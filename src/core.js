@@ -1,0 +1,5 @@
+export function assertPence(v){if(!Number.isInteger(v)||v<0)throw new Error("price_pence must be a non-negative integer");return v}
+export function overlaps(aStart,aEnd,bStart,bEnd){return aStart < bEnd && bStart < aEnd}
+export function isAvailable(equipmentId,start,end,bookings){return !bookings.some(b=>b.equipment_id===equipmentId&&b.status==="CONFIRMED"&&overlaps(start,end,b.start_at,b.end_at))}
+export function createQuote(enquiry,equipment){assertPence(equipment.price_pence);return {enquiry_id:enquiry.id,equipment_id:equipment.id,total_pence:equipment.price_pence,deposit_pence:Math.round(equipment.price_pence*0.25),status:"DRAFT"}}
+export function confirmBooking({quote,payment,start_at,end_at,bookings}){if(payment.status!=="RECEIVED"||payment.amount_pence<quote.deposit_pence)throw new Error("deposit not received");if(!isAvailable(quote.equipment_id,start_at,end_at,bookings))throw new Error("equipment unavailable");return {equipment_id:quote.equipment_id,start_at,end_at,status:"CONFIRMED",deposit_received_pence:payment.amount_pence,balance_pence:quote.total_pence-payment.amount_pence}}

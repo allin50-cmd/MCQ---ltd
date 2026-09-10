@@ -1,0 +1,14 @@
+import http from "node:http";import {load,save,id} from "./store.js";import {assertPence,isAvailable,createQuote,confirmBooking} from "./core.js";
+const json=(res,status,body)=>{res.writeHead(status,{"content-type":"application/json"});res.end(JSON.stringify(body))};
+const body=async req=>{let s="";for await(const c of req)s+=c;return s?JSON.parse(s):{}};
+const server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,"http://localhost");const db=load();
+if(req.method==="GET"&&u.pathname==="/health")return json(res,200,{ok:true});
+if(req.method==="POST"&&u.pathname==="/equipment"){const x=await body(req);assertPence(x.price_pence);if(!x.name)throw new Error("name required");const row={id:id("eq"),name:x.name,price_pence:x.price_pence};db.equipment.push(row);save(db);return json(res,201,row)}
+if(req.method==="GET"&&u.pathname==="/availability"){const start=u.searchParams.get("start"),end=u.searchParams.get("end");if(!start||!end)throw new Error("start and end required");return json(res,200,db.equipment.filter(e=>isAvailable(e.id,start,end,db.bookings)))}
+if(req.method==="POST"&&u.pathname==="/enquiries"){const x=await body(req);if(!x.customer_name||!x.contact||!x.equipment_id||!x.start_at||!x.end_at)throw new Error("customer_name, contact, equipment_id, start_at, end_at required");const row={id:id("enq"),...x};db.enquiries.push(row);save(db);return json(res,201,row)}
+if(req.method==="POST"&&u.pathname==="/quotes"){const x=await body(req),enq=db.enquiries.find(v=>v.id===x.enquiry_id);if(!enq)throw new Error("enquiry not found");const eq=db.equipment.find(v=>v.id===enq.equipment_id);if(!eq)throw new Error("equipment not found");const row={id:id("quo"),...createQuote(enq,eq)};db.quotes.push(row);save(db);return json(res,201,row)}
+if(req.method==="POST"&&u.pathname==="/payments/confirm"){const x=await body(req);assertPence(x.amount_pence);if(!x.reference)throw new Error("real payment reference required");const row={id:id("pay"),quote_id:x.quote_id,amount_pence:x.amount_pence,reference:x.reference,status:"RECEIVED"};db.payments.push(row);save(db);return json(res,201,row)}
+if(req.method==="POST"&&u.pathname==="/bookings"){const x=await body(req),quote=db.quotes.find(v=>v.id===x.quote_id),payment=db.payments.find(v=>v.quote_id===x.quote_id&&v.status==="RECEIVED");if(!quote||!payment)throw new Error("quote and received deposit required");const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);const row={id:id("book"),...confirmBooking({quote,payment,start_at:enq.start_at,end_at:enq.end_at,bookings:db.bookings})};db.bookings.push(row);save(db);return json(res,201,row)}
+return json(res,404,{error:"not found"});}catch(e){return json(res,400,{error:e.message})}});
+if(process.env.NODE_ENV!=="test")server.listen(Number(process.env.PORT||3000));
+export default server;
