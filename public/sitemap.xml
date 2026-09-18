@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
-  <url><loc>/urban</loc></url>
-  <url><loc>/urban-underground</loc></url>
-  <url><loc>/chart</loc></url>
-  <url><loc>/music</loc></url>
-  <url><loc>/vinyl-underground</loc></url>
-  <url><loc>/swap-shop</loc></url>
-  <url><loc>/microphones</loc></url>
+  <url><loc>/shop</loc></url>
   <url><loc>/headphones</loc></url>
+  <url><loc>/microphones</loc></url>
   <url><loc>/wireless</loc></url>
   <url><loc>/dj</loc></url>
+  <url><loc>/urban</loc></url>
+  <url><loc>/chart</loc></url>
+  <url><loc>/publish</loc></url>
+  <url><loc>/live</loc></url>
+  <url><loc>/vinyl</loc></url>
+  <url><loc>/swap</loc></url>
+  <url><loc>/magazine</loc></url>
+  <url><loc>/hire</loc></url>
+  <url><loc>/trade</loc></url>
+  <url><loc>/about</loc></url>
 </urlset>
