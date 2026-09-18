@@ -16,7 +16,7 @@ test("website backend protects admin writes and accepts public hire enquiries", 
 
   const home=await fetch(base+"/");
   assert.equal(home.status,200);
-  assert.match(await home.text(),/MCQ Audio Journal/);
+  assert.match(await home.text(),/MCQ Audio — Hi‑Fi Magazine/);
 
   const lead=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
     name:"HiFi Customer",
