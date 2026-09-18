@@ -50,6 +50,7 @@ function urbanCard(x){
       <audio controls preload="none" src="${urbanEsc(x.preview_url)}"></audio>
       <div class="urban-actions">
         <button class="btn dark urban-vote" data-id="${urbanEsc(x.id)}" data-track="${urbanEsc(x.artist_name+" — "+x.title)}">Support • ${x.votes}</button>
+        <button class="btn urban-live-submit" data-id="${urbanEsc(x.id)}" data-track="${urbanEsc(x.artist_name+" — "+x.title)}">Submit to live show</button>
         <button class="report-btn urban-report" data-id="${urbanEsc(x.id)}">Report</button>
       </div>
     </div>
@@ -64,7 +65,8 @@ async function loadUrbanChart(){
     const d=await api("/api/urban/chart?"+p);
     list.innerHTML=d.items?.length?d.items.map(urbanCard).join(""):'<div class="empty"><strong>No tracks yet in this lane.</strong><br>Be the first to self-publish.</div>';
     $$(".urban-vote",list).forEach(b=>b.addEventListener("click",()=>supportUrban(b.dataset.id,b.dataset.track,b)));
-    $$(".urban-report",list).forEach(b=>b.addEventListener("click",()=>reportUrban(b.dataset.id)));
+    $(".urban-report",list).forEach(b=>b.addEventListener("click",()=>reportUrban(b.dataset.id)));
+    $(".urban-live-submit",list).forEach(b=>b.addEventListener("click",()=>submitToLive(b.dataset.id,b.dataset.track,b)));
   }catch(err){list.innerHTML=`<div class="empty">Urban Chart unavailable: ${urbanEsc(err.message)}</div>`}
 }
 async function supportUrban(id,track,button){
@@ -92,3 +94,43 @@ $("#publish-form")?.addEventListener("submit",async e=>{
   }catch(err){st.textContent=err.message}
 });
 loadUrbanChart();
+
+
+let currentLiveEvent=null;
+function liveDateText(value){
+  if(!value)return "Launch date to be announced";
+  const d=new Date(value);if(Number.isNaN(d.getTime()))return value;
+  return new Intl.DateTimeFormat("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit",timeZoneName:"short"}).format(d);
+}
+async function loadLiveShow(){
+  const status=$("#live-status"),player=$("#live-player");if(!status||!player)return;
+  try{
+    const show=await api("/api/urban/live");currentLiveEvent=show;
+    const when=liveDateText(show.starts_at);
+    status.innerHTML=`<strong>${esc(show.status)}</strong><span>${esc(show.frequency)} • ${esc(when)}</span>`;
+    $("#live-remind-form [name=event_id]").value=show.id;
+    if(show.stream_embed_url){
+      player.innerHTML=`<iframe src="${esc(show.stream_embed_url)}" title="${esc(show.title)}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+    }else{
+      player.innerHTML=`<div class="live-placeholder"><span class="live-dot"></span><strong>${esc(show.title)}</strong><p>${esc(when)}. The embedded player will appear here when the broadcast feed is configured.</p></div>`;
+    }
+  }catch(err){status.textContent="Live schedule unavailable: "+err.message}
+}
+async function submitToLive(id,track,button){
+  const contact=prompt(`Submit ${track} for the next Urban Underground Live show.\n\nEnter the creator email used when you published the track.`);
+  if(!contact)return;
+  const original=button.textContent;button.disabled=true;button.textContent="Submitting…";
+  try{
+    const r=await api("/api/urban/live/submit-track",{method:"POST",body:JSON.stringify({submission_id:id,contact,event_id:currentLiveEvent?.id||"urban-live-launch"})});
+    button.textContent=r.already_submitted?"Already submitted":"Submitted";
+  }catch(err){button.textContent=err.message;setTimeout(()=>{button.textContent=original;button.disabled=false},1800)}
+}
+const liveDialog=$("#live-remind-dialog");
+$("#live-remind-open")?.addEventListener("click",()=>liveDialog?.showModal());
+$("#live-remind-dialog .dialog-close")?.addEventListener("click",()=>liveDialog.close());
+$("#live-remind-form")?.addEventListener("submit",async e=>{
+  e.preventDefault();const f=e.currentTarget,st=$("#live-remind-status"),d=Object.fromEntries(new FormData(f));st.textContent="Saving reminder…";
+  try{const r=await api("/api/urban/live/remind",{method:"POST",body:JSON.stringify(d)});st.textContent=r.already_registered?"You're already on the reminder list.":"Reminder saved for the next Urban Underground Live.";f.reset();if(currentLiveEvent)f.event_id.value=currentLiveEvent.id}
+  catch(err){st.textContent=err.message}
+});
+loadLiveShow();
