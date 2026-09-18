@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { load, save, id } from "./store.js";
 import { assertPence, isAvailable, createQuote, confirmBooking } from "./core.js";
 import { listSuppliers, searchFarnell } from "./suppliers.js";
+import { searchInternalCatalog, listInternalCatalog } from "./catalog.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
@@ -51,7 +52,33 @@ const server=http.createServer(async(req,res)=>{
 
     if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{ok:true,service:"mcq-hire"});
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
-    if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers());
+    if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers().map(({id,name,kind,api_status})=>({id,name,kind,api_status})));
+    if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
+    if(req.method==="GET"&&u.pathname==="/api/catalog/search"){
+      const q=u.searchParams.get("q")||"";
+      const internal=searchInternalCatalog(q);
+      let live=[];
+      try{
+        const result=await searchFarnell(q);
+        if(result.configured&&Array.isArray(result.products)){
+          live=result.products.map(p=>({
+            id:`farnell-${p.sku||Math.random().toString(36).slice(2)}`,
+            brand:p.brand||"Farnell",
+            name:p.name||p.sku||q,
+            category:"supplier",
+            price_band:"live",
+            image:p.image_url||"",
+            summary:"Live supplier result available through MCQ.",
+            specs:[],
+            source:"Farnell live feed",
+            availability:p.stock||"LIVE_FEED",
+            sku:p.sku||null,
+            prices:p.prices||[]
+          }));
+        }
+      }catch{}
+      return json(res,200,{query:q,results:[...internal,...live].slice(0,24)});
+    }
 
     if(req.method==="POST"&&u.pathname==="/api/leads"){
       const x=await body(req);
