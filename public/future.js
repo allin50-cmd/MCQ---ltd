@@ -13,7 +13,7 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.targe
 
 $$(".tilt").forEach(card=>{card.addEventListener("pointermove",e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`perspective(700px) rotateX(${-y*8}deg) rotateY(${x*10}deg) translateY(-3px)`});card.addEventListener("pointerleave",()=>card.style.transform="")});
 
-let soundOn=false;$("#sound-toggle").addEventListener("click",e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?"◉":"○";e.currentTarget.setAttribute("aria-pressed",String(soundOn))});
+let soundOn=false;$("#sound-toggle")?.addEventListener("click",e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?"◉":"○";e.currentTarget.setAttribute("aria-pressed",String(soundOn))});
 
 $("#movie-scrubber").addEventListener("input",e=>{const max=Math.max(0,$("#movie-track").scrollWidth-innerWidth*.8),x=max*(Number(e.target.value)/100);$("#movie-track").style.transform=`translateX(-${x}px)`});
 
