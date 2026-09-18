@@ -72,6 +72,15 @@ test("website backend protects admin writes and accepts public hire enquiries", 
     assert.match(html,/Skip to content/);
   }
 
+  const future=await fetch(base+"/prototype");
+  assert.equal(future.status,200);
+  const futureHtml=await future.text();
+  assert.match(futureHtml,/MCQ Future Experience/);
+  assert.match(futureHtml,/future\.css/);
+  assert.match(futureHtml,/future\.js/);
+  assert.match(futureHtml,/URBAN UNDERGROUND LIVE|Urban Underground Live/);
+  assert.match(futureHtml,/MCQ LIVE CATALOGUE/);
+
   const suppliers=await fetch(base+"/api/suppliers");
   assert.equal(suppliers.status,200);
   const supplierList=await suppliers.json();

@@ -49,7 +49,9 @@ const prettyRoutes=new Map([
   ["/self-publish","/publish.html"],
   ["/swap","/swap.html"],
   ["/vinyl","/vinyl.html"],
-  ["/white-labels","/vinyl.html"]
+  ["/white-labels","/vinyl.html"],
+  ["/prototype","/future.html"],
+  ["/future","/future.html"]
 ]);
 
 function serveStatic(u,res){
