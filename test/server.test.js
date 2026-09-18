@@ -18,7 +18,7 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   assert.equal(home.status,200);
   assert.match(await home.text(),/MCQ Audio — Hi‑Fi Magazine/);
 
-  for (const route of ["/microphones","/headphones","/wireless","/dj"]) {
+  for (const route of ["/microphones","/headphones","/wireless","/dj","/music"]) {
     const page=await fetch(base+route);
     assert.equal(page.status,200);
     assert.equal(page.headers.get("x-content-type-options"),"nosniff");
@@ -30,7 +30,7 @@ test("website backend protects admin writes and accepts public hire enquiries", 
     assert.match(html,/Skip to content/);
   }
 
-  for (const route of ["/","/microphones","/headphones","/wireless","/dj"]) {
+  for (const route of ["/","/microphones","/headphones","/wireless","/dj","/music"]) {
     const page=await fetch(base+route);
     const html=await page.text();
     assert.doesNotMatch(html,/href=["']https?:\/\//i);
@@ -49,6 +49,44 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   const catalogBody=await catalog.json();
   assert.ok(catalogBody.results.length>0);
   assert.equal("product_url" in catalogBody.results[0],false);
+
+  const musicImport=await fetch(base+"/api/music/catalog/import",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer test-admin"},body:JSON.stringify({items:[{
+    id:"vu-test-001",
+    artist:"Test Artist",
+    title:"Test Garage Cut",
+    label:"Vinyl Underground",
+    catalogue_no:"VU001",
+    genre:"UK Garage",
+    format:"vinyl",
+    release_type:"exclusive",
+    price_pence:1299,
+    stock:10,
+    status:"LIVE"
+  }]})});
+  assert.equal(musicImport.status,200);
+  const imported=await musicImport.json();
+  assert.equal(imported.imported,1);
+
+  const musicCatalog=await fetch(base+"/api/music/catalog?q=Garage&format=vinyl&type=exclusive");
+  assert.equal(musicCatalog.status,200);
+  const musicBody=await musicCatalog.json();
+  assert.equal(musicBody.count,1);
+  assert.equal(musicBody.items[0].catalogue_no,"VU001");
+
+  const musicOrder=await fetch(base+"/api/music/order-interest",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    item_id:"vu-test-001",name:"Garage Buyer",contact:"buyer@example.com",quantity:2
+  })});
+  assert.equal(musicOrder.status,201);
+
+  const dropSignup=await fetch(base+"/api/music/drop-signup",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    name:"DJ Test",contact:"dj@example.com",interests:["pre-release","reissues"]
+  })});
+  assert.equal(dropSignup.status,201);
+
+  const swap=await fetch(base+"/api/swap/offer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    name:"Seller",contact:"seller@example.com",item_type:"Collection / job lot",description:"40 UK Garage 12-inch records",quantity:40,condition:"Very good"
+  })});
+  assert.equal(swap.status,201);
 
   const manifest=await fetch(base+"/site.webmanifest");
   assert.equal(manifest.status,200);
