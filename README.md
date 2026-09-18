@@ -1,26 +1,63 @@
-# MCQ Hire — Christmas/New Year revenue tool
+# MCQ Entertainments — Hire Website
 
-Minimal dependency-free Node 20 service for MCQ's real hire journey:
+Dependency-light Node 20 website and hire backend for MCQ Entertainments Ltd.
 
-equipment → availability → enquiry → quote → received deposit → confirmed booking.
+## What is included
 
-This is deliberately not AgentX and not a generic platform.
+- public customer website
+- mobile responsive hire catalogue
+- availability checks
+- hire enquiry flow
+- automatic draft quote when a real inventory item is selected
+- existing deposit and booking rules preserved
+- live supplier directory
+- Farnell / element14 Product Search API adapter
+- protected admin mutations
+- Docker image for AWS/container deployment
 
 ## Run
 
+```bash
+cp .env.example .env
 npm test
 npm start
+```
 
-Data is persisted to data/mcq.json (gitignored). Enter MCQ's real equipment through POST /equipment; no inventory or prices are seeded.
+Open http://localhost:3000.
 
-## Acceptance
+## Environment
 
-1. Enter one real MCQ item and price.
-2. Query availability for the real hire period.
-3. Capture a real enquiry through POST /enquiries.
-4. Create the quote.
-5. Confirm a deposit only after money is actually received; a real payment reference is mandatory.
-6. Confirm booking.
-7. A second overlapping booking for that equipment must fail.
+- `PORT` — HTTP port
+- `MCQ_DATA_FILE` — current JSON persistence path
+- `MCQ_ADMIN_TOKEN` — bearer token required for equipment, payment-confirmation and booking mutations
+- `FARNELL_API_KEY` — optional element14/Farnell API key. Without it the website falls back to the live Farnell product-search link.
 
-The current payment edge is manual confirmation against an actual external payment reference. Stripe/SumUp can replace that edge later without changing booking rules.
+## Supplier integration
+
+The public site links directly to Farnell, CPC, Canford Audio, Thomann UK and Gear4music.
+
+When `FARNELL_API_KEY` is configured, `GET /api/suppliers/farnell/search?q=...` calls the official element14 Product Search API for the UK Farnell catalogue.
+
+No undocumented supplier API is simulated.
+
+## Hire flow
+
+Real equipment must be added through the protected equipment API. No fake MCQ inventory or prices are seeded.
+
+Customer journey:
+
+equipment → availability → enquiry → draft quote → received deposit → confirmed booking
+
+A general hire enquiry can also be submitted without selecting an equipment item.
+
+## Important production note
+
+The current store remains the repo's original JSON file store. It is suitable for local/demo use and a single server with persistent storage, but it is **not yet the final AWS production database**. Before multi-instance production deployment, move persistence to PostgreSQL while keeping the same business rules.
+
+## Truth status
+
+- Website/backend: CODED
+- Core hire-rule tests: TESTED once CI passes on this branch
+- Supplier links: CODED
+- Farnell live API: CODED, requires MCQ API credentials for LIVE-VERIFIED
+- AWS: NOT DEPLOYED

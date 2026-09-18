@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="MCQ Entertainments Ltd — professional PA, audio and event equipment hire for venues, corporate events, parties and productions.">
+  <title>MCQ Entertainments | PA & Event Equipment Hire</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="MCQ Entertainments home"><span>MCQ</span><small>Entertainments Ltd</small></a>
+    <nav>
+      <a href="#hire">Hire</a>
+      <a href="#services">Services</a>
+      <a href="#suppliers">Suppliers</a>
+      <a class="pill" href="#quote">Get a quote</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Professional sound • hire • events</p>
+        <h1>Sound systems that arrive ready to work.</h1>
+        <p class="lead">PA hire, microphones, mixers, DJ and event audio for venues, corporate events, celebrations and productions. Check availability and send a hire request online.</p>
+        <div class="actions">
+          <a class="button primary" href="#quote">Request hire</a>
+          <a class="button secondary" href="#hire">View equipment</a>
+        </div>
+        <div class="trust">
+          <span>PA systems</span><span>Microphones</span><span>Mixers</span><span>Event audio</span>
+        </div>
+      </div>
+      <figure class="hero-image">
+        <img src="https://unsplash.com/photos/QtgGYlug6Cw/download?force=true&w=1400" alt="Professional audio mixing console">
+        <figcaption>Professional audio for real events.</figcaption>
+      </figure>
+    </section>
+
+    <section class="strip">
+      <div><strong>15+</strong><span>hire systems available</span></div>
+      <div><strong>Live</strong><span>availability workflow</span></div>
+      <div><strong>Trade</strong><span>supplier sourcing</span></div>
+      <div><strong>Real</strong><span>booking records</span></div>
+    </section>
+
+    <section id="services" class="section">
+      <div class="section-head"><p class="eyebrow">What we do</p><h2>Audio for the room, the crowd and the job.</h2></div>
+      <div class="service-grid">
+        <article><span>01</span><h3>PA hire</h3><p>Complete sound systems for parties, bars, venues, community spaces, corporate events and celebrations.</p></article>
+        <article><span>02</span><h3>Professional audio</h3><p>Mixers, microphones, stands, cables, adapters and the specialist audio accessories that events actually need.</p></article>
+        <article><span>03</span><h3>Venue & installation</h3><p>Support for pubs, bars, restaurants, clubs, churches, schools, gyms, hotels and meeting spaces.</p></article>
+        <article><span>04</span><h3>Hard-to-find audio</h3><p>Legacy and specialist connections, phono leads, headphone extensions, media and DJ accessories sourced through trade suppliers.</p></article>
+      </div>
+    </section>
+
+    <section id="hire" class="section soft">
+      <div class="section-head row">
+        <div><p class="eyebrow">Hire catalogue</p><h2>Check the real MCQ inventory.</h2></div>
+        <div class="date-check">
+          <label>From<input id="availability-start" type="datetime-local"></label>
+          <label>To<input id="availability-end" type="datetime-local"></label>
+          <button id="check-availability" class="button secondary" type="button">Check dates</button>
+        </div>
+      </div>
+      <div id="equipment-grid" class="equipment-grid" aria-live="polite">
+        <div class="empty">Loading MCQ equipment…</div>
+      </div>
+    </section>
+
+    <section id="suppliers" class="section">
+      <div class="section-head"><p class="eyebrow">Supplier network</p><h2>Source parts and equipment without leaving the workflow.</h2><p>Verified supplier links are live now. Farnell product search becomes API-powered when the MCQ trade API key is configured.</p></div>
+      <div class="supplier-search">
+        <input id="supplier-query" type="search" placeholder="Search supplier stock e.g. XLR cable, SM58, phono lead">
+        <button id="supplier-api-search" class="button primary" type="button">Search Farnell API</button>
+      </div>
+      <div id="supplier-results" class="supplier-results"></div>
+      <div id="supplier-grid" class="supplier-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="quote" class="section quote-section">
+      <div class="quote-copy">
+        <p class="eyebrow">Hire request</p>
+        <h2>Tell us what the event needs.</h2>
+        <p>Submit the event details. If you select an available MCQ hire item, the backend creates the enquiry and a draft quote from the real stored hire price.</p>
+      </div>
+      <form id="hire-form" class="hire-form">
+        <label>Name<input name="customer_name" required autocomplete="name"></label>
+        <label>Email<input name="contact" required type="email" autocomplete="email"></label>
+        <label>Phone<input name="phone" autocomplete="tel"></label>
+        <label>Event type<input name="event_type" placeholder="Wedding, corporate event, party…"></label>
+        <label class="wide">Venue / postcode<input name="venue"></label>
+        <label>Start<input name="start_at" required type="datetime-local"></label>
+        <label>Finish<input name="end_at" required type="datetime-local"></label>
+        <label class="wide">Equipment<select name="equipment_id" id="equipment-select"><option value="">Tell MCQ what I need</option></select></label>
+        <label class="wide">Notes<textarea name="notes" rows="4" placeholder="Audience size, room, microphones, DJ setup, delivery, installation…"></textarea></label>
+        <button class="button primary wide" type="submit">Send hire request</button>
+        <p id="form-status" class="wide status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="section final-cta">
+      <div><p class="eyebrow">MCQ Entertainments Ltd</p><h2>One hire system. Real availability. Real bookings.</h2></div>
+      <a class="button primary" href="#quote">Start a hire request</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand"><span>MCQ</span><small>Entertainments Ltd</small></div>
+    <p>Professional PA and event audio hire.</p>
+    <p class="small">Supplier product availability and pricing remain subject to the supplier's live terms and stock.</p>
+  </footer>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
