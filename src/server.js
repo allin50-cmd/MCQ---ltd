@@ -72,7 +72,8 @@ const server=http.createServer(async(req,res)=>{
 
     if(req.method==="POST"&&u.pathname==="/api/hire/request"){
       const x=await body(req);
-      if(!x.customer_name||!x.contact||!x.equipment_id||!x.start_at||!x.end_at)throw new Error("customer_name, contact, equipment_id, start_at, end_at required");
+      if(!x.customer_name||!x.contact||!x.start_at||!x.end_at)throw new Error("customer_name, contact, start_at, end_at required");
+      if(new Date(x.start_at)>=new Date(x.end_at))throw new Error("end must be after start");
       const equipmentId=String(x.equipment_id||"").trim();
       const eq=equipmentId?db.equipment.find(v=>v.id===equipmentId):null;
       if(equipmentId&&!eq)throw new Error("equipment not found");
