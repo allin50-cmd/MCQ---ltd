@@ -14,7 +14,7 @@ const securityHeaders={
   "x-content-type-options":"nosniff",
   "referrer-policy":"strict-origin-when-cross-origin",
   "permissions-policy":"camera=(), microphone=(), geolocation=()",
-  "content-security-policy":"default-src 'self'; img-src 'self' data: https:; media-src 'self' https: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.element14.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  "content-security-policy":"default-src 'self'; img-src 'self' data: https:; media-src 'self' https: blob:; frame-src https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.element14.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 };
 const json=(res,status,body)=>{res.writeHead(status,{...securityHeaders,"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
 const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>1_000_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
@@ -85,6 +85,88 @@ const server=http.createServer(async(req,res)=>{
         }
       }catch{}
       return json(res,200,{query:q,results:[...internal,...live].slice(0,24)});
+    }
+
+    if(req.method==="GET"&&u.pathname==="/api/urban/live"){
+      const configured=db.live_stream_events.filter(v=>v.status!=="ARCHIVED").sort((a,b)=>new Date(a.starts_at||0)-new Date(b.starts_at||0))[0]||null;
+      const fallback={
+        id:"urban-live-launch",
+        title:"Urban Underground Live — Launch Edition",
+        frequency:"Monthly",
+        status:"UPCOMING",
+        starts_at:"",
+        duration_minutes:120,
+        hosts:["DJ Dexter","Mickey Simms"],
+        guests:["MC Creed","Romeo (So Solid Crew)"],
+        segments:["Hosts' opening sets","Guest conversation + performance","Urban Chart: unsigned/pre-pre-release picks","White-label / archive selection","Community shout-outs"],
+        stream_embed_url:(process.env.MCQ_URBAN_LIVE_EMBED_URL||"").trim(),
+        replay_embed_url:"",
+        description:"Monthly live music stream from MCQ Urban Underground, connecting established urban names with unsigned and pre-pre-release music from the user-powered chart."
+      };
+      return json(res,200,configured||fallback);
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/live/configure"){
+      requireAdmin(req);
+      const x=await body(req);
+      const safeEmbed=(value)=>{
+        const raw=String(value||"").trim();if(!raw)return "";
+        let parsed;try{parsed=new URL(raw)}catch{throw new Error("invalid stream URL")}
+        if(parsed.protocol!=="https:")throw new Error("stream URL must use https");
+        return parsed.toString();
+      };
+      const row={
+        id:String(x.id||id("live")),
+        title:String(x.title||"Urban Underground Live").trim(),
+        frequency:String(x.frequency||"Monthly").trim(),
+        status:String(x.status||"UPCOMING").trim().toUpperCase(),
+        starts_at:String(x.starts_at||"").trim(),
+        duration_minutes:Math.max(30,Number(x.duration_minutes||120)),
+        hosts:Array.isArray(x.hosts)?x.hosts.map(String):["DJ Dexter","Mickey Simms"],
+        guests:Array.isArray(x.guests)?x.guests.map(String):["MC Creed","Romeo (So Solid Crew)"],
+        segments:Array.isArray(x.segments)?x.segments.map(String):[],
+        stream_embed_url:safeEmbed(x.stream_embed_url),
+        replay_embed_url:safeEmbed(x.replay_embed_url),
+        description:String(x.description||"").trim(),
+        updated_at:new Date().toISOString()
+      };
+      const i=db.live_stream_events.findIndex(v=>v.id===row.id);
+      if(i>=0)db.live_stream_events[i]=row;else db.live_stream_events.push(row);
+      save(db);return json(res,200,row);
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/live/remind"){
+      const x=await body(req);
+      if(!x.contact)throw new Error("contact required");
+      const contact=String(x.contact).trim().toLowerCase();
+      const email_hash=crypto.createHash("sha256").update(contact).digest("hex");
+      const event_id=String(x.event_id||"urban-live-launch");
+      if(db.stream_reminders.some(v=>v.event_id===event_id&&v.email_hash===email_hash))return json(res,200,{ok:true,already_registered:true});
+      db.stream_reminders.push({id:id("remind"),event_id,email_hash,created_at:new Date().toISOString()});
+      save(db);return json(res,201,{ok:true,event_id});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/live/submit-track"){
+      const x=await body(req);
+      if(!x.submission_id||!x.contact)throw new Error("submission_id and contact required");
+      const track=db.urban_submissions.find(v=>v.id===x.submission_id&&v.status==="LIVE");
+      if(!track)throw new Error("submission not found");
+      const creatorMatch=String(x.contact).trim().toLowerCase()===String(track.contact||"").trim().toLowerCase();
+      if(!creatorMatch)throw new Error("creator contact does not match submission");
+      const event_id=String(x.event_id||"urban-live-launch");
+      if(db.stream_track_submissions.some(v=>v.event_id===event_id&&v.submission_id===track.id))return json(res,200,{ok:true,already_submitted:true});
+      const row={id:id("streamtrack"),event_id,submission_id:track.id,status:"SUBMITTED",created_at:new Date().toISOString()};
+      db.stream_track_submissions.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="GET"&&u.pathname==="/api/urban/live/submissions"){
+      requireAdmin(req);
+      const event_id=String(u.searchParams.get("event_id")||"urban-live-launch");
+      const rows=db.stream_track_submissions.filter(v=>v.event_id===event_id).map(v=>{
+        const track=db.urban_submissions.find(t=>t.id===v.submission_id);
+        return {...v,track:track?{id:track.id,artist_name:track.artist_name,title:track.title,genre:track.genre,preview_url:track.preview_url,release_stage:track.release_stage}:null};
+      });
+      return json(res,200,{count:rows.length,items:rows});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/urban/submissions"){
@@ -332,7 +414,7 @@ const server=http.createServer(async(req,res)=>{
 
     if(req.method==="GET"&&u.pathname==="/api/admin/summary"){
       requireAdmin(req);
-      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length,leads:db.leads.length,events:db.events.length,music_catalog:db.music_catalog.length,music_orders:db.music_orders.length,swap_offers:db.swap_offers.length,drop_signups:db.drop_signups.length,urban_submissions:db.urban_submissions.length,urban_votes:db.urban_votes.length,urban_reports:db.urban_reports.length});
+      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length,leads:db.leads.length,events:db.events.length,music_catalog:db.music_catalog.length,music_orders:db.music_orders.length,swap_offers:db.swap_offers.length,drop_signups:db.drop_signups.length,urban_submissions:db.urban_submissions.length,urban_votes:db.urban_votes.length,urban_reports:db.urban_reports.length,live_stream_events:db.live_stream_events.length,stream_reminders:db.stream_reminders.length,stream_track_submissions:db.stream_track_submissions.length});
     }
 
     if(req.method==="GET"&&serveStatic(u,res)) return;
