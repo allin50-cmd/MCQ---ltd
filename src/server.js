@@ -14,7 +14,7 @@ const securityHeaders={
   "x-content-type-options":"nosniff",
   "referrer-policy":"strict-origin-when-cross-origin",
   "permissions-policy":"camera=(), microphone=(), geolocation=()",
-  "content-security-policy":"default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.element14.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  "content-security-policy":"default-src 'self'; img-src 'self' data: https:; media-src 'self' https: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.element14.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 };
 const json=(res,status,body)=>{res.writeHead(status,{...securityHeaders,"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
 const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>1_000_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
@@ -93,6 +93,13 @@ const server=http.createServer(async(req,res)=>{
       if(x.rights_declared!==true)throw new Error("rights declaration required");
       const stage=String(x.release_stage||"pre-pre-release").trim().toLowerCase();
       if(!["pre-pre-release","unsigned","independent"].includes(stage))throw new Error("invalid release_stage");
+      const safeHttpUrl=(value,required=false)=>{
+        const raw=String(value||"").trim();
+        if(!raw){if(required)throw new Error("preview_url required");return ""}
+        let parsed;try{parsed=new URL(raw)}catch{throw new Error("invalid media URL")}
+        if(!["http:","https:"].includes(parsed.protocol))throw new Error("invalid media URL");
+        return parsed.toString();
+      };
       const row={
         id:id("urban"),
         artist_name:String(x.artist_name).trim(),
@@ -103,8 +110,8 @@ const server=http.createServer(async(req,res)=>{
         creator_name:String(x.creator_name).trim(),
         contact:String(x.contact).trim(),
         location:String(x.location||"").trim(),
-        artwork_url:String(x.artwork_url||"").trim(),
-        preview_url:String(x.preview_url).trim(),
+        artwork_url:safeHttpUrl(x.artwork_url,false),
+        preview_url:safeHttpUrl(x.preview_url,true),
         description:String(x.description||"").trim(),
         socials:String(x.socials||"").trim(),
         rights_declared:true,
