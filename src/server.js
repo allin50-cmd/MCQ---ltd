@@ -1,14 +1,114 @@
-import http from "node:http";import {load,save,id} from "./store.js";import {assertPence,isAvailable,createQuote,confirmBooking} from "./core.js";
-const json=(res,status,body)=>{res.writeHead(status,{"content-type":"application/json"});res.end(JSON.stringify(body))};
-const body=async req=>{let s="";for await(const c of req)s+=c;return s?JSON.parse(s):{}};
-const server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,"http://localhost");const db=load();
-if(req.method==="GET"&&u.pathname==="/health")return json(res,200,{ok:true});
-if(req.method==="POST"&&u.pathname==="/equipment"){const x=await body(req);assertPence(x.price_pence);if(!x.name)throw new Error("name required");const row={id:id("eq"),name:x.name,price_pence:x.price_pence};db.equipment.push(row);save(db);return json(res,201,row)}
-if(req.method==="GET"&&u.pathname==="/availability"){const start=u.searchParams.get("start"),end=u.searchParams.get("end");if(!start||!end)throw new Error("start and end required");return json(res,200,db.equipment.filter(e=>isAvailable(e.id,start,end,db.bookings)))}
-if(req.method==="POST"&&u.pathname==="/enquiries"){const x=await body(req);if(!x.customer_name||!x.contact||!x.equipment_id||!x.start_at||!x.end_at)throw new Error("customer_name, contact, equipment_id, start_at, end_at required");const row={id:id("enq"),...x};db.enquiries.push(row);save(db);return json(res,201,row)}
-if(req.method==="POST"&&u.pathname==="/quotes"){const x=await body(req),enq=db.enquiries.find(v=>v.id===x.enquiry_id);if(!enq)throw new Error("enquiry not found");const eq=db.equipment.find(v=>v.id===enq.equipment_id);if(!eq)throw new Error("equipment not found");const row={id:id("quo"),...createQuote(enq,eq)};db.quotes.push(row);save(db);return json(res,201,row)}
-if(req.method==="POST"&&u.pathname==="/payments/confirm"){const x=await body(req);assertPence(x.amount_pence);if(!x.reference)throw new Error("real payment reference required");const row={id:id("pay"),quote_id:x.quote_id,amount_pence:x.amount_pence,reference:x.reference,status:"RECEIVED"};db.payments.push(row);save(db);return json(res,201,row)}
-if(req.method==="POST"&&u.pathname==="/bookings"){const x=await body(req),quote=db.quotes.find(v=>v.id===x.quote_id),payment=db.payments.find(v=>v.quote_id===x.quote_id&&v.status==="RECEIVED");if(!quote||!payment)throw new Error("quote and received deposit required");const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);const row={id:id("book"),...confirmBooking({quote,payment,start_at:enq.start_at,end_at:enq.end_at,bookings:db.bookings})};db.bookings.push(row);save(db);return json(res,201,row)}
-return json(res,404,{error:"not found"});}catch(e){return json(res,400,{error:e.message})}});
-if(process.env.NODE_ENV!=="test")server.listen(Number(process.env.PORT||3000));
+import http from "node:http";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { load, save, id } from "./store.js";
+import { assertPence, isAvailable, createQuote, confirmBooking } from "./core.js";
+import { listSuppliers, searchFarnell } from "./suppliers.js";
+
+const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
+const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
+const json=(res,status,body)=>{res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
+const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>1_000_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
+const route=(u,...paths)=>paths.includes(u.pathname);
+
+function serveStatic(u,res){
+  let pathname = u.pathname === "/" ? "/index.html" : u.pathname;
+  try { pathname = decodeURIComponent(pathname); } catch { return false; }
+  const target = path.resolve(publicDir, "." + pathname);
+  if(!target.startsWith(publicDir + path.sep) && target !== publicDir) return false;
+  if(!fs.existsSync(target) || !fs.statSync(target).isFile()) return false;
+  const ext=path.extname(target).toLowerCase();
+  res.writeHead(200,{"content-type":mime[ext]||"application/octet-stream","cache-control":ext===".html"?"no-store":"public, max-age=3600"});
+  fs.createReadStream(target).pipe(res);
+  return true;
+}
+
+const server=http.createServer(async(req,res)=>{
+  try{
+    const u=new URL(req.url,"http://localhost");
+    const db=load();
+
+    if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{ok:true,service:"mcq-hire"});
+    if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
+    if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers());
+
+    if(req.method==="GET"&&u.pathname==="/api/suppliers/farnell/search"){
+      const result=await searchFarnell(u.searchParams.get("q")||"");
+      return json(res,result.configured?200:503,result);
+    }
+
+    if(req.method==="POST"&&route(u,"/equipment","/api/equipment")){
+      const x=await body(req);
+      assertPence(x.price_pence);
+      if(!x.name)throw new Error("name required");
+      const row={id:id("eq"),name:String(x.name).trim(),category:String(x.category||"PA").trim(),description:String(x.description||"").trim(),price_pence:x.price_pence,image_url:String(x.image_url||"").trim()};
+      db.equipment.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="GET"&&route(u,"/availability","/api/availability")){
+      const start=u.searchParams.get("start"),end=u.searchParams.get("end");
+      if(!start||!end)throw new Error("start and end required");
+      if(new Date(start)>=new Date(end))throw new Error("end must be after start");
+      return json(res,200,db.equipment.filter(e=>isAvailable(e.id,start,end,db.bookings)));
+    }
+
+    if(req.method==="POST"&&route(u,"/enquiries","/api/enquiries")){
+      const x=await body(req);
+      if(!x.customer_name||!x.contact||!x.equipment_id||!x.start_at||!x.end_at)throw new Error("customer_name, contact, equipment_id, start_at, end_at required");
+      if(new Date(x.start_at)>=new Date(x.end_at))throw new Error("end must be after start");
+      if(!db.equipment.some(e=>e.id===x.equipment_id))throw new Error("equipment not found");
+      if(!isAvailable(x.equipment_id,x.start_at,x.end_at,db.bookings))throw new Error("equipment unavailable");
+      const row={id:id("enq"),customer_name:String(x.customer_name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),venue:String(x.venue||"").trim(),event_type:String(x.event_type||"").trim(),notes:String(x.notes||"").trim(),equipment_id:x.equipment_id,start_at:x.start_at,end_at:x.end_at,status:"NEW",created_at:new Date().toISOString()};
+      db.enquiries.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/hire/request"){
+      const x=await body(req);
+      if(!x.customer_name||!x.contact||!x.equipment_id||!x.start_at||!x.end_at)throw new Error("customer_name, contact, equipment_id, start_at, end_at required");
+      const eq=db.equipment.find(v=>v.id===x.equipment_id);
+      if(!eq)throw new Error("equipment not found");
+      if(!isAvailable(eq.id,x.start_at,x.end_at,db.bookings))throw new Error("equipment unavailable");
+      const enquiry={id:id("enq"),customer_name:String(x.customer_name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),venue:String(x.venue||"").trim(),event_type:String(x.event_type||"").trim(),notes:String(x.notes||"").trim(),equipment_id:eq.id,start_at:x.start_at,end_at:x.end_at,status:"NEW",created_at:new Date().toISOString()};
+      const quote={id:id("quo"),...createQuote(enquiry,eq)};
+      db.enquiries.push(enquiry);db.quotes.push(quote);save(db);
+      return json(res,201,{enquiry,quote});
+    }
+
+    if(req.method==="POST"&&route(u,"/quotes","/api/quotes")){
+      const x=await body(req),enq=db.enquiries.find(v=>v.id===x.enquiry_id);
+      if(!enq)throw new Error("enquiry not found");
+      const eq=db.equipment.find(v=>v.id===enq.equipment_id);
+      if(!eq)throw new Error("equipment not found");
+      const row={id:id("quo"),...createQuote(enq,eq)};db.quotes.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="POST"&&route(u,"/payments/confirm","/api/payments/confirm")){
+      const x=await body(req);assertPence(x.amount_pence);
+      if(!x.reference)throw new Error("real payment reference required");
+      if(!db.quotes.some(q=>q.id===x.quote_id))throw new Error("quote not found");
+      const row={id:id("pay"),quote_id:x.quote_id,amount_pence:x.amount_pence,reference:String(x.reference).trim(),status:"RECEIVED",received_at:new Date().toISOString()};
+      db.payments.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="POST"&&route(u,"/bookings","/api/bookings")){
+      const x=await body(req),quote=db.quotes.find(v=>v.id===x.quote_id),payment=db.payments.find(v=>v.quote_id===x.quote_id&&v.status==="RECEIVED");
+      if(!quote||!payment)throw new Error("quote and received deposit required");
+      const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);
+      const row={id:id("book"),...confirmBooking({quote,payment,start_at:enq.start_at,end_at:enq.end_at,bookings:db.bookings}),enquiry_id:enq.id,quote_id:quote.id,confirmed_at:new Date().toISOString()};
+      db.bookings.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="GET"&&u.pathname==="/api/admin/summary"){
+      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length});
+    }
+
+    if(req.method==="GET"&&serveStatic(u,res)) return;
+    return json(res,404,{error:"not found"});
+  }catch(e){
+    const status=/not found/.test(e.message)?404:/unavailable/.test(e.message)?409:/Farnell API returned/.test(e.message)?502:400;
+    return json(res,status,{error:e.message});
+  }
+});
+if(process.env.NODE_ENV!=="test")server.listen(Number(process.env.PORT||3000),()=>console.log(`MCQ Hire listening on ${process.env.PORT||3000}`));
 export default server;
