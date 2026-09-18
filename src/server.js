@@ -39,6 +39,31 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
     if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers());
 
+    if(req.method==="POST"&&u.pathname==="/api/leads"){
+      const x=await body(req);
+      if(!x.name||!x.contact)throw new Error("name and contact required");
+      const row={
+        id:id("lead"),
+        name:String(x.name).trim(),
+        contact:String(x.contact).trim(),
+        phone:String(x.phone||"").trim(),
+        interest:String(x.interest||"general").trim(),
+        product:String(x.product||"").trim(),
+        budget:String(x.budget||"").trim(),
+        message:String(x.message||"").trim(),
+        source:String(x.source||"website").trim(),
+        status:"NEW",
+        created_at:new Date().toISOString()
+      };
+      db.leads.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/events"){
+      const x=await body(req);
+      const row={id:id("evt"),type:String(x.type||"interaction").slice(0,80),label:String(x.label||"").slice(0,200),href:String(x.href||"").slice(0,500),created_at:new Date().toISOString()};
+      db.events.push(row);save(db);return json(res,201,{ok:true});
+    }
+
     if(req.method==="GET"&&u.pathname==="/api/suppliers/farnell/search"){
       const result=await searchFarnell(u.searchParams.get("q")||"");
       return json(res,result.configured?200:503,result);
@@ -112,7 +137,7 @@ const server=http.createServer(async(req,res)=>{
 
     if(req.method==="GET"&&u.pathname==="/api/admin/summary"){
       requireAdmin(req);
-      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length});
+      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length,leads:db.leads.length,events:db.events.length});
     }
 
     if(req.method==="GET"&&serveStatic(u,res)) return;
@@ -122,5 +147,5 @@ const server=http.createServer(async(req,res)=>{
     return json(res,status,{error:e.message});
   }
 });
-if(process.env.NODE_ENV!=="test")server.listen(Number(process.env.PORT||3000),()=>console.log(`MCQ Hire listening on ${process.env.PORT||3000}`));
+if(process.env.NODE_ENV!=="test")server.listen(Number(process.env.PORT||3000),()=>console.log(`MCQ Audio listening on ${process.env.PORT||3000}`));
 export default server;

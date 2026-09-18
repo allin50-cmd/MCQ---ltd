@@ -14,6 +14,21 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   t.after(()=>new Promise(resolve=>server.close(resolve)));
   const base=`http://127.0.0.1:${server.address().port}`;
 
+  const home=await fetch(base+"/");
+  assert.equal(home.status,200);
+  assert.match(await home.text(),/MCQ Audio Journal/);
+
+  const lead=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    name:"HiFi Customer",
+    contact:"hifi@example.com",
+    interest:"system",
+    budget:"£3,000–£7,500",
+    message:"Vinyl system"
+  })});
+  assert.equal(lead.status,201);
+  const leadPayload=await lead.json();
+  assert.equal(leadPayload.status,"NEW");
+
   const denied=await fetch(base+"/api/equipment",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:"Test PA",price_pence:10000})});
   assert.equal(denied.status,401);
 
