@@ -42,11 +42,34 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   assert.match(musicHtml,/site\.webmanifest/);
   assert.match(musicHtml,/Skip to content/);
 
-  for (const route of ["/","/microphones","/headphones","/wireless","/dj","/music","/urban","/chart"]) {
+  for (const route of ["/","/microphones","/headphones","/wireless","/dj","/music","/urban","/chart","/shop","/magazine","/live","/hire","/trade","/about","/publish","/swap","/vinyl"]) {
     const page=await fetch(base+route);
     const html=await page.text();
     assert.doesNotMatch(html,/href=["']https?:\/\//i);
     assert.doesNotMatch(html,/target=["']_blank["']/i);
+  }
+
+  const magazinePages=[
+    ["/shop","Sound for"],
+    ["/magazine","Sound has"],
+    ["/live","The room"],
+    ["/hire","Sound that"],
+    ["/trade","When audio is"],
+    ["/about","More than"],
+    ["/chart","The chart"],
+    ["/publish","Made tonight"],
+    ["/swap","Good records"],
+    ["/vinyl","The archive"]
+  ];
+  for (const [route,marker] of magazinePages) {
+    const page=await fetch(base+route);
+    assert.equal(page.status,200);
+    assert.equal(page.headers.get("x-content-type-options"),"nosniff");
+    const html=await page.text();
+    assert.match(html,/MCQ/);
+    assert.match(html,new RegExp(marker,"i"));
+    assert.match(html,/magazine\.css/);
+    assert.match(html,/Skip to content/);
   }
 
   const suppliers=await fetch(base+"/api/suppliers");
