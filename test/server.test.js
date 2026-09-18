@@ -18,6 +18,14 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   assert.equal(home.status,200);
   assert.match(await home.text(),/MCQ Audio — Hi‑Fi Magazine/);
 
+  for (const path of ["/microphones.html","/headphones.html","/wireless.html","/dj.html"]) {
+    const page=await fetch(base+path);
+    assert.equal(page.status,200);
+    const html=await page.text();
+    assert.match(html,/MCQ Audio/);
+    assert.match(html,/CHEAP → PREMIUM/);
+  }
+
   const lead=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
     name:"HiFi Customer",
     contact:"hifi@example.com",
