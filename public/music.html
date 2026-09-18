@@ -16,7 +16,7 @@
 <header class="top">
   <a class="logo" href="/"><b>MCQ</b><span>URBAN UNDERGROUND</span></a>
   <nav>
-    <a href="#chart">Chart</a>
+    <a href="#live">Live</a><a href="#chart">Chart</a>
     <a href="#publish">Publish</a>
     <a href="#catalogue">Catalogue</a>
     <a href="#whitelabels">White Labels</a>
@@ -46,6 +46,47 @@
   <div><b>PRE-PRE</b><span>music before release</span></div>
   <div><b>CATALOGUE</b><span>vinyl + digital + white labels</span></div>
   <div><b>SWAP SHOP</b><span>records + CDs</span></div>
+</section>
+
+
+<section class="live-show" id="live">
+  <div class="live-copy">
+    <p class="eyebrow">MONTHLY LIVE STREAM</p>
+    <h2>Urban Underground Live.</h2>
+    <p class="live-kicker">Hosted by <strong>DJ Dexter</strong> + <strong>Mickey Simms</strong></p>
+    <p>Launch guests: <strong>MC Creed</strong> + <strong>Romeo (So Solid Crew)</strong>. Established names, unsigned music and the Urban Chart in one monthly live programme.</p>
+    <div id="live-status" class="live-status">Loading next show…</div>
+    <div class="live-actions">
+      <button class="btn light" id="live-remind-open" type="button">Remind me</button>
+      <a class="btn ghost" href="#chart">Hear chart tracks</a>
+    </div>
+  </div>
+  <div class="live-player-wrap">
+    <div id="live-player" class="live-player">
+      <div class="live-placeholder">
+        <span class="live-dot"></span>
+        <strong>Stream player</strong>
+        <p>The live video appears here when the monthly show is configured.</p>
+      </div>
+    </div>
+    <div class="lineup">
+      <div><span>Hosts</span><strong>DJ Dexter · Mickey Simms</strong></div>
+      <div><span>Launch guests</span><strong>MC Creed · Romeo</strong></div>
+    </div>
+  </div>
+</section>
+
+<section class="section live-format">
+  <div class="section-head">
+    <div><p class="eyebrow dark">THE FORMAT</p><h2>Legacy meets what’s next.</h2></div>
+    <p class="note">Every month the show combines recognised urban names with unsigned and pre-pre-release music surfaced from the community chart.</p>
+  </div>
+  <div class="release-model live-grid">
+    <article><span>01</span><h3>Host Sets</h3><p>DJ Dexter and Mickey Simms open the session and set the musical direction.</p></article>
+    <article><span>02</span><h3>Guest Session</h3><p>Conversation, performance and scene history with established urban guests.</p></article>
+    <article><span>03</span><h3>Chart Picks</h3><p>Unsigned and pre-pre-release tracks submitted by creators and surfaced from the Urban Chart.</p></article>
+    <article><span>04</span><h3>Archive / White Label</h3><p>MCQ catalogue cuts, unreleased material, white labels and records from the archive.</p></article>
+  </div>
 </section>
 
 <section class="section manifesto">
@@ -225,9 +266,9 @@
 
 <nav class="mobile-dock">
   <a href="/"><span>⌂</span>MCQ</a>
+  <a href="#live"><span>●</span>Live</a>
   <a href="#chart"><span>↗</span>Chart</a>
   <a href="#publish"><span>＋</span>Publish</a>
-  <a href="#catalogue"><span>▤</span>Dig</a>
   <a href="#swap"><span>↔</span>Swap</a>
 </nav>
 
@@ -263,5 +304,16 @@
 </dialog>
 
 <script type="module" src="/music.js"></script>
+<dialog id="live-remind-dialog">
+  <button class="dialog-close" type="button" aria-label="Close">×</button>
+  <form id="live-remind-form">
+    <p class="eyebrow dark">URBAN UNDERGROUND LIVE</p>
+    <h2>Remind me before the next stream.</h2>
+    <input type="hidden" name="event_id" value="urban-live-launch">
+    <input name="contact" type="email" placeholder="Email" required>
+    <button class="btn dark" type="submit">Set reminder</button>
+    <p id="live-remind-status" aria-live="polite"></p>
+  </form>
+</dialog>
 </body>
 </html>

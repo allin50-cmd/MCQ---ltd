@@ -121,6 +121,36 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   const urbanReport=await fetch(base+"/api/urban/report",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({submission_id:urban2.id,reason:"Possible copyright issue"})});
   assert.equal(urbanReport.status,201);
 
+  const liveShow=await fetch(base+"/api/urban/live");
+  assert.equal(liveShow.status,200);
+  const liveBody=await liveShow.json();
+  assert.equal(liveBody.frequency,"Monthly");
+  assert.deepEqual(liveBody.hosts,["DJ Dexter","Mickey Simms"]);
+  assert.deepEqual(liveBody.guests,["MC Creed","Romeo (So Solid Crew)"]);
+
+  const liveReminder=await fetch(base+"/api/urban/live/remind",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event_id:liveBody.id,contact:"viewer@example.com"})});
+  assert.equal(liveReminder.status,201);
+  const liveReminderAgain=await fetch(base+"/api/urban/live/remind",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event_id:liveBody.id,contact:"viewer@example.com"})});
+  assert.equal(liveReminderAgain.status,200);
+  assert.equal((await liveReminderAgain.json()).already_registered,true);
+
+  const showTrack=await fetch(base+"/api/urban/live/submit-track",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event_id:liveBody.id,submission_id:urban1.id,contact:"creator1@example.com"})});
+  assert.equal(showTrack.status,201);
+  const wrongCreator=await fetch(base+"/api/urban/live/submit-track",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event_id:liveBody.id,submission_id:urban2.id,contact:"notcreator@example.com"})});
+  assert.equal(wrongCreator.status,400);
+
+  const configuredLive=await fetch(base+"/api/urban/live/configure",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer test-admin"},body:JSON.stringify({
+    id:"urban-live-launch",
+    title:"Urban Underground Live — Launch Edition",
+    starts_at:"2026-10-31T20:00:00+00:00",
+    stream_embed_url:"https://video.example.com/embed/live",
+    hosts:["DJ Dexter","Mickey Simms"],
+    guests:["MC Creed","Romeo (So Solid Crew)"]
+  })});
+  assert.equal(configuredLive.status,200);
+  const configuredBody=await configuredLive.json();
+  assert.equal(configuredBody.stream_embed_url,"https://video.example.com/embed/live");
+
   const musicImport=await fetch(base+"/api/music/catalog/import",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer test-admin"},body:JSON.stringify({items:[{
     id:"vu-test-001",
     artist:"Test Artist",
