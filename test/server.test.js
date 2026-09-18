@@ -30,17 +30,19 @@ test("website backend protects admin writes and accepts public hire enquiries", 
     assert.match(html,/Skip to content/);
   }
 
-  const musicPage=await fetch(base+"/music");
+  const musicPage=await fetch(base+"/urban");
   assert.equal(musicPage.status,200);
   assert.equal(musicPage.headers.get("x-content-type-options"),"nosniff");
+  assert.match(musicPage.headers.get("content-security-policy")||"",/media-src 'self' https: blob:/);
   const musicHtml=await musicPage.text();
-  assert.match(musicHtml,/VINYL UNDERGROUND/);
+  assert.match(musicHtml,/URBAN UNDERGROUND/);
+  assert.match(musicHtml,/THE URBAN CHART|The Urban Chart/);
+  assert.match(musicHtml,/SELF PUBLISH/);
   assert.match(musicHtml,/URBAN SWAP SHOP/);
-  assert.match(musicHtml,/MP3 \/ DIGITAL/);
   assert.match(musicHtml,/site\.webmanifest/);
   assert.match(musicHtml,/Skip to content/);
 
-  for (const route of ["/","/microphones","/headphones","/wireless","/dj","/music"]) {
+  for (const route of ["/","/microphones","/headphones","/wireless","/dj","/music","/urban","/chart"]) {
     const page=await fetch(base+route);
     const html=await page.text();
     assert.doesNotMatch(html,/href=["']https?:\/\//i);
@@ -59,6 +61,65 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   const catalogBody=await catalog.json();
   assert.ok(catalogBody.results.length>0);
   assert.equal("product_url" in catalogBody.results[0],false);
+
+  const urbanSubmit1=await fetch(base+"/api/urban/submissions",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    artist_name:"Bedroom Producer",
+    title:"Tomorrow's Dub",
+    genre:"Garage",
+    release_stage:"pre-pre-release",
+    creator_type:"Bedroom producer",
+    creator_name:"Creator One",
+    contact:"creator1@example.com",
+    preview_url:"https://media.example.com/tomorrows-dub.mp3",
+    artwork_url:"https://media.example.com/tomorrows-dub.jpg",
+    rights_declared:true
+  })});
+  assert.equal(urbanSubmit1.status,201);
+  const urban1=await urbanSubmit1.json();
+  assert.equal(urban1.contact,undefined);
+
+  const urbanSubmit2=await fetch(base+"/api/urban/submissions",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    artist_name:"Unsigned Artist",
+    title:"No Label Needed",
+    genre:"Hip-Hop",
+    release_stage:"unsigned",
+    creator_type:"Artist / vocalist",
+    creator_name:"Creator Two",
+    contact:"creator2@example.com",
+    preview_url:"https://media.example.com/no-label-needed.mp3",
+    rights_declared:true
+  })});
+  assert.equal(urbanSubmit2.status,201);
+  const urban2=await urbanSubmit2.json();
+
+  const vote1=await fetch(base+"/api/urban/vote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({submission_id:urban1.id,contact:"listener@example.com"})});
+  assert.equal(vote1.status,201);
+  const vote2=await fetch(base+"/api/urban/vote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({submission_id:urban1.id,contact:"listener2@example.com"})});
+  assert.equal(vote2.status,201);
+  const duplicateVote=await fetch(base+"/api/urban/vote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({submission_id:urban1.id,contact:"listener@example.com"})});
+  assert.equal(duplicateVote.status,400);
+
+  const chart=await fetch(base+"/api/urban/chart");
+  assert.equal(chart.status,200);
+  const chartBody=await chart.json();
+  assert.equal(chartBody.items[0].id,urban1.id);
+  assert.equal(chartBody.items[0].rank,1);
+  assert.equal(chartBody.items[0].votes,2);
+  assert.equal("contact" in chartBody.items[0],false);
+  assert.match(chartBody.ranking,/unique user support votes/i);
+
+  const genreChart=await fetch(base+"/api/urban/chart?genre=Hip-Hop");
+  const genreBody=await genreChart.json();
+  assert.equal(genreBody.count,1);
+  assert.equal(genreBody.items[0].id,urban2.id);
+
+  const unsafeSubmit=await fetch(base+"/api/urban/submissions",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    artist_name:"Bad URL",title:"Unsafe",genre:"Other",creator_name:"Bad",contact:"bad@example.com",preview_url:"javascript:alert(1)",rights_declared:true
+  })});
+  assert.equal(unsafeSubmit.status,400);
+
+  const urbanReport=await fetch(base+"/api/urban/report",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({submission_id:urban2.id,reason:"Possible copyright issue"})});
+  assert.equal(urbanReport.status,201);
 
   const musicImport=await fetch(base+"/api/music/catalog/import",{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer test-admin"},body:JSON.stringify({items:[{
     id:"vu-test-001",

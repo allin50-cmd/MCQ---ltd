@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#110e0b">
 <meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="description" content="Vinyl Underground by MCQ — UK Garage vinyl, MP3 catalogue, exclusive and pre-release white labels, plus Urban Swap Shop for buying and selling records and CDs.">
-<title>Vinyl Underground — UK Garage, White Labels & Urban Swap Shop | MCQ</title>
+<meta name="description" content="Urban Underground by MCQ — unsigned music, pre-pre releases, independent drops, vinyl, MP3 and white labels, plus Urban Swap Shop for buying and selling records and CDs.">
+<title>Urban Underground — UK Garage, White Labels & Urban Swap Shop | MCQ</title>
 <link rel="manifest" href="/site.webmanifest">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/music.css">
@@ -14,11 +14,12 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="top">
-  <a class="logo" href="/"><b>MCQ</b><span>VINYL UNDERGROUND</span></a>
+  <a class="logo" href="/"><b>MCQ</b><span>URBAN UNDERGROUND</span></a>
   <nav>
+    <a href="#chart">Chart</a>
+    <a href="#publish">Publish</a>
     <a href="#catalogue">Catalogue</a>
     <a href="#whitelabels">White Labels</a>
-    <a href="#downloads">MP3</a>
     <a href="#swap">Swap Shop</a>
   </nav>
   <a class="back" href="/">MCQ Audio</a>
@@ -29,37 +30,81 @@
   <img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=1800" alt="Record shop with vinyl records on display">
   <div class="hero-shade"></div>
   <div class="hero-copy">
-    <p class="eyebrow">MCQ PRESENTS / VINYL UNDERGROUND</p>
-    <h1>UK Garage.<br>On wax.<br>On file.</h1>
-    <p>Original catalogue. Reissues. Exclusive white labels. Pre-release drops. MP3 downloads. Used records and CDs bought and sold through Urban Swap Shop.</p>
+    <p class="eyebrow">MCQ PRESENTS / URBAN UNDERGROUND</p>
+    <h1>Before the hype.<br>Before the label.<br>Before release.</h1>
+    <p>Self-publish new music before release. Bedroom DJs, producers, singers, rappers and independent artists can enter the user-powered Urban Chart — alongside MCQ’s vinyl, digital, white-label and Swap Shop catalogue.</p>
     <div class="hero-actions">
-      <a class="btn light" href="#catalogue">Dig the catalogue</a>
-      <a class="btn ghost" href="#swap">Sell records to MCQ</a>
+      <a class="btn light" href="#chart">Hear the Urban Chart</a>
+      <a class="btn ghost" href="#publish">Publish your track</a>
     </div>
   </div>
 </section>
 
 <section class="culture-strip">
-  <div><b>VINYL</b><span>UK Garage catalogue</span></div>
-  <div><b>MP3</b><span>digital catalogue</span></div>
-  <div><b>WHITE LABELS</b><span>exclusive + pre-release</span></div>
+  <div><b>SELF PUBLISH</b><span>bedroom to first audience</span></div>
+  <div><b>URBAN CHART</b><span>ranked by user support</span></div>
+  <div><b>PRE-PRE</b><span>music before release</span></div>
+  <div><b>CATALOGUE</b><span>vinyl + digital + white labels</span></div>
   <div><b>SWAP SHOP</b><span>records + CDs</span></div>
 </section>
 
 <section class="section manifesto">
   <div>
     <p class="eyebrow dark">WHY THIS EXISTS</p>
-    <h2>Not nostalgia.<br>Living underground culture.</h2>
+    <h2>Not one genre.<br>The next sound.</h2>
   </div>
   <div class="manifesto-copy">
-    <p>Vinyl Underground should be the place where the MCQ shop’s history, DJ knowledge and UK Garage catalogue become a commercial advantage — not a box of stock hidden behind the audio business.</p>
-    <p>Collectors can dig. DJs can find cuts. New listeners can discover the catalogue. Sellers can bring records back into circulation. Exclusive pressings create reasons to return.</p>
+    <p>Urban Underground is the open front door for bedroom DJs, producers, singers, rappers, beat makers and independent labels. Garage remains part of MCQ’s heritage, but the platform follows what people are actually making now.</p>
+    <p>The Urban Chart is not editorially selected and has no paid ranking. Creators self-publish; listeners decide what rises through unique support votes.</p>
   </div>
+</section>
+
+
+<section class="section urban-chart" id="chart">
+  <div class="section-head">
+    <div><p class="eyebrow dark">PURE USER INPUT</p><h2>The Urban Chart.</h2></div>
+    <p class="note">Unsigned. Independent. Pre-pre-release. No label gatekeeper, no paid chart position, no MCQ editorial ranking. One unique support vote per listener email per track.</p>
+  </div>
+  <div class="chart-toolbar">
+    <select id="chart-genre">
+      <option value="">All Urban</option>
+      <option>Garage</option><option>House</option><option>Grime</option><option>Hip-Hop</option><option>R&B</option>
+      <option>Jungle / D&B</option><option>Afro</option><option>Amapiano</option><option>Bass</option><option>Dance</option>
+      <option>Reggae / Dancehall</option><option>Soul</option><option>Electronic</option><option>Other</option>
+    </select>
+    <button class="btn dark" id="refresh-chart" type="button">Refresh chart</button>
+  </div>
+  <div id="urban-chart-list" class="urban-chart-list" aria-live="polite"></div>
+</section>
+
+<section class="publish-zone" id="publish">
+  <div class="publish-intro">
+    <p class="eyebrow">SELF PUBLISH</p>
+    <h2>Made it tonight?<br>Put it in front of people tonight.</h2>
+    <p>Upload your identity, artwork and a playable preview URL. Choose the stage honestly: <strong>Pre‑Pre Release</strong>, <strong>Unsigned</strong> or <strong>Independent</strong>. Your submission goes into the public Urban Chart immediately once you confirm you control the rights.</p>
+    <p class="microcopy">MCQ does not take ownership of your music. Publishing here is a showcase/chart submission, not a record deal.</p>
+  </div>
+  <form id="publish-form" class="publish-form">
+    <div class="two"><input name="artist_name" placeholder="Artist / producer name" required><input name="title" placeholder="Track title" required></div>
+    <div class="two">
+      <select name="genre" required><option value="">Genre</option><option>Garage</option><option>House</option><option>Grime</option><option>Hip-Hop</option><option>R&B</option><option>Jungle / D&B</option><option>Afro</option><option>Amapiano</option><option>Bass</option><option>Dance</option><option>Reggae / Dancehall</option><option>Soul</option><option>Electronic</option><option>Other</option></select>
+      <select name="release_stage" required><option value="pre-pre-release">Pre‑Pre Release</option><option value="unsigned">Unsigned</option><option value="independent">Independent</option></select>
+    </div>
+    <div class="two"><select name="creator_type"><option>Bedroom producer</option><option>DJ</option><option>Artist / vocalist</option><option>Rapper / MC</option><option>Beat maker</option><option>Band / group</option><option>Independent label</option><option>Other</option></select><input name="location" placeholder="Town / city (optional)"></div>
+    <input name="artwork_url" type="url" placeholder="Artwork image URL (optional)">
+    <input name="preview_url" type="url" placeholder="Playable audio preview URL (required)" required>
+    <input name="socials" placeholder="Social handle / link (optional)">
+    <textarea name="description" rows="4" placeholder="Tell listeners what this is — 2-step, vocal house, grime instrumental, amapiano experiment…"></textarea>
+    <div class="two"><input name="creator_name" placeholder="Your real name / contact name" required><input name="contact" type="email" placeholder="Email (kept private)" required></div>
+    <label class="rights-check"><input type="checkbox" name="rights_declared" required> I confirm I own/control the rights needed to publish this preview and I accept responsibility for what I submit.</label>
+    <button class="btn light" type="submit">Publish to Urban Chart</button>
+    <p id="publish-status" aria-live="polite"></p>
+  </form>
 </section>
 
 <section class="section catalogue" id="catalogue">
   <div class="section-head">
-    <div><p class="eyebrow dark">THE CATALOGUE</p><h2>Dig by sound, format or release.</h2></div>
+    <div><p class="eyebrow dark">MCQ ARCHIVE / VINYL UNDERGROUND</p><h2>Dig the catalogue.</h2></div>
     <p class="note">Real MCQ catalogue data only. No fabricated releases or fake stock.</p>
   </div>
   <div class="filters">
@@ -121,7 +166,7 @@
     <p>MCQ buys and sells vinyl and CDs. Customers can submit collections, single rarities, DJ clear-outs and job lots for appraisal.</p>
     <ul>
       <li>Vinyl, 12", LP, 7" and selected white labels</li>
-      <li>UK Garage, house, dance, soul, reggae, hip-hop and more</li>
+      <li>Urban music, garage, house, dance, soul, reggae, hip-hop and more</li>
       <li>CD singles, albums, promos and collections</li>
       <li>Condition and demand determine offers</li>
     </ul>
@@ -173,16 +218,16 @@
 </main>
 
 <footer>
-  <div class="logo"><b>MCQ</b><span>VINYL UNDERGROUND</span></div>
-  <p>UK Garage • Vinyl • MP3 • White Labels • Urban Swap Shop</p>
+  <div class="logo"><b>MCQ</b><span>URBAN UNDERGROUND</span></div>
+  <p>Self Publish • Urban Chart • Pre‑Pre Release • Vinyl • MP3 • White Labels • Urban Swap Shop</p>
   <a href="/">Back to MCQ Audio</a>
 </footer>
 
 <nav class="mobile-dock">
   <a href="/"><span>⌂</span>MCQ</a>
+  <a href="#chart"><span>↗</span>Chart</a>
+  <a href="#publish"><span>＋</span>Publish</a>
   <a href="#catalogue"><span>▤</span>Dig</a>
-  <a href="#whitelabels"><span>●</span>Drops</a>
-  <a href="#downloads"><span>↓</span>MP3</a>
   <a href="#swap"><span>↔</span>Swap</a>
 </nav>
 
