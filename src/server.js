@@ -11,6 +11,12 @@ const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8
 const json=(res,status,body)=>{res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
 const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>1_000_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
 const route=(u,...paths)=>paths.includes(u.pathname);
+function requireAdmin(req){
+  const expected=(process.env.MCQ_ADMIN_TOKEN||"").trim();
+  if(!expected)throw new Error("admin access is not configured");
+  const auth=req.headers.authorization||"";
+  if(auth!==`Bearer ${expected}`)throw new Error("unauthorized");
+}
 
 function serveStatic(u,res){
   let pathname = u.pathname === "/" ? "/index.html" : u.pathname;
@@ -39,6 +45,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="POST"&&route(u,"/equipment","/api/equipment")){
+      requireAdmin(req);
       const x=await body(req);
       assertPence(x.price_pence);
       if(!x.name)throw new Error("name required");
@@ -85,6 +92,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="POST"&&route(u,"/payments/confirm","/api/payments/confirm")){
+      requireAdmin(req);
       const x=await body(req);assertPence(x.amount_pence);
       if(!x.reference)throw new Error("real payment reference required");
       if(!db.quotes.some(q=>q.id===x.quote_id))throw new Error("quote not found");
@@ -93,6 +101,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="POST"&&route(u,"/bookings","/api/bookings")){
+      requireAdmin(req);
       const x=await body(req),quote=db.quotes.find(v=>v.id===x.quote_id),payment=db.payments.find(v=>v.quote_id===x.quote_id&&v.status==="RECEIVED");
       if(!quote||!payment)throw new Error("quote and received deposit required");
       const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);
@@ -101,13 +110,14 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="GET"&&u.pathname==="/api/admin/summary"){
+      requireAdmin(req);
       return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length});
     }
 
     if(req.method==="GET"&&serveStatic(u,res)) return;
     return json(res,404,{error:"not found"});
   }catch(e){
-    const status=/not found/.test(e.message)?404:/unavailable/.test(e.message)?409:/Farnell API returned/.test(e.message)?502:400;
+    const status=e.message==="unauthorized"?401:e.message==="admin access is not configured"?503:/not found/.test(e.message)?404:/unavailable/.test(e.message)?409:/Farnell API returned/.test(e.message)?502:400;
     return json(res,status,{error:e.message});
   }
 });
