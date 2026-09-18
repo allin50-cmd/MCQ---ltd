@@ -3,223 +3,208 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#05070a">
+<meta name="theme-color" content="#090909">
 <meta name="robots" content="noindex">
-<meta name="description" content="MCQ simplified animated interactive futuristic prototype">
-<title>MCQ Future Experience — Interactive Prototype</title>
+<meta name="description" content="MCQ cinematic interactive prototype">
+<title>MCQ — Cinematic Prototype</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/future.css">
 </head>
 <body>
-<a class="skip" href="#main">Skip to experience</a>
-<div class="ambient" aria-hidden="true"><i></i><i></i></div>
+<a class="skip" href="#main">Skip to content</a>
 
-<header class="future-nav">
-  <a class="f-logo" href="/"><b>MCQ</b><span>FUTURE LAB</span></a>
+<header class="cinema-nav">
+  <a class="mcq-mark" href="/"><b>MCQ</b><span>AUDIO</span></a>
   <nav>
-    <button data-jump="shop">Shop</button>
-    <button data-jump="urban">Urban</button>
-    <button data-jump="live">Live</button>
-    <button data-jump="more">More</button>
+    <button data-scene="shop">Shop</button>
+    <button data-scene="urban">Urban</button>
+    <button data-scene="live">Live</button>
+    <button data-scene="magazine">Magazine</button>
+    <button data-scene="pro">Professional</button>
   </nav>
-  <a class="pill" href="/">Main site</a>
+  <a class="nav-exit" href="/">Main site</a>
 </header>
 
 <main id="main">
-<section class="cinematic" id="hero" aria-label="MCQ immersive hero">
-  <div class="slides" id="slides">
-    <article class="slide is-active">
-      <img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=2000" alt="Urban record shop at night">
-      <div class="film"></div>
-      <div class="slide-copy">
-        <p class="kicker">MCQ / SOUND • MUSIC • CULTURE</p>
-        <h1>Real creativity<br><em>lives here.</em></h1>
-        <p>Audio, underground music, live performance and professional sound — all inside one MCQ experience.</p>
-        <div class="hero-actions">
-          <button class="glow-btn" data-jump="urban">Explore Urban</button>
-          <button class="ghost-btn" data-jump="shop">Shop Audio</button>
-        </div>
-      </div>
-    </article>
-
-    <article class="slide">
-      <img src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Premium headphones">
-      <div class="film"></div>
-      <div class="slide-copy">
-        <p class="kicker">SHOP AUDIO</p>
-        <h1>Simple choices.<br><em>Better sound.</em></h1>
-        <p>Headphones, microphones, wireless systems, DJ equipment and turntables — clearly organised from affordable to premium.</p>
-        <div class="hero-actions"><button class="glow-btn" data-jump="shop">Browse Audio</button></div>
-      </div>
-    </article>
-
-    <article class="slide">
-      <img src="https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=2000" alt="Live performance atmosphere">
-      <div class="film"></div>
-      <div class="slide-copy">
-        <p class="kicker">URBAN UNDERGROUND LIVE</p>
-        <h1>Watch.<br><em>Listen. Discover.</em></h1>
-        <p>A monthly MCQ live stream linking established urban names with unsigned and pre-release music.</p>
-        <div class="hero-actions"><button class="glow-btn" data-jump="live">Open Live</button></div>
-      </div>
-    </article>
+<section class="scene scene-hero" id="home">
+  <div class="scene-media zoom-drift">
+    <img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=2200" alt="Independent urban record shop">
   </div>
-
-  <div class="slide-controls">
-    <button id="prev-slide" aria-label="Previous slide">←</button>
-    <div id="slide-dots" class="dots"></div>
-    <button id="next-slide" aria-label="Next slide">→</button>
-  </div>
-</section>
-
-<section class="big-menu reveal" aria-label="Main MCQ areas">
-  <button class="big-menu-card cyan" data-jump="shop">
-    <span class="big-icon">◉</span>
-    <small>SHOP AUDIO</small>
-    <strong>Find the right gear.</strong>
-    <p>Headphones, mics, speakers, DJ and vinyl.</p>
-    <b>Explore →</b>
-  </button>
-  <button class="big-menu-card yellow" data-jump="urban">
-    <span class="big-icon">▥</span>
-    <small>URBAN UNDERGROUND</small>
-    <strong>Hear what is next.</strong>
-    <p>User-powered chart, self-publish and white labels.</p>
-    <b>Explore →</b>
-  </button>
-  <button class="big-menu-card pink" data-jump="live">
-    <span class="big-icon">▶</span>
-    <small>LIVE</small>
-    <strong>Watch the monthly show.</strong>
-    <p>DJ Dexter, Mickey Simms and guests.</p>
-    <b>Watch →</b>
-  </button>
-  <button class="big-menu-card violet" data-jump="more">
-    <span class="big-icon">＋</span>
-    <small>MCQ PROFESSIONAL</small>
-    <strong>Hire, install and trade.</strong>
-    <p>Professional audio without the complexity.</p>
-    <b>Explore →</b>
-  </button>
-</section>
-
-<section class="simple-section reveal" id="shop">
-  <div class="simple-heading">
-    <p>SHOP AUDIO</p>
-    <h2>Big categories.<br>Easy choices.</h2>
-    <span>Start with what you want to do, then choose your budget.</span>
-  </div>
-
-  <div class="large-category-grid">
-    <a class="large-category-card tilt" href="/headphones">
-      <img src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Headphones">
-      <div><small>LISTEN</small><strong>Headphones</strong><p>Wireless, studio and hi-fi.</p></div>
-    </a>
-    <a class="large-category-card tilt" href="/microphones">
-      <img src="https://shure.widen.net/content/dxlbvgdzn6/webp/faq-whats-the-difference-between-the-sm58-and-the-beta58a_header.webp?color=ffffffff&position=c&quality=80&u=zenegx" alt="Microphone">
-      <div><small>PERFORM</small><strong>Microphones</strong><p>Live, studio and wireless.</p></div>
-    </a>
-    <a class="large-category-card tilt" href="/wireless">
-      <img src="https://unsplash.com/photos/Qia1BBnS3Tk/download?force=true&w=1200" alt="Wireless speakers">
-      <div><small>PLAY</small><strong>Wireless</strong><p>Portable to premium systems.</p></div>
-    </a>
-    <a class="large-category-card tilt" href="/dj">
-      <img src="https://www.pioneerdj.com/product-images/1303/130db239-d874-411b-b2ea-395c83f09255/ddj-flx10_1.png" alt="DJ controller">
-      <div><small>MIX</small><strong>DJ</strong><p>Bedroom to professional.</p></div>
-    </a>
-  </div>
-
-  <div class="smart-search simple-panel">
-    <div>
-      <p class="kicker">MCQ LIVE CATALOGUE</p>
-      <h3>Know what you want?</h3>
-      <span>Search MCQ directly without leaving the site.</span>
+  <div class="scene-shade"></div>
+  <div class="scene-copy hero-copy">
+    <p class="overline">MCQ / SOUND • MUSIC • CULTURE</p>
+    <h1>More than<br>an audio shop.</h1>
+    <p class="standfirst">A place where equipment, music, people and culture meet.</p>
+    <div class="hero-actions">
+      <button class="primary-action" data-scene="urban">Enter the culture</button>
+      <button class="secondary-action" data-scene="shop">Shop audio</button>
     </div>
-    <form id="future-search">
-      <input name="q" placeholder="Sony XM6, SM58, DJ controller…">
-      <button class="glow-btn" type="submit">Search</button>
-    </form>
-    <div id="future-search-results" class="result-rail"></div>
   </div>
+  <div class="scene-index">01 / 06</div>
+  <button class="scroll-next" data-scene="shop" aria-label="Continue to shop">↓</button>
 </section>
 
-<section class="simple-section urban-simple reveal" id="urban">
-  <div class="simple-heading inverse">
-    <p>URBAN UNDERGROUND</p>
-    <h2>The chart before<br>the charts.</h2>
-    <span>Unsigned. Independent. Pre-pre-release. No pay-to-chart.</span>
-  </div>
-
-  <div class="urban-simple-layout">
-    <div id="future-chart" class="future-chart">
-      <div class="loading">Loading real Urban Chart…</div>
+<section class="scene scene-light" id="shop">
+  <div class="shop-stage">
+    <div class="shop-copy reveal-copy">
+      <p class="overline dark">MCQ AUDIO</p>
+      <h2>Choose by<br>what you want to do.</h2>
+      <p class="standfirst dark-copy">No wall of products. Start with the job, then move through entry, enthusiast, professional and flagship.</p>
+      <a class="text-link" href="/shop">Open full shop →</a>
     </div>
-    <aside class="big-side-card">
-      <span class="pulse-orb"></span>
-      <small>SELF PUBLISH</small>
-      <strong>Made tonight.<br>Heard tonight.</strong>
-      <p>Upload your track and enter the user-powered chart.</p>
-      <a class="glow-btn" href="/publish">Publish a track</a>
-    </aside>
-  </div>
 
-  <div class="movie-strip compact-movie">
-    <div class="movie-track" id="movie-track">
-      <article><img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=1000" alt="Urban music culture"><h3>Record culture</h3></article>
-      <article><img src="https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=1000" alt="Music production"><h3>Bedroom to broadcast</h3></article>
-      <article><img src="https://unsplash.com/photos/xGfrml0T-_8/download?force=true&w=1000" alt="Vinyl records"><h3>Archive becomes future</h3></article>
+    <div class="object-gallery" aria-label="Audio categories">
+      <article class="object-card is-active" data-label="Headphones">
+        <img src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Premium headphones">
+        <div class="object-meta"><small>LISTEN</small><h3>Headphones</h3><p>Wireless • Studio • Hi-Fi</p><a href="/headphones">Explore →</a></div>
+      </article>
+      <article class="object-card" data-label="Microphones">
+        <img src="https://shure.widen.net/content/dxlbvgdzn6/webp/faq-whats-the-difference-between-the-sm58-and-the-beta58a_header.webp?color=ffffffff&position=c&quality=80&u=zenegx" alt="Professional microphone">
+        <div class="object-meta"><small>PERFORM</small><h3>Microphones</h3><p>Live • Studio • Wireless</p><a href="/microphones">Explore →</a></div>
+      </article>
+      <article class="object-card" data-label="DJ">
+        <img src="https://www.pioneerdj.com/product-images/1303/130db239-d874-411b-b2ea-395c83f09255/ddj-flx10_1.png" alt="DJ controller">
+        <div class="object-meta"><small>MIX</small><h3>DJ</h3><p>Bedroom • Mobile • Club</p><a href="/dj">Explore →</a></div>
+      </article>
+      <article class="object-card" data-label="Turntables">
+        <img src="https://www.technics.com/content/dam/pim/uk/en/SL/SL-120/SL-1200G/ast-1651355.png.pub.thumb.644.644.png" alt="Technics turntable">
+        <div class="object-meta"><small>PLAY</small><h3>Turntables</h3><p>Vinyl • DJ • Hi-Fi</p><a href="/vinyl">Explore →</a></div>
+      </article>
     </div>
-    <div class="movie-scrub"><input id="movie-scrubber" type="range" min="0" max="100" value="0" aria-label="Scrub visual reel"></div>
+
+    <div class="object-controls">
+      <button id="obj-prev" aria-label="Previous category">←</button>
+      <div id="object-label">Headphones</div>
+      <button id="obj-next" aria-label="Next category">→</button>
+    </div>
   </div>
+  <div class="scene-index dark-index">02 / 06</div>
 </section>
 
-<section class="simple-section live-simple reveal" id="live">
-  <div class="simple-heading inverse">
-    <p>MONTHLY LIVE STREAM</p>
+<section class="scene scene-urban" id="urban">
+  <div class="urban-backdrop">
+    <img src="https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=2200" alt="Music production and urban culture">
+  </div>
+  <div class="urban-art" aria-hidden="true">
+    <span>URBAN</span>
+    <span>UNDERGROUND</span>
+  </div>
+  <div class="scene-shade urban-shade"></div>
+
+  <div class="scene-copy urban-copy reveal-copy">
+    <p class="overline">URBAN UNDERGROUND</p>
+    <h2>The chart<br>before the charts.</h2>
+    <p class="standfirst">Unsigned. Independent. Pre-pre-release. Real listener support. No paid ranking.</p>
+    <div class="hero-actions">
+      <a class="primary-action" href="/publish">Publish your track</a>
+      <a class="secondary-action" href="/chart">Hear the chart</a>
+    </div>
+  </div>
+
+  <div class="floating-chart" id="future-chart">
+    <div class="chart-loading">Loading the live chart…</div>
+  </div>
+
+  <div class="scene-index">03 / 06</div>
+</section>
+
+<section class="scene scene-live" id="live">
+  <div class="live-film">
+    <img src="https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=2200" alt="Live performance and crowd">
+    <div class="live-film-grain"></div>
+  </div>
+  <div class="scene-shade"></div>
+
+  <div class="live-title reveal-copy">
+    <p class="overline">MONTHLY BROADCAST</p>
     <h2>Urban Underground<br>Live.</h2>
-    <span>Established names meet unsigned music from the chart.</span>
   </div>
 
-  <div class="live-simple-layout">
-    <div class="live-screen">
-      <div id="future-live-player" class="future-live-player">
-        <div class="broadcast-card">
-          <span class="on-air">● LIVE</span>
-          <h3>DJ Dexter + Mickey Simms</h3>
-          <p>Launch guests: MC Creed + Romeo</p>
-          <button id="fake-play" class="play-orb" aria-label="Play live experience">▶</button>
-        </div>
-      </div>
+  <div class="live-info">
+    <div class="live-lineup">
+      <small>HOSTS</small>
+      <strong>DJ Dexter<br>Mickey Simms</strong>
     </div>
-    <aside class="big-side-card live-card">
+    <div class="live-lineup">
+      <small>LAUNCH GUESTS</small>
+      <strong>MC Creed<br>Romeo</strong>
+    </div>
+    <div class="live-status" id="live-meta">
       <small>NEXT SHOW</small>
-      <div id="live-meta"><strong>Monthly show</strong><p>Loading schedule…</p></div>
-      <a class="glow-btn" href="/urban#live">Open live page</a>
-    </aside>
+      <strong>Loading…</strong>
+    </div>
   </div>
+
+  <div class="live-action">
+    <a class="primary-action" href="/live">Open the live experience</a>
+  </div>
+
+  <div class="scene-index">04 / 06</div>
 </section>
 
-<section class="simple-section reveal" id="more">
-  <div class="simple-heading">
-    <p>MORE FROM MCQ</p>
-    <h2>Professional when<br>you need it.</h2>
-    <span>The cultural side stays expressive. The business side stays clear.</span>
+<section class="scene scene-magazine" id="magazine">
+  <div class="magazine-grid">
+    <article class="mag-main">
+      <img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=1400" alt="Urban night culture">
+      <div class="mag-overlay">
+        <small>FEATURE</small>
+        <h3>Inside the new underground.</h3>
+        <p>How independent music, street culture and technology are building new scenes.</p>
+      </div>
+    </article>
+    <article class="mag-side">
+      <img src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Headphones">
+      <div><small>TECH</small><h3>Wireless finally got interesting.</h3></div>
+    </article>
+    <article class="mag-side">
+      <img src="https://www.technics.com/content/dam/pim/uk/en/SL/SL-120/SL-1200G/ast-1651355.png.pub.thumb.644.644.png" alt="Turntable">
+      <div><small>VINYL</small><h3>The turntable is still a machine.</h3></div>
+    </article>
   </div>
 
-  <div class="three-big-links">
-    <a href="/hire"><small>HIRE & INSTALL</small><strong>Sound that has to work.</strong><p>PA, venues, schools, bars, events and permanent systems.</p><b>Open →</b></a>
-    <a href="/trade"><small>TRADE</small><strong>Source the difficult stuff.</strong><p>Legacy audio, unusual connectors, repeat professional supply.</p><b>Open →</b></a>
-    <a href="/magazine"><small>MAGAZINE</small><strong>Stories around sound.</strong><p>Reviews, culture, vinyl, people and practical audio knowledge.</p><b>Read →</b></a>
+  <div class="magazine-copy reveal-copy">
+    <p class="overline dark">MCQ MAGAZINE</p>
+    <h2>Stories around<br>the sound.</h2>
+    <p class="standfirst dark-copy">Reviews, buying guides, people, places, vinyl and the culture around the equipment.</p>
+    <a class="text-link" href="/magazine">Read the magazine →</a>
   </div>
+
+  <div class="scene-index dark-index">05 / 06</div>
+</section>
+
+<section class="scene scene-pro" id="pro">
+  <div class="pro-columns">
+    <article class="pro-panel">
+      <img src="https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=1400" alt="Professional audio system">
+      <div class="pro-copy">
+        <p class="overline">MCQ PROFESSIONAL</p>
+        <h2>Hire & install.</h2>
+        <p>PA hire, venues, schools, bars, churches, corporate events and permanent sound systems.</p>
+        <a class="primary-action" href="/hire">Get a quote</a>
+      </div>
+    </article>
+
+    <article class="pro-panel">
+      <img src="https://unsplash.com/photos/QtgGYlug6Cw/download?force=true&w=1400" alt="Professional audio equipment">
+      <div class="pro-copy">
+        <p class="overline">MCQ TRADE</p>
+        <h2>Source the difficult stuff.</h2>
+        <p>Legacy audio, unusual connectors, replacement parts and repeat professional supply.</p>
+        <a class="secondary-action" href="/trade">Open trade</a>
+      </div>
+    </article>
+  </div>
+
+  <footer class="cinema-footer">
+    <a class="mcq-mark" href="/"><b>MCQ</b><span>AUDIO</span></a>
+    <p>REAL CREATIVITY LIVES HERE</p>
+    <a href="/">Back to main site</a>
+  </footer>
+  <div class="scene-index">06 / 06</div>
 </section>
 </main>
 
-<footer class="future-footer">
-  <a class="f-logo" href="/"><b>MCQ</b><span>AUDIO</span></a>
-  <p>REAL CREATIVITY LIVES HERE</p>
-  <a class="pill" href="/">Main site</a>
-</footer>
-
+<div class="scene-progress" aria-hidden="true"><span id="scene-progress-bar"></span></div>
 <script type="module" src="/future.js"></script>
 </body>
 </html>
