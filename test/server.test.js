@@ -78,7 +78,7 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   assert.match(futureHtml,/MCQ — Cinematic Prototype/);
   assert.match(futureHtml,/future\.css/);
   assert.match(futureHtml,/future\.js/);
-  assert.match(futureHtml,/URBAN UNDERGROUND LIVE|Urban Underground Live/);
+  assert.match(futureHtml,/MONTHLY BROADCAST/);
   assert.match(futureHtml,/More than/);
   assert.match(futureHtml,/The chart/);
   assert.match(futureHtml,/Hire & install/);
