@@ -36,7 +36,20 @@ const prettyRoutes=new Map([
   ["/swap-shop","/music.html"],
   ["/urban","/music.html"],
   ["/urban-underground","/music.html"],
-  ["/chart","/music.html"]
+  ["/chart","/chart.html"],
+  ["/shop","/shop.html"],
+  ["/magazine","/magazine.html"],
+  ["/hire","/hire.html"],
+  ["/hire-install","/hire.html"],
+  ["/trade","/trade.html"],
+  ["/about","/about.html"],
+  ["/contact","/about.html"],
+  ["/live","/live.html"],
+  ["/publish","/publish.html"],
+  ["/self-publish","/publish.html"],
+  ["/swap","/swap.html"],
+  ["/vinyl","/vinyl.html"],
+  ["/white-labels","/vinyl.html"]
 ]);
 
 function serveStatic(u,res){
