@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const file=process.env.MCQ_DATA_FILE||path.join(process.cwd(),"data","mcq.json");
-const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[]};
+const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[]};
 
 export function load(){
   try{
@@ -18,7 +18,10 @@ export function load(){
       music_catalog:Array.isArray(parsed.music_catalog)?parsed.music_catalog:[],
       music_orders:Array.isArray(parsed.music_orders)?parsed.music_orders:[],
       swap_offers:Array.isArray(parsed.swap_offers)?parsed.swap_offers:[],
-      drop_signups:Array.isArray(parsed.drop_signups)?parsed.drop_signups:[]
+      drop_signups:Array.isArray(parsed.drop_signups)?parsed.drop_signups:[],
+      urban_submissions:Array.isArray(parsed.urban_submissions)?parsed.urban_submissions:[],
+      urban_votes:Array.isArray(parsed.urban_votes)?parsed.urban_votes:[],
+      urban_reports:Array.isArray(parsed.urban_reports)?parsed.urban_reports:[]
     };
   }catch(e){
     if(e.code==="ENOENT")return structuredClone(empty);
