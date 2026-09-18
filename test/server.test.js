@@ -30,6 +30,26 @@ test("website backend protects admin writes and accepts public hire enquiries", 
     assert.match(html,/Skip to content/);
   }
 
+  for (const route of ["/","/microphones","/headphones","/wireless","/dj"]) {
+    const page=await fetch(base+route);
+    const html=await page.text();
+    assert.doesNotMatch(html,/href=["']https?:\/\//i);
+    assert.doesNotMatch(html,/target=["']_blank["']/i);
+  }
+
+  const suppliers=await fetch(base+"/api/suppliers");
+  assert.equal(suppliers.status,200);
+  const supplierList=await suppliers.json();
+  assert.ok(supplierList.length>0);
+  assert.equal("homepage" in supplierList[0],false);
+  assert.equal("search_url" in supplierList[0],false);
+
+  const catalog=await fetch(base+"/api/catalog/search?q=Sony%20WH-1000XM6");
+  assert.equal(catalog.status,200);
+  const catalogBody=await catalog.json();
+  assert.ok(catalogBody.results.length>0);
+  assert.equal("product_url" in catalogBody.results[0],false);
+
   const manifest=await fetch(base+"/site.webmanifest");
   assert.equal(manifest.status,200);
   assert.match(await manifest.text(),/"name": "MCQ Audio"/);
