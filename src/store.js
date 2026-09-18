@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const file=process.env.MCQ_DATA_FILE||path.join(process.cwd(),"data","mcq.json");
-const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[]};
+const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[],live_stream_events:[],stream_reminders:[],stream_track_submissions:[]};
 
 export function load(){
   try{
@@ -21,7 +21,10 @@ export function load(){
       drop_signups:Array.isArray(parsed.drop_signups)?parsed.drop_signups:[],
       urban_submissions:Array.isArray(parsed.urban_submissions)?parsed.urban_submissions:[],
       urban_votes:Array.isArray(parsed.urban_votes)?parsed.urban_votes:[],
-      urban_reports:Array.isArray(parsed.urban_reports)?parsed.urban_reports:[]
+      urban_reports:Array.isArray(parsed.urban_reports)?parsed.urban_reports:[],
+      live_stream_events:Array.isArray(parsed.live_stream_events)?parsed.live_stream_events:[],
+      stream_reminders:Array.isArray(parsed.stream_reminders)?parsed.stream_reminders:[],
+      stream_track_submissions:Array.isArray(parsed.stream_track_submissions)?parsed.stream_track_submissions:[]
     };
   }catch(e){
     if(e.code==="ENOENT")return structuredClone(empty);
