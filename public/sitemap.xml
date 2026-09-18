@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
-  <url><loc>/microphones.html</loc></url>
-  <url><loc>/headphones.html</loc></url>
-  <url><loc>/wireless.html</loc></url>
-  <url><loc>/dj.html</loc></url>
+  <url><loc>/music</loc></url>
+  <url><loc>/vinyl-underground</loc></url>
+  <url><loc>/swap-shop</loc></url>
+  <url><loc>/microphones</loc></url>
+  <url><loc>/headphones</loc></url>
+  <url><loc>/wireless</loc></url>
+  <url><loc>/dj</loc></url>
 </urlset>
