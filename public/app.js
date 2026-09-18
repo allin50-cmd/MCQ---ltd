@@ -56,20 +56,13 @@ function renderReviews(){
  $$(".open-review").forEach(b=>b.addEventListener("click",()=>openReview(Number(b.closest("[data-review]").dataset.review))));
 }
 function openReview(i){
- const r=reviews[i];if(!r)return;$("#review-body").innerHTML=`<article class="dialog-body"><img class="hero-img" src="${esc(r.image)}" alt=""><p class="eyebrow dark">${esc(r.kind)} / ${esc(r.category)}</p><h1>${esc(r.title)}</h1><p>${esc(r.intro)}</p><div class="spec-grid">${r.specs.map(([k,v])=>`<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join("")}</div>${r.notes.map(n=>`<p>${esc(n)}</p>`).join("")}<div class="source-row">${r.sources.map(([n,u])=>`<a href="${u}" target="_blank" rel="noreferrer">${esc(n)} ↗</a>`).join("")}</div></article>`;
+ const r=reviews[i];if(!r)return;$("#review-body").innerHTML=`<article class="dialog-body"><img class="hero-img" src="${esc(r.image)}" alt=""><p class="eyebrow dark">${esc(r.kind)} / ${esc(r.category)}</p><h1>${esc(r.title)}</h1><p>${esc(r.intro)}</p><div class="spec-grid">${r.specs.map(([k,v])=>`<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join("")}</div>${r.notes.map(n=>`<p>${esc(n)}</p>`).join("")}<div class="source-row">${r.sources.map(([n])=>`<span>${esc(n)}</span>`).join("")}</div></article>`;
  $("#review-dialog").showModal();track("review_open",r.title)
 }
 $("#review-close").addEventListener("click",()=>$("#review-dialog").close());$("#review-dialog").addEventListener("click",e=>{if(e.target===$("#review-dialog"))e.currentTarget.close()});
 
 let suppliers=[];
-async function loadSuppliers(){try{suppliers=await api("/api/suppliers");$("#supplier-select").innerHTML=suppliers.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("")}catch{$("#supplier-select").innerHTML='<option>Supplier search</option>'}}
-function supplierUrl(s,q){return s.search_url.replace("{query}",encodeURIComponent(q))}
-async function runSupplierSearch(q){
- q=String(q||$("#shop-search").value||"").trim();if(!q)return;$("#shop-search").value=q;const out=$("#live-products");out.innerHTML='<div class="live-message">Checking the live supplier route…</div>';
- const id=$("#supplier-select").value||"farnell",s=suppliers.find(x=>x.id===id)||suppliers[0];track("supplier_search",q,s?.homepage||"");
- if(id==="farnell"){try{const d=await api(`/api/suppliers/farnell/search?q=${encodeURIComponent(q)}`);if(d.products?.length){out.innerHTML=d.products.map(p=>`<div class="product-row">${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:"<div></div>"}<div><b>${esc(p.name||p.sku)}</b><br><small>${esc(p.brand||"Farnell")} • ${esc(p.sku||"")}</small></div><button class="mini-btn supplier-buy" type="button" data-product="${esc((p.brand||"")+" "+(p.name||p.sku||q))}" data-query="${esc(q)}">Request MCQ price</button></div>`).join("");$$(".supplier-buy").forEach(a=>a.addEventListener("click",()=>track("buy_click",q,a.href)));return}}catch{}}
- const live=s?supplierUrl(s,q):"https://uk.farnell.com/search?st="+encodeURIComponent(q);out.innerHTML=`<div class="live-message"><b>${esc(s?.name||"Supplier")}</b><p>Open the supplier's current search for live stock and pricing.</p><a class="mini-btn" href="${esc(live)}" target="_blank" rel="noreferrer">View live stock</a></div>`
-}
+async function loadSuppliers(){const select=$("#supplier-select");if(select){select.innerHTML='<option value="mcq">MCQ live catalogue</option>';select.disabled=true}}
 $("#shop-search-btn").addEventListener("click",()=>runSupplierSearch());$("#shop-search").addEventListener("keydown",e=>{if(e.key==="Enter")runSupplierSearch()});$$("[data-query]").forEach(x=>x.addEventListener("click",()=>{runSupplierSearch(x.dataset.query);$("#shop").scrollIntoView({behavior:"smooth"})}));
 
 function openProduct(i){
@@ -101,3 +94,4 @@ $("#search-open").addEventListener("click",()=>{$("#search-drawer").classList.ad
 $("#global-search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();if(!q){$("#global-results").innerHTML="";return}const ps=products.filter(p=>(p.brand+" "+p.name+" "+p.category+" "+p.desc).toLowerCase().includes(q));const bs=brands.filter(b=>(b[0]+" "+b[2]).toLowerCase().includes(q));$("#global-results").innerHTML=ps.map((p,i)=>`<button class="global-result global-action" data-product="${esc(p.brand+" "+p.name)}" data-query="${esc(p.query)}"><img src="${esc(p.image)}" alt=""><div><b>${esc(p.brand)} ${esc(p.name)}</b><p>${esc(p.category)} — source through MCQ</p></div></button>`).join("")+bs.map(([n,u,d])=>`<button class="global-result global-action" data-product="${esc(n)}" data-query="${esc(n)}"><div></div><div><b>${esc(n)}</b><p>${esc(d)} — ask MCQ</p></div></button>`).join("");$(".global-action",$("#global-results")).forEach(b=>b.addEventListener("click",()=>{$("#search-drawer").classList.remove("open");prepareLead(b.dataset.product,b.dataset.query)}))});
 
 renderProducts();renderBrands();renderReviews();loadSuppliers();
+$$('[data-query].cta').forEach(b=>b.addEventListener('click',()=>prepareLead(b.dataset.query,b.dataset.query)));
