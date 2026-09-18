@@ -8,7 +8,13 @@ import { listSuppliers, searchFarnell } from "./suppliers.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
-const json=(res,status,body)=>{res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
+const securityHeaders={
+  "x-content-type-options":"nosniff",
+  "referrer-policy":"strict-origin-when-cross-origin",
+  "permissions-policy":"camera=(), microphone=(), geolocation=()",
+  "content-security-policy":"default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.element14.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+};
+const json=(res,status,body)=>{res.writeHead(status,{...securityHeaders,"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
 const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>1_000_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
 const route=(u,...paths)=>paths.includes(u.pathname);
 function requireAdmin(req){
@@ -18,14 +24,22 @@ function requireAdmin(req){
   if(auth!==`Bearer ${expected}`)throw new Error("unauthorized");
 }
 
+const prettyRoutes=new Map([
+  ["/microphones","/microphones.html"],
+  ["/headphones","/headphones.html"],
+  ["/wireless","/wireless.html"],
+  ["/dj","/dj.html"]
+]);
+
 function serveStatic(u,res){
-  let pathname = u.pathname === "/" ? "/index.html" : u.pathname;
+  let pathname = u.pathname === "/" ? "/index.html" : (prettyRoutes.get(u.pathname)||u.pathname);
   try { pathname = decodeURIComponent(pathname); } catch { return false; }
   const target = path.resolve(publicDir, "." + pathname);
   if(!target.startsWith(publicDir + path.sep) && target !== publicDir) return false;
   if(!fs.existsSync(target) || !fs.statSync(target).isFile()) return false;
   const ext=path.extname(target).toLowerCase();
-  res.writeHead(200,{"content-type":mime[ext]||"application/octet-stream","cache-control":ext===".html"?"no-store":"public, max-age=3600"});
+  const immutable=/\.(?:css|js|svg|png|jpe?g|webp|ico)$/.test(ext);
+  res.writeHead(200,{...securityHeaders,"content-type":mime[ext]||"application/octet-stream","cache-control":ext===".html"?"no-store":immutable?"public, max-age=3600":"public, max-age=300"});
   fs.createReadStream(target).pipe(res);
   return true;
 }
@@ -141,6 +155,14 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="GET"&&serveStatic(u,res)) return;
+    if(req.method==="GET"&&u.pathname.startsWith("/api/")) return json(res,404,{error:"not found"});
+    if(req.method==="GET"){
+      const fallback=path.join(publicDir,"404.html");
+      if(fs.existsSync(fallback)){
+        res.writeHead(404,{...securityHeaders,"content-type":"text/html; charset=utf-8","cache-control":"no-store"});
+        return fs.createReadStream(fallback).pipe(res);
+      }
+    }
     return json(res,404,{error:"not found"});
   }catch(e){
     const status=e.message==="unauthorized"?401:e.message==="admin access is not configured"?503:/not found/.test(e.message)?404:/unavailable/.test(e.message)?409:/Farnell API returned/.test(e.message)?502:400;
