@@ -29,7 +29,10 @@ const prettyRoutes=new Map([
   ["/microphones","/microphones.html"],
   ["/headphones","/headphones.html"],
   ["/wireless","/wireless.html"],
-  ["/dj","/dj.html"]
+  ["/dj","/dj.html"],
+  ["/music","/music.html"],
+  ["/vinyl-underground","/music.html"],
+  ["/swap-shop","/music.html"]
 ]);
 
 function serveStatic(u,res){
@@ -78,6 +81,75 @@ const server=http.createServer(async(req,res)=>{
         }
       }catch{}
       return json(res,200,{query:q,results:[...internal,...live].slice(0,24)});
+    }
+
+    if(req.method==="GET"&&u.pathname==="/api/music/catalog"){
+      const q=String(u.searchParams.get("q")||"").trim().toLowerCase();
+      const format=String(u.searchParams.get("format")||"").trim().toLowerCase();
+      const type=String(u.searchParams.get("type")||"").trim().toLowerCase();
+      const rows=db.music_catalog.filter(item=>{
+        if(format&&String(item.format||"").toLowerCase()!==format)return false;
+        if(type&&String(item.release_type||"").toLowerCase()!==type)return false;
+        if(!q)return true;
+        const hay=[item.artist,item.title,item.label,item.catalogue_no,item.genre,item.format,item.release_type].join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+      return json(res,200,{count:rows.length,items:rows});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/music/catalog/import"){
+      requireAdmin(req);
+      const x=await body(req);
+      if(!Array.isArray(x.items))throw new Error("items array required");
+      const imported=[];
+      for(const raw of x.items){
+        if(!raw||!raw.title||!raw.artist)continue;
+        const row={
+          id:String(raw.id||id("music")),
+          artist:String(raw.artist).trim(),
+          title:String(raw.title).trim(),
+          label:String(raw.label||"Vinyl Underground").trim(),
+          catalogue_no:String(raw.catalogue_no||"").trim(),
+          genre:String(raw.genre||"UK Garage").trim(),
+          format:String(raw.format||"vinyl").trim().toLowerCase(),
+          release_type:String(raw.release_type||"catalogue").trim().toLowerCase(),
+          price_pence:Number.isInteger(raw.price_pence)?raw.price_pence:null,
+          stock:Number.isInteger(raw.stock)?raw.stock:null,
+          release_date:String(raw.release_date||"").trim(),
+          image_url:String(raw.image_url||"").trim(),
+          audio_preview_url:String(raw.audio_preview_url||"").trim(),
+          description:String(raw.description||"").trim(),
+          status:String(raw.status||"LIVE").trim().toUpperCase(),
+          created_at:String(raw.created_at||new Date().toISOString())
+        };
+        const existing=db.music_catalog.findIndex(v=>v.id===row.id||(row.catalogue_no&&v.catalogue_no===row.catalogue_no));
+        if(existing>=0)db.music_catalog[existing]=row;else db.music_catalog.push(row);
+        imported.push(row.id);
+      }
+      save(db);return json(res,200,{imported:imported.length,ids:imported});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/music/order-interest"){
+      const x=await body(req);
+      if(!x.name||!x.contact||!x.item_id)throw new Error("name, contact and item_id required");
+      const item=db.music_catalog.find(v=>v.id===x.item_id);
+      if(!item)throw new Error("music item not found");
+      const row={id:id("morder"),item_id:item.id,name:String(x.name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),quantity:Math.max(1,Number(x.quantity||1)),status:"NEW",created_at:new Date().toISOString()};
+      db.music_orders.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/music/drop-signup"){
+      const x=await body(req);
+      if(!x.contact)throw new Error("contact required");
+      const row={id:id("drop"),name:String(x.name||"").trim(),contact:String(x.contact).trim(),interests:Array.isArray(x.interests)?x.interests.map(String):[],created_at:new Date().toISOString()};
+      db.drop_signups.push(row);save(db);return json(res,201,row);
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/swap/offer"){
+      const x=await body(req);
+      if(!x.name||!x.contact||!x.item_type||!x.description)throw new Error("name, contact, item_type and description required");
+      const row={id:id("swap"),name:String(x.name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),item_type:String(x.item_type).trim(),artist:String(x.artist||"").trim(),title:String(x.title||"").trim(),quantity:Math.max(1,Number(x.quantity||1)),condition:String(x.condition||"unspecified").trim(),description:String(x.description).trim(),asking_price:String(x.asking_price||"").trim(),status:"NEW",created_at:new Date().toISOString()};
+      db.swap_offers.push(row);save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/leads"){
@@ -178,7 +250,7 @@ const server=http.createServer(async(req,res)=>{
 
     if(req.method==="GET"&&u.pathname==="/api/admin/summary"){
       requireAdmin(req);
-      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length,leads:db.leads.length,events:db.events.length});
+      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length,leads:db.leads.length,events:db.events.length,music_catalog:db.music_catalog.length,music_orders:db.music_orders.length,swap_offers:db.swap_offers.length,drop_signups:db.drop_signups.length});
     }
 
     if(req.method==="GET"&&serveStatic(u,res)) return;
