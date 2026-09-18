@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070a">
+<meta name="robots" content="noindex">
+<title>MCQ Future Experience — Interactive Prototype</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/future.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to experience</a>
+<div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header class="future-nav">
+  <a class="f-logo" href="/"><b>MCQ</b><span>FUTURE LAB</span></a>
+  <nav>
+    <button data-jump="hero">Experience</button>
+    <button data-jump="shop">Shop</button>
+    <button data-jump="urban">Urban</button>
+    <button data-jump="live">Live</button>
+    <button data-jump="magazine">Magazine</button>
+  </nav>
+  <div class="nav-actions"><button id="sound-toggle" class="icon-btn" aria-label="Toggle interface sound">◉</button><a class="pill" href="/">Exit prototype</a></div>
+</header>
+
+<main id="main">
+<section class="cinematic" id="hero" aria-label="MCQ immersive hero">
+  <div class="slides" id="slides">
+    <article class="slide is-active" data-theme="cyan">
+      <img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=2000" alt="Urban record shop at night">
+      <div class="film"></div>
+      <div class="slide-copy">
+        <p class="kicker">MCQ / SOUND • MUSIC • CULTURE</p>
+        <h1>Real creativity<br><em>lives here.</em></h1>
+        <p>Audio, underground music, self-publishing, live performance and community — one MCQ universe.</p>
+        <div class="hero-actions"><button class="glow-btn" data-jump="urban">Enter Urban Underground</button><button class="ghost-btn" data-jump="shop">Shop the sound</button></div>
+      </div>
+      <div class="holo-card holo-a"><span>URBAN CHART</span><strong id="hero-chart-count">LIVE</strong><small>user powered</small></div>
+      <div class="holo-card holo-b"><span>LIVE STREAM</span><strong>MONTHLY</strong><small>MCQ studio</small></div>
+    </article>
+
+    <article class="slide" data-theme="magenta">
+      <img src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Premium headphones">
+      <div class="film"></div>
+      <div class="slide-copy">
+        <p class="kicker">SHOP AUDIO</p>
+        <h1>Technology<br><em>with purpose.</em></h1>
+        <p>From first headphones to flagship systems. Search, compare, source and buy through MCQ.</p>
+        <div class="hero-actions"><button class="glow-btn" data-jump="shop">Explore gear</button><a class="ghost-btn" href="/shop">Full shop</a></div>
+      </div>
+      <div class="holo-ring" aria-hidden="true"><i></i><i></i><i></i></div>
+    </article>
+
+    <article class="slide" data-theme="violet">
+      <img src="https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=2000" alt="Music creation technology">
+      <div class="film"></div>
+      <div class="slide-copy">
+        <p class="kicker">SELF PUBLISH</p>
+        <h1>Made tonight.<br><em>heard tonight.</em></h1>
+        <p>Unsigned and pre-pre-release music can enter the user-powered chart without paying for position.</p>
+        <div class="hero-actions"><a class="glow-btn" href="/publish">Publish a track</a><button class="ghost-btn" data-jump="urban">Hear the chart</button></div>
+      </div>
+    </article>
+
+    <article class="slide" data-theme="gold">
+      <img src="https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=2000" alt="Live performance atmosphere">
+      <div class="film"></div>
+      <div class="slide-copy">
+        <p class="kicker">URBAN UNDERGROUND LIVE</p>
+        <h1>The room.<br><em>The stream.</em></h1>
+        <p>DJ Dexter and Mickey Simms host a monthly show connecting established culture with what is next.</p>
+        <div class="hero-actions"><button class="glow-btn" data-jump="live">Open live experience</button><a class="ghost-btn" href="/live">Full show page</a></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="slide-controls">
+    <button id="prev-slide" aria-label="Previous slide">←</button>
+    <div id="slide-dots" class="dots"></div>
+    <button id="next-slide" aria-label="Next slide">→</button>
+  </div>
+  <div class="scroll-indicator"><span></span>SCROLL TO EXPLORE</div>
+</section>
+
+<section class="portal-grid reveal" aria-label="Main MCQ experiences">
+  <button class="portal cyan" data-jump="live"><span class="portal-icon">◉</span><div><small>LIVE STREAM</small><strong>Watch the movement</strong></div><b>→</b></button>
+  <button class="portal yellow" data-jump="urban"><span class="portal-icon">▥</span><div><small>THE CHART</small><strong>New sounds. Real people.</strong></div><b>→</b></button>
+  <a class="portal blue" href="/publish"><span class="portal-icon">⇧</span><div><small>SELF PUBLISH</small><strong>Your music. Your way.</strong></div><b>→</b></a>
+  <a class="portal pink" href="/swap"><span class="portal-icon">↔</span><div><small>SWAP SHOP</small><strong>Buy, sell, circulate.</strong></div><b>→</b></a>
+</section>
+
+<section class="future-section shop-zone reveal" id="shop">
+  <div class="section-title"><div><p>SHOP AUDIO</p><h2>Gear for creators.<br>Sound with a purpose.</h2></div><a href="/shop">View full shop →</a></div>
+  <div class="category-carousel" id="category-carousel">
+    <a class="cat-card tilt" href="/headphones"><span class="cat-icon">◉</span><img src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Headphones"><strong>Headphones</strong><small>wireless • studio • hi-fi</small></a>
+    <a class="cat-card tilt" href="/microphones"><span class="cat-icon">●</span><img src="https://shure.widen.net/content/dxlbvgdzn6/webp/faq-whats-the-difference-between-the-sm58-and-the-beta58a_header.webp?color=ffffffff&position=c&quality=80&u=zenegx" alt="Microphone"><strong>Microphones</strong><small>live • studio • wireless</small></a>
+    <a class="cat-card tilt" href="/wireless"><span class="cat-icon">◫</span><img src="https://unsplash.com/photos/Qia1BBnS3Tk/download?force=true&w=900" alt="Wireless speakers"><strong>Wireless</strong><small>portable • party • hi-fi</small></a>
+    <a class="cat-card tilt" href="/dj"><span class="cat-icon">⌁</span><img src="https://www.pioneerdj.com/product-images/1303/130db239-d874-411b-b2ea-395c83f09255/ddj-flx10_1.png" alt="DJ controller"><strong>DJ Controllers</strong><small>learn • perform • club</small></a>
+    <a class="cat-card tilt" href="/vinyl"><span class="cat-icon">◎</span><img src="https://www.technics.com/content/dam/pim/uk/en/SL/SL-120/SL-1200G/ast-1651355.png.pub.thumb.644.644.png" alt="Turntable"><strong>Turntables</strong><small>vinyl • DJ • hi-fi</small></a>
+  </div>
+
+  <div class="smart-search holo-panel">
+    <div><p class="kicker">MCQ LIVE CATALOGUE</p><h3>Search without leaving MCQ.</h3></div>
+    <form id="future-search"><input name="q" placeholder="Try Sony XM6, SM58, controller, stylus…"><button class="glow-btn" type="submit">Search</button></form>
+    <div id="future-search-results" class="result-rail"></div>
+  </div>
+</section>
+
+<section class="future-section urban-zone reveal" id="urban">
+  <div class="street-layer" aria-hidden="true"><span>URBAN</span><span>UNDERGROUND</span><span>REAL PEOPLE</span></div>
+  <div class="section-title inverse"><div><p>PURE USER INPUT</p><h2>The chart before<br>the charts.</h2></div><a href="/chart">Full chart →</a></div>
+  <div class="chart-stage">
+    <div id="future-chart" class="future-chart"><div class="loading">Loading real Urban Chart…</div></div>
+    <aside class="chart-holo">
+      <span class="pulse-orb"></span>
+      <p>NO PAY-TO-CHART</p>
+      <h3>Community signal only.</h3>
+      <small>Unique support votes. Ties broken by newest submission.</small>
+      <a class="glow-btn" href="/publish">Publish your track</a>
+    </aside>
+  </div>
+</section>
+
+<section class="movie-strip reveal" aria-label="Cinematic culture reel">
+  <div class="movie-track" id="movie-track">
+    <article><img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=1000" alt="Urban music culture"><span>01</span><h3>Record culture</h3></article>
+    <article><img src="https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=1000" alt="Music production"><span>02</span><h3>Bedroom to broadcast</h3></article>
+    <article><img src="https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=1000" alt="Live performance"><span>03</span><h3>People make scenes</h3></article>
+    <article><img src="https://unsplash.com/photos/xGfrml0T-_8/download?force=true&w=1000" alt="Vinyl records"><span>04</span><h3>Archive becomes future</h3></article>
+  </div>
+  <div class="movie-scrub"><input id="movie-scrubber" type="range" min="0" max="100" value="0" aria-label="Scrub cinematic reel"></div>
+</section>
+
+<section class="future-section live-zone reveal" id="live">
+  <div class="section-title inverse"><div><p>MONTHLY</p><h2>Urban Underground<br>Live.</h2></div><a href="/live">Full show →</a></div>
+  <div class="live-layout">
+    <div class="live-screen">
+      <div class="screen-glow"></div>
+      <div id="future-live-player" class="future-live-player">
+        <div class="broadcast-card"><span class="on-air">● ON AIR</span><h3>DJ Dexter + Mickey Simms</h3><p>Launch guests: MC Creed + Romeo</p><button id="fake-play" class="play-orb" aria-label="Play live experience">▶</button></div>
+      </div>
+      <div class="timeline"><span style="width:38%"></span></div>
+    </div>
+    <aside class="live-console">
+      <div class="console-head"><span>LIVE DATA</span><i></i></div>
+      <div id="live-meta"><b>Monthly show</b><small>Loading schedule…</small></div>
+      <div class="lineup-chip"><span>HOST</span><strong>DJ Dexter</strong></div>
+      <div class="lineup-chip"><span>HOST</span><strong>Mickey Simms</strong></div>
+      <div class="lineup-chip"><span>GUEST</span><strong>MC Creed</strong></div>
+      <div class="lineup-chip"><span>GUEST</span><strong>Romeo</strong></div>
+      <a class="glow-btn" href="/urban#live">Remind me</a>
+    </aside>
+  </div>
+</section>
+
+<section class="future-section magazine-zone reveal" id="magazine">
+  <div class="section-title"><div><p>MCQ MAGAZINE</p><h2>Stories. Sound.<br>People. Culture.</h2></div><a href="/magazine">Read all →</a></div>
+  <div class="mag-grid">
+    <article class="mag-feature tilt"><img src="https://unsplash.com/photos/MN_P-C0CXb4/download?force=true&w=1200" alt="Urban nightlife"><div><small>CULTURE</small><h3>Inside the new underground.</h3><p>Why independent scenes are being rebuilt around creators, not gatekeepers.</p></div></article>
+    <article class="mag-card"><img src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Headphones"><small>TECH</small><h3>Wireless is finally asking better questions.</h3></article>
+    <article class="mag-card"><img src="https://www.technics.com/content/dam/pim/uk/en/SL/SL-120/SL-1200G/ast-1651355.png.pub.thumb.644.644.png" alt="Turntable"><small>VINYL</small><h3>The turntable is still a machine.</h3></article>
+  </div>
+</section>
+
+<section class="future-section corporate-zone reveal">
+  <div class="corp-grid">
+    <article><p>MCQ PROFESSIONAL</p><h2>Hire & install.</h2><p>PA, venues, events, schools, bars, churches and commercial audio systems.</p><a class="ghost-btn" href="/hire">Get a quote</a></article>
+    <article><p>MCQ TRADE</p><h2>Source the difficult stuff.</h2><p>Legacy audio, unusual connectors, replacement parts and repeat professional supply.</p><a class="ghost-btn" href="/trade">Open trade</a></article>
+  </div>
+</section>
+</main>
+
+<footer class="future-footer"><a class="f-logo" href="/"><b>MCQ</b><span>AUDIO</span></a><p>REAL CREATIVITY LIVES HERE</p><div><a href="/shop">Shop</a><a href="/urban">Urban</a><a href="/magazine">Magazine</a><a href="/hire">Hire</a></div></footer>
+
+<div class="hud" aria-hidden="true"><span></span><span></span><span></span><b>MCQ / FUTURE LAB</b></div>
+<script type="module" src="/future.js"></script>
+</body>
+</html>
