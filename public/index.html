@@ -1,240 +1,160 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="MCQ Audio — premium hi-fi journal, technical reviews, system building, specialist cables, audio sourcing and event sound.">
-  <title>MCQ Audio Journal — Hi‑Fi, Reviews, Systems & Specialist Audio</title>
-  <link rel="stylesheet" href="/app.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0b">
+<meta name="description" content="MCQ Audio — premium hi-fi, technical reviews, specialist audio sourcing, live supplier search and system advice.">
+<title>MCQ Audio — Hi‑Fi Magazine, Reviews & Shop</title>
+<link rel="stylesheet" href="/app.css">
 </head>
 <body>
-  <div class="ticker" aria-label="Latest">
-    <span>MCQ AUDIO / ISSUE 01</span>
-    <div>HI‑FI • ANALOGUE • DIGITAL • CABLES • SYSTEMS • TECHNICAL REVIEWS • PRO AUDIO</div>
+<header class="top" id="top">
+  <a class="logo" href="#top" aria-label="MCQ Audio home"><b>MCQ</b><span>AUDIO</span></a>
+  <nav class="desktop-nav">
+    <a href="#discover">Discover</a><a href="#brands">Brands</a><a href="#reviews">Reviews</a><a href="#shop">Shop</a><a href="#build">Build a system</a>
+  </nav>
+  <button class="round" id="search-open" aria-label="Open product search">⌕</button>
+</header>
+
+<main>
+<section class="hero snap">
+  <img class="hero-bg" src="https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=" alt="Sony WH-1000XM6 headphones">
+  <div class="shade"></div>
+  <div class="hero-content">
+    <p class="eyebrow">MCQ AUDIO / NEW & NOTEWORTHY</p>
+    <h1>Hear more.<br>Choose better.</h1>
+    <p class="hero-copy">A visual guide to serious listening — hi-fi, headphones, vinyl, cables, pro audio and the engineering behind them.</p>
+    <div class="hero-actions">
+      <a class="cta light" href="#shop">Shop audio</a>
+      <a class="cta glass" href="#reviews">Read reviews</a>
+    </div>
   </div>
+  <div class="scroll-cue">Swipe ↓</div>
+</section>
 
-  <header class="site-header">
-    <a href="#top" class="logo" aria-label="MCQ Audio home">
-      <strong>MCQ</strong><span>AUDIO</span>
-    </a>
-    <nav>
-      <a href="#journal">Journal</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#shop">Shop</a>
-      <a href="#builder">System Builder</a>
-      <a href="#trade">Trade</a>
-    </nav>
-    <button class="menu-button" id="menu-button" aria-label="Open menu">Menu</button>
-  </header>
+<section class="quick-strip" aria-label="Quick categories">
+  <a href="#shop" data-query="wireless headphones"><span>01</span>Headphones</a>
+  <a href="#shop" data-query="turntable"><span>02</span>Turntables</a>
+  <a href="#shop" data-query="integrated amplifier"><span>03</span>Amplifiers</a>
+  <a href="#shop" data-query="speaker cable"><span>04</span>Cables</a>
+  <a href="#shop" data-query="microphone"><span>05</span>Pro audio</a>
+</section>
 
-  <main id="top">
-    <section class="cover">
-      <figure class="cover-image">
-        <img src="https://unsplash.com/photos/kcTl2boB4SQ/download?force=true&w=1800" alt="Close-up of a premium turntable">
-      </figure>
-      <div class="cover-copy">
-        <p class="kicker">MCQ Audio Journal / London</p>
-        <h1>The equipment. The engineering. The listening.</h1>
-        <p class="dek">A picture-led guide to serious hi-fi, specialist audio and the small details that make systems work: source, amplification, speakers, cables, setup and room.</p>
-        <div class="cover-actions">
-          <a class="btn btn-dark" href="#journal">Read Issue 01</a>
-          <a class="btn btn-light" href="#shop">Shop & source</a>
-        </div>
-        <div class="cover-meta">
-          <span>Technical briefs</span><span>Buying guides</span><span>Live supplier links</span><span>MCQ sourcing</span>
-        </div>
-      </div>
-    </section>
+<section class="section" id="discover">
+  <div class="section-head">
+    <div><p class="eyebrow dark">FEATURED</p><h2>Products worth knowing.</h2></div>
+    <p class="section-note">Official manufacturer imagery and specifications where available. Live price/stock stays with the supplier.</p>
+  </div>
+  <div class="product-rail" id="featured-products"></div>
+</section>
 
-    <section class="edition-strip">
-      <div><b>01</b><span>Current issue</span></div>
-      <div><b>12</b><span>Editorial features</span></div>
-      <div><b>05</b><span>Supplier routes</span></div>
-      <div><b>LIVE</b><span>Product sourcing</span></div>
-    </section>
+<section class="editorial-stack">
+  <article class="feature-card large">
+    <img src="https://www.technics.com/content/dam/pim/uk/en/SL/SL-120/SL-1200G/ast-1651355.png.pub.thumb.644.644.png" alt="Technics SL-1200G turntable">
+    <div class="feature-overlay">
+      <p class="eyebrow">TECHNICS / GRAND CLASS</p>
+      <h2>The turntable as an instrument.</h2>
+      <p>Coreless direct drive, a three-layer platter and a magnesium tonearm — examined as engineering, not nostalgia.</p>
+      <a class="cta light" href="https://www.technics.com/uk/products/grand-class/turntables/sl-1200g.html" target="_blank" rel="noreferrer">Explore SL‑1200G</a>
+    </div>
+  </article>
 
-    <section id="journal" class="section">
-      <div class="section-title">
-        <p>ISSUE 01 — THE SYSTEM ISSUE</p>
-        <h2>Listen deeper.</h2>
-      </div>
+  <div class="duo">
+    <article class="feature-card">
+      <img src="https://unsplash.com/photos/qtKOZH1iDY4/download?force=true&w=1200" alt="Premium headphone listening setup">
+      <div class="feature-overlay"><p class="eyebrow">HEADPHONES</p><h3>Portable does not mean compromised.</h3><button class="text-btn" data-query="audiophile headphones">Browse headphones →</button></div>
+    </article>
+    <article class="feature-card">
+      <img src="https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=1200" alt="Audio electronics">
+      <div class="feature-overlay"><p class="eyebrow">SIGNAL PATH</p><h3>Where the system really loses information.</h3><a class="text-btn" href="#reviews">Read technical reviews →</a></div>
+    </article>
+  </div>
+</section>
 
-      <div class="story-grid">
-        <article class="story story-main" data-article="system-matching">
-          <img src="https://unsplash.com/photos/XdRf3vsLh5Y/download?force=true&w=1400" alt="Vinyl record playing on a turntable">
-          <div>
-            <p class="tag">SYSTEM BUILDING</p>
-            <h3>Why the best component can still make the wrong system</h3>
-            <p>Matching source, amplifier, speakers and room matters more than buying the most expensive box in isolation.</p>
-            <button class="text-link article-open">Read the feature →</button>
-          </div>
-        </article>
+<section class="section brands-section" id="brands">
+  <div class="section-head"><div><p class="eyebrow dark">BRAND DIRECTORY</p><h2>Major audio makers.</h2></div></div>
+  <div class="brand-grid" id="brand-grid"></div>
+</section>
 
-        <article class="story" data-article="analogue-path">
-          <img src="https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=1000" alt="Turntable stylus over a record">
-          <div><p class="tag">ANALOGUE</p><h3>The signal starts here</h3><p>Cartridge alignment, phono gain and loading explained without the mystique.</p><button class="text-link article-open">Read →</button></div>
-        </article>
+<section class="section black" id="reviews">
+  <div class="section-head inverse">
+    <div><p class="eyebrow">MCQ TECHNICAL DESK</p><h2>Review the engineering.</h2></div>
+    <p class="section-note">Clear distinction between manufacturer specification, independent review evidence and MCQ commentary.</p>
+  </div>
+  <div class="review-rail" id="review-rail"></div>
+</section>
 
-        <article class="story" data-article="cables">
-          <img src="https://unsplash.com/photos/5D2KsMj0e3Y/download?force=true&w=1000" alt="Audiophile amplifier electronics">
-          <div><p class="tag">ENGINEERING</p><h3>Cables: what actually matters</h3><p>Connector quality, geometry, resistance, capacitance, shielding and where spending stops making sense.</p><button class="text-link article-open">Read →</button></div>
-        </article>
+<section class="image-break snap">
+  <img src="https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=1800" alt="Turntable stylus in a record groove">
+  <div class="image-break-copy"><p class="eyebrow">ANALOGUE / DETAIL</p><h2>The signal begins at the stylus.</h2><p>Alignment, tracking force, gain and loading before accessories and folklore.</p></div>
+</section>
 
-        <article class="story story-wide" data-article="listening-room">
-          <img src="https://unsplash.com/photos/QtgGYlug6Cw/download?force=true&w=1400" alt="Professional mixing and listening equipment">
-          <div><p class="tag">ROOM / SETUP</p><h3>The room is part of the system</h3><p>Speaker position, listening distance, reflective surfaces and why a comfortable listening position can transform the experience.</p><button class="text-link article-open">Read →</button></div>
-        </article>
-      </div>
-    </section>
+<section class="section shop-section" id="shop">
+  <div class="section-head">
+    <div><p class="eyebrow dark">LIVE SHOPPING</p><h2>Find it. Compare it. Buy it.</h2></div>
+    <p class="section-note">Farnell uses its live API when configured. Other brands route to their current official or retailer pages rather than fake inventory.</p>
+  </div>
+  <div class="search-shell">
+    <input id="shop-search" type="search" placeholder="Search headphones, XLR, turntable, stylus, amplifier…">
+    <select id="supplier-select" aria-label="Supplier"></select>
+    <button id="shop-search-btn">Search</button>
+  </div>
+  <div class="shop-chips">
+    <button data-query="XLR cable">XLR</button><button data-query="RCA phono cable">RCA / Phono</button><button data-query="headphone extension">Headphone leads</button><button data-query="turntable stylus">Stylus</button><button data-query="speaker cable">Speaker cable</button><button data-query="audio adapter">Adapters</button>
+  </div>
+  <div id="live-products" class="live-products"></div>
+</section>
 
-    <section id="reviews" class="section dark-section">
-      <div class="section-title inverse">
-        <p>TECHNICAL REVIEWS & BRIEFS</p>
-        <h2>Specs are facts. Listening is context.</h2>
-        <span>Where MCQ has not performed a hands-on listening test, we label the piece as a technical brief and link to the manufacturer and independent review sources.</span>
-      </div>
-      <div class="review-filter" role="group" aria-label="Filter reviews">
-        <button class="chip active" data-filter="all">All</button>
-        <button class="chip" data-filter="amplifier">Amplifiers</button>
-        <button class="chip" data-filter="digital">Digital</button>
-        <button class="chip" data-filter="headphones">Headphones</button>
-        <button class="chip" data-filter="analogue">Analogue</button>
-      </div>
-      <div id="review-grid" class="review-grid"></div>
-    </section>
+<section class="section build-section" id="build">
+  <div class="build-intro"><p class="eyebrow dark">SYSTEM BUILDER</p><h2>Build around the listener, not the logo.</h2><p>Four questions create a practical buying brief you can send to MCQ.</p></div>
+  <form id="system-form" class="system-form">
+    <label>Source<select name="source"><option>Vinyl</option><option>Streaming</option><option>CD</option><option>TV + music</option><option>DJ / mixed sources</option></select></label>
+    <label>Room<select name="room"><option>Small room</option><option>Medium room</option><option>Large room</option><option>Commercial / venue</option></select></label>
+    <label>Budget<select name="budget"><option>Under £1,000</option><option>£1,000–£3,000</option><option>£3,000–£7,500</option><option>£7,500–£15,000</option><option>£15,000+</option></select></label>
+    <label>Priority<select name="priority"><option>Musical engagement</option><option>Detail & imaging</option><option>Bass & scale</option><option>Flexibility</option><option>Analogue character</option></select></label>
+    <button class="cta dark" type="submit">Build my system</button>
+  </form>
+  <div id="system-result"></div>
+</section>
 
-    <section class="image-essay">
-      <div class="image-essay-copy">
-        <p class="kicker">PHOTO ESSAY</p>
-        <h2>Inside the signal path.</h2>
-        <p>From groove to cartridge, gain stage, conversion and current delivery, a hi-fi system is a chain. The useful question is not “what is best?” but “where is the limiting factor?”</p>
-      </div>
-      <div class="mosaic">
-        <img src="https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=900" alt="Audio amplifier circuit board">
-        <img src="https://unsplash.com/photos/qtKOZH1iDY4/download?force=true&w=900" alt="Audiophile headphone amplifier">
-        <img src="https://unsplash.com/photos/Fl75UpeRyEI/download?force=true&w=900" alt="Vintage turntable tonearm and platter">
-        <img src="https://unsplash.com/photos/wFlAdbV5XDM/download?force=true&w=900" alt="Amplifier control panel">
-      </div>
-    </section>
+<section class="section lead-section">
+  <div><p class="eyebrow dark">MCQ SOURCING DESK</p><h2>Hard-to-find audio is part of the business.</h2><p>Legacy phono, headphone extensions, professional leads, 1210 accessories, blank media, microphones, venue audio, installation parts and current hi-fi.</p></div>
+  <form id="lead-form">
+    <input name="name" placeholder="Name" required>
+    <input name="contact" type="email" placeholder="Email" required>
+    <input name="phone" placeholder="Phone">
+    <select name="interest"><option>Product sourcing</option><option>Hi‑Fi system</option><option>Turntable / vinyl</option><option>Headphones</option><option>Cables / connectors</option><option>Installation</option><option>PA hire</option></select>
+    <textarea name="message" rows="4" placeholder="What are you looking for?"></textarea>
+    <button class="cta dark" type="submit">Send to MCQ</button>
+    <p id="lead-status"></p>
+  </form>
+</section>
+</main>
 
-    <section id="shop" class="section">
-      <div class="section-title">
-        <p>SHOP / SOURCE</p>
-        <h2>Find the part. Build the system.</h2>
-        <span>MCQ combines specialist sourcing with direct supplier routes. Live price and stock remain with the supplier until MCQ's own sale inventory is entered.</span>
-      </div>
+<footer>
+  <div class="logo footer-logo"><b>MCQ</b><span>AUDIO</span></div>
+  <p>Hi‑Fi • Pro Audio • Specialist sourcing • Hire • Installation</p>
+  <p class="legal">Manufacturer names, marks and product imagery belong to their respective owners. MCQ links to current manufacturer/supplier sources and does not claim manufacturer affiliation unless explicitly stated.</p>
+</footer>
 
-      <div class="shop-toolbar">
-        <input id="shop-search" type="search" placeholder="Search XLR, phono, turntable, amplifier, headphones…">
-        <select id="supplier-select" aria-label="Supplier"></select>
-        <button class="btn btn-dark" id="shop-search-button">Search live</button>
-      </div>
+<nav class="mobile-dock" aria-label="Mobile navigation">
+  <a href="#top"><span>⌂</span>Home</a>
+  <a href="#brands"><span>◎</span>Brands</a>
+  <a href="#shop"><span>⌕</span>Shop</a>
+  <a href="#reviews"><span>◫</span>Reviews</a>
+  <a href="#build"><span>＋</span>Build</a>
+</nav>
 
-      <div class="shop-categories">
-        <button data-shop-query="XLR cable">XLR & balanced</button>
-        <button data-shop-query="RCA phono cable">Phono & RCA</button>
-        <button data-shop-query="headphone extension">Headphone leads</button>
-        <button data-shop-query="turntable cartridge stylus">Turntable & stylus</button>
-        <button data-shop-query="speaker cable">Speaker cable</button>
-        <button data-shop-query="audio adapter jack phono">Adapters</button>
-        <button data-shop-query="microphone cable">Microphones</button>
-        <button data-shop-query="audio mixer">Mixers</button>
-      </div>
-      <div id="live-products" class="live-products"></div>
+<dialog id="review-dialog"><button id="review-close" aria-label="Close review">×</button><div id="review-body"></div></dialog>
 
-      <div class="buying-grid">
-        <article>
-          <img src="https://unsplash.com/photos/kcTl2boB4SQ/download?force=true&w=900" alt="Turntable">
-          <p class="tag">BUYING GUIDE</p><h3>Turntables</h3><p>Drive system, arm geometry, cartridge compatibility and phono stage matching.</p>
-          <button class="text-link" data-shop-query="turntable">Find turntables →</button>
-        </article>
-        <article>
-          <img src="https://unsplash.com/photos/5D2KsMj0e3Y/download?force=true&w=900" alt="Amplifier electronics">
-          <p class="tag">BUYING GUIDE</p><h3>Amplifiers</h3><p>Power, current, gain structure, analogue/digital inputs and speaker matching.</p>
-          <button class="text-link" data-shop-query="integrated amplifier hifi">Find amplifiers →</button>
-        </article>
-        <article>
-          <img src="https://unsplash.com/photos/qtKOZH1iDY4/download?force=true&w=900" alt="Audiophile headphones">
-          <p class="tag">BUYING GUIDE</p><h3>Headphones</h3><p>Impedance, sensitivity, amplification, open vs closed and balanced connections.</p>
-          <button class="text-link" data-shop-query="audiophile headphones">Find headphones →</button>
-        </article>
-      </div>
-    </section>
+<div class="search-drawer" id="search-drawer" aria-hidden="true">
+  <button id="search-close">×</button>
+  <p class="eyebrow dark">SEARCH MCQ AUDIO</p>
+  <input id="global-search" type="search" placeholder="Try Technics, Sony, XLR, phono…">
+  <div id="global-results"></div>
+</div>
 
-    <section id="builder" class="section builder-section">
-      <div class="builder-copy">
-        <p class="kicker">INTERACTIVE SYSTEM BUILDER</p>
-        <h2>Start with how you listen.</h2>
-        <p>Choose source, room and budget. We turn it into a practical system brief rather than a random shopping list.</p>
-      </div>
-      <form id="builder-form" class="builder-form">
-        <label>Primary source
-          <select name="source">
-            <option>Vinyl</option><option>Streaming</option><option>CD</option><option>TV + music</option><option>DJ / mixed sources</option>
-          </select>
-        </label>
-        <label>Room
-          <select name="room">
-            <option>Small room</option><option>Medium room</option><option>Large room</option><option>Venue / commercial</option>
-          </select>
-        </label>
-        <label>Budget
-          <select name="budget">
-            <option>Under £1,000</option><option>£1,000–£3,000</option><option>£3,000–£7,500</option><option>£7,500–£15,000</option><option>£15,000+</option>
-          </select>
-        </label>
-        <label>Priority
-          <select name="priority">
-            <option>Musical engagement</option><option>Detail and imaging</option><option>Bass and scale</option><option>Flexibility</option><option>Vintage / analogue feel</option>
-          </select>
-        </label>
-        <button class="btn btn-accent" type="submit">Build my brief</button>
-      </form>
-      <div id="builder-result" class="builder-result" aria-live="polite"></div>
-    </section>
-
-    <section id="trade" class="section trade-section">
-      <div>
-        <p class="kicker">TRADE / INSTALL / SPECIALIST SOURCING</p>
-        <h2>For the cable no one else keeps.</h2>
-        <p>Legacy connections, professional leads, phono, headphone extensions, DJ accessories, blank media, venue audio and installation parts — MCQ's hard-to-find stock and supplier knowledge is part of the offer.</p>
-      </div>
-      <form id="lead-form" class="lead-form">
-        <input name="name" placeholder="Name" required>
-        <input name="contact" type="email" placeholder="Email" required>
-        <input name="phone" placeholder="Phone">
-        <select name="interest">
-          <option value="system">Hi‑Fi system</option>
-          <option value="product">Product sourcing</option>
-          <option value="cable">Cable / connector</option>
-          <option value="installation">Installation</option>
-          <option value="hire">PA / event hire</option>
-          <option value="trade">Trade account</option>
-        </select>
-        <textarea name="message" rows="4" placeholder="What are you looking for?"></textarea>
-        <button class="btn btn-dark" type="submit">Send to MCQ</button>
-        <p id="lead-status" class="form-status"></p>
-      </form>
-    </section>
-
-    <section class="closing">
-      <div class="closing-image"><img src="https://unsplash.com/photos/Qia1BBnS3Tk/download?force=true&w=1400" alt="Close-up vintage audio equipment"></div>
-      <div class="closing-copy"><p>MCQ AUDIO</p><h2>Buy less randomly. Listen more deliberately.</h2><a href="#builder" class="btn btn-light">Build a system</a></div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="logo"><strong>MCQ</strong><span>AUDIO</span></div>
-    <div><b>Explore</b><a href="#journal">Journal</a><a href="#reviews">Reviews</a><a href="#shop">Shop</a></div>
-    <div><b>Services</b><a href="#builder">System builder</a><a href="#trade">Trade & install</a><a href="/#quote">Hire</a></div>
-    <p class="legal">Independent technical briefs are source-linked. Manufacturer specifications and supplier availability can change. Product images returned by supplier APIs remain the property of their respective owners.</p>
-  </footer>
-
-  <dialog id="article-dialog">
-    <button class="dialog-close" aria-label="Close">×</button>
-    <div id="article-content"></div>
-  </dialog>
-
-  <script type="module" src="/app.js"></script>
+<script type="module" src="/app.js"></script>
 </body>
 </html>

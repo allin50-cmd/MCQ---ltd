@@ -1,215 +1,81 @@
-const $=(s,root=document)=>root.querySelector(s);
-const $$=(s,root=document)=>[...root.querySelectorAll(s)];
-
-const reviews=[
-  {
-    id:"michi-x430",category:"amplifier",type:"Technical brief",
-    title:"Michi Prestige X430",strap:"A heavyweight integrated amplifier built around Class AB power, modern digital inputs and a serious analogue front end.",
-    image:"https://unsplash.com/photos/5D2KsMj0e3Y/download?force=true&w=1200",
-    specs:[["Power","210W/ch continuous into 8Ω; 340W/ch max into 4Ω"],["DAC","ESS ES9039Q2M"],["USB","Up to 32-bit/384kHz; DSD support"],["THD","<0.03%"],["Weight","16.9kg"],["Phono","Moving Magnet"]],
-    body:[
-      "The X430 is a useful example of where high-end integrated amplification is heading: fewer separate boxes, but no attempt to make the amplifier itself lightweight or compromised.",
-      "Its published electrical specification is substantial enough for demanding loudspeakers, while HDMI ARC, USB, optical/coaxial digital inputs, Bluetooth and MM phono make it unusually flexible for a premium integrated design.",
-      "This is a specification-led technical brief, not an MCQ listening test. The useful buying question is whether you need this level of power and connectivity in one chassis, and whether your loudspeakers and room can exploit it."
-    ],
-    sources:[
-      ["Manufacturer specs","https://www.rotel.com/en-gb/product/x430"],
-      ["Independent review","https://www.whathifi.com/hi-fi/stereo-amplifiers/rotel-michi-prestige-x430"]
-    ],
-    query:"Michi X430 amplifier"
-  },
-  {
-    id:"topping-dx1ii",category:"digital",type:"Review digest",
-    title:"Topping DX1 II",strap:"A compact desktop DAC/headphone amplifier with unusually broad digital format support for its price class.",
-    image:"https://unsplash.com/photos/qtKOZH1iDY4/download?force=true&w=1200",
-    specs:[["Role","USB DAC + headphone amplifier"],["PCM","Up to 32-bit/384kHz"],["DSD","Up to DSD256"],["Headphones","3.5mm + 4.4mm"],["Inputs","USB-C + optical"],["Output","RCA line out"]],
-    body:[
-      "The DX1 II belongs to the modern desktop category where digital conversion and headphone amplification are combined in a very small chassis.",
-      "Published reviews praise its cleanliness, detail and feature set while noting that technical competence does not automatically equal the most expressive or rhythmically engaging presentation.",
-      "That makes it an interesting system-matching product rather than an automatic choice: excellent where compact digital functionality matters, less obvious where the system needs warmth or drive."
-    ],
-    sources:[["Independent review","https://www.whathifi.com/hi-fi/dacs/topping-dx1-ii"]],
-    query:"Topping DX1 II"
-  },
-  {
-    id:"ath-wp900se",category:"headphones",type:"Review digest",
-    title:"Audio-Technica ATH-WP900SE",strap:"Limited-edition closed-back headphones combining 53mm drivers, wood cups and balanced connectivity.",
-    image:"https://unsplash.com/photos/FFM2RHe1nQE/download?force=true&w=1200",
-    specs:[["Type","Closed-back dynamic"],["Driver","53mm"],["Response","5Hz–50kHz"],["Sensitivity","98dB/mW"],["Weight","235g"],["Cables","3.5mm + 4.4mm balanced"]],
-    body:[
-      "The WP900SE takes a deliberately traditional audiophile route: wired, closed-back, lightweight and visually distinctive rather than feature-loaded with wireless processing.",
-      "Independent listening reports emphasise clarity, spaciousness for a closed design and strong vocal/instrumental presentation, while also pointing out that bass-heavy listeners may prefer a different balance.",
-      "This kind of product is best auditioned with your own source and amplifier because sensitivity, output impedance and tonal balance all affect the result."
-    ],
-    sources:[["Independent review","https://www.whathifi.com/headphones/wired-headphones/audio-technica-ath-wp900se"]],
-    query:"Audio Technica ATH WP900SE"
-  },
-  {
-    id:"technics-sl1500cs",category:"analogue",type:"Review digest",
-    title:"Technics SL-1500CS",strap:"A modern direct-drive turntable that keeps the convenience of an integrated phono stage while aiming at serious two-channel systems.",
-    image:"https://unsplash.com/photos/Fl75UpeRyEI/download?force=true&w=1200",
-    specs:[["Drive","Direct drive"],["Category","Turntable"],["Use","Home hi-fi"],["Setup","Integrated system-friendly design"],["Focus","Speed stability + usability"],["Context","Current-generation SL-1500 line"]],
-    body:[
-      "The appeal of the SL-1500 concept is straightforward: direct-drive engineering, restrained industrial design and fewer setup barriers than many enthusiast decks.",
-      "For buyers, the real comparison is not simply belt versus direct drive. Cartridge choice, phono stage quality, isolation and support furniture can have as much influence on the final result.",
-      "Use this as a starting point for system matching rather than treating any turntable as a self-contained sound."
-    ],
-    sources:[["Independent review","https://www.whathifi.com/hi-fi/turntables/technics-sl-1500cs"]],
-    query:"Technics SL-1500C turntable"
-  }
-];
-
-const articles={
-  "system-matching":{
-    title:"Why the best component can still make the wrong system",tag:"SYSTEM BUILDING",
-    image:"https://unsplash.com/photos/XdRf3vsLh5Y/download?force=true&w=1600",
-    intro:"A hi-fi system is a chain. The meaningful question is not which box has the biggest review score, but whether source, amplifier, loudspeaker and room are electrically and sonically compatible.",
-    sections:[
-      ["Start with the room","Small rooms usually reward controlled bass, sensible cabinet size and manageable listening distance. Large rooms need displacement, headroom and current. Buying speakers before thinking about the room is one of the most expensive ways to get hi-fi wrong."],
-      ["Amplifier and speaker matching","Sensitivity, impedance behaviour and required listening level matter more than the headline watt figure alone. A nominally powerful amplifier can still struggle with an awkward load; an efficient speaker can produce convincing scale from modest power."],
-      ["Source quality still matters","Digital and analogue sources fail in different ways. Turntables need mechanical setup and phono gain/loading. Digital systems depend on conversion, clocking, analogue output stage and sensible level matching."],
-      ["System balance beats trophy collecting","Independent publications regularly build complete systems rather than merely ranking isolated products. That reflects the central truth: synergy is a system property, not a product feature."]
-    ],
-    sources:[["System matching reference","https://premiumsound.co.uk/journal/hi-fi-systems-complete-setups-our-picks/"],["Independent systems feature","https://www.whathifi.com/hi-fi/hugely-capable-and-surprisingly-unfussy-this-streaming-and-vinyl-hi-fi-system-is-a-premium-package-but-youll-be-richly-rewarded"]]
-  },
-  "analogue-path":{
-    title:"The signal starts here",tag:"ANALOGUE",
-    image:"https://unsplash.com/photos/D5iKflt76eU/download?force=true&w=1600",
-    intro:"Vinyl replay is mechanical first and electrical second. Small setup errors are amplified along with the music.",
-    sections:[
-      ["Geometry","Tracking force, cartridge alignment, arm height and anti-skate affect how the stylus sits in the groove. Get these fundamentals wrong and no cable upgrade will rescue the result."],
-      ["Gain and loading","Moving-magnet and moving-coil cartridges produce very different signal levels. The phono stage has to provide the right gain and electrical loading before the line-level amplifier ever sees the signal."],
-      ["Isolation","Turntables convert movement into voltage. That includes unwanted movement from floors, loudspeakers and furniture, so support and placement are part of the signal path."]
-    ],
-    sources:[["Browse turntable reviews","https://www.whathifi.com/hi-fi/reviews"]]
-  },
-  "cables":{
-    title:"Cables: what actually matters",tag:"ENGINEERING",
-    image:"https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=1600",
-    intro:"Cables are electrical components, but they are not magic. The useful variables are measurable and application-specific.",
-    sections:[
-      ["Resistance","Speaker cable resistance rises with length and falls with conductor cross-section. Long runs and low-impedance loudspeakers deserve thicker cable than short desktop systems."],
-      ["Capacitance and shielding","Low-level analogue signals, especially phono, can be sensitive to cable capacitance and interference. Shielding and sensible routing matter more here than decorative construction."],
-      ["Connectors","Reliable contact, strain relief, corrosion resistance and the right mechanical standard matter. A robust XLR or RCA termination is valuable because it keeps working."],
-      ["Where MCQ fits","Legacy phono, headphone extensions, adapters, DJ leads and professional interconnects are exactly where practical stock knowledge matters more than marketing language."]
-    ],
-    sources:[["Canford Audio","https://www.canford.co.uk/"],["CPC","https://cpc.farnell.com/"]]
-  },
-  "listening-room":{
-    title:"The room is part of the system",tag:"ROOM / SETUP",
-    image:"https://unsplash.com/photos/QtgGYlug6Cw/download?force=true&w=1600",
-    intro:"Move the loudspeakers or chair and you can change the tonal balance more than many component swaps.",
-    sections:[
-      ["Position first","Distance from rear and side walls changes bass reinforcement. Toe-in changes treble balance and image focus. Listening distance changes how directly you hear the loudspeaker versus the room."],
-      ["Control the first reflections","Bare side walls, glass and hard floors increase early reflections. Rugs, curtains, furniture and well-placed acoustic treatment can improve clarity without making the room visually clinical."],
-      ["Comfort matters","A dedicated listening position is not a luxury detail. Recent listening-room commentary has highlighted how physical comfort and intentional placement can transform engagement with a system."],
-      ["Measure before buying more boxes","A simple room measurement often reveals whether the next pound should go into electronics, loudspeaker placement, bass control or treatment."]
-    ],
-    sources:[["Listening-room trend","https://www.ft.com/content/7f2f0322-2568-4ad3-9199-5245e09d889e"],["Practical listening-room perspective","https://www.whathifi.com/hi-fi/forget-speakers-and-amps-this-is-the-best-upgrade-ive-made-to-my-hi-fi-listening-room-in-years"]]
-  }
-};
-
+const $=(s,r=document)=>r.querySelector(s);const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-async function api(url,options={}){
-  const res=await fetch(url,{...options,headers:{"content-type":"application/json",...(options.headers||{})}});
-  const text=await res.text();let data;try{data=text?JSON.parse(text):null}catch{data=text}
-  if(!res.ok){const e=new Error(data?.error||data?.message||`Request failed (${res.status})`);e.data=data;throw e}
-  return data;
-}
+async function api(url,opt={}){const res=await fetch(url,{...opt,headers:{"content-type":"application/json",...(opt.headers||{})}});const t=await res.text();let d;try{d=t?JSON.parse(t):null}catch{d=t}if(!res.ok){const e=new Error(d?.error||d?.message||`Request failed (${res.status})`);e.data=d;throw e}return d}
 function track(type,label,href=""){api("/api/events",{method:"POST",body:JSON.stringify({type,label,href})}).catch(()=>{})}
 
-function renderReviews(filter="all"){
-  const grid=$("#review-grid");
-  const items=filter==="all"?reviews:reviews.filter(x=>x.category===filter);
-  grid.innerHTML=items.map(r=>`<article class="review-card" data-review="${r.id}">
-    <img src="${r.image}" alt="">
-    <div class="inner"><div class="meta"><span>${esc(r.type)}</span><span>${esc(r.category)}</span></div>
-    <h3>${esc(r.title)}</h3><p>${esc(r.strap)}</p>
-    <button class="text-link review-open">Open technical review →</button></div>
-  </article>`).join("");
-  $$(".review-open",grid).forEach(btn=>btn.addEventListener("click",()=>openReview(btn.closest("[data-review]").dataset.review)));
-}
-function articleMarkup(x){
-  return `<article class="article-body">
-    <img class="hero" src="${x.image}" alt="">
-    <p class="tag">${esc(x.tag||x.type||"MCQ AUDIO")}</p>
-    <h1>${esc(x.title)}</h1>
-    <p class="dek">${esc(x.intro||x.strap||"")}</p>
-    ${(x.specs||[]).length?`<div class="spec-grid">${x.specs.map(([k,v])=>`<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join("")}</div>`:""}
-    ${(x.sections||[]).map(([h,p])=>`<h2>${esc(h)}</h2><p>${esc(p)}</p>`).join("")}
-    ${(x.body||[]).map(p=>`<p>${esc(p)}</p>`).join("")}
-    <div class="source-links">${(x.sources||[]).map(([label,url])=>`<a href="${url}" target="_blank" rel="noreferrer">${esc(label)} ↗</a>`).join("")}</div>
-    ${x.query?`<button class="btn btn-dark" id="article-shop" data-query="${esc(x.query)}">Find live price</button>`:""}
-  </article>`;
-}
-function showDialog(content,label){
-  const d=$("#article-dialog");$("#article-content").innerHTML=content;d.showModal();track("view",label);
-  const shop=$("#article-shop");if(shop)shop.addEventListener("click",()=>{d.close();runSupplierSearch(shop.dataset.query);$("#shop").scrollIntoView({behavior:"smooth"})});
-}
-function openReview(id){const r=reviews.find(x=>x.id===id);if(r)showDialog(articleMarkup(r),`review:${id}`)}
-function openArticle(id){const a=articles[id];if(a)showDialog(articleMarkup(a),`article:${id}`)}
+const products=[
+{brand:"Sony",name:"WH‑1000XM6",category:"Headphones",image:"https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=",desc:"Flagship wireless noise cancelling with 30 mm drivers, LDAC and up to 30 hours playback with NC on.",specs:["30 mm","LDAC","Bluetooth 5.3","30h NC"],url:"https://www.sony.co.uk/headphones/products/wh-1000xm6",query:"Sony WH-1000XM6"},
+{brand:"Technics",name:"SL‑1200G",category:"Turntable",image:"https://www.technics.com/content/dam/pim/uk/en/SL/SL-120/SL-1200G/ast-1651355.png.pub.thumb.644.644.png",desc:"Grand Class direct-drive turntable with coreless motor, three-layer platter and magnesium tonearm.",specs:["Direct drive","18 kg","33/45/78","0.025% W&F"],url:"https://www.technics.com/uk/products/grand-class/turntables/sl-1200g.html",query:"Technics SL-1200G"},
+{brand:"Technics",name:"SU‑R1000",category:"Amplifier",image:"https://www.technics.com/content/dam/pim/uk/en/SU/SU-R10/SU-R1000/ast-1263320.png.pub.thumb.644.644.png",desc:"Reference Class integrated amplifier with JENO Engine, LAPC, MM/MC phono and balanced analogue inputs.",specs:["150W/8Ω","300W/4Ω","MM + MC","USB + XLR"],url:"https://www.technics.com/uk/products/reference-class/su-r1000.html",query:"Technics SU-R1000"},
+{brand:"Sony",name:"WF‑1000XM6",category:"Earbuds",image:"https://sony.scene7.com/is/image/sonyglobalsolutions/WF-1000XM6_Image-Gallery_image01_d?$originalDimensions$=&fmt=png-alpha",desc:"True wireless flagship with QN3e noise cancelling, mastering-engineer sound tuning and compact ergonomic design.",specs:["True wireless","QN3e","ANC","Hi-res"],url:"https://www.sony.co.uk/headphones/products/wf-1000xm6",query:"Sony WF-1000XM6"},
+{brand:"MCQ Edit",name:"Vinyl System",category:"Buying guide",image:"https://unsplash.com/photos/kcTl2boB4SQ/download?force=true&w=1200",desc:"Build from cartridge, phono gain and isolation outward — not from brand reputation inward.",specs:["Turntable","Phono","Amp","Speakers"],url:"#build",query:"turntable phono amplifier"},
+{brand:"MCQ Edit",name:"Cable Lab",category:"Technical guide",image:"https://unsplash.com/photos/-oT4BM9PAQQ/download?force=true&w=1200",desc:"Resistance, capacitance, shielding, connector quality and the point where engineering becomes marketing.",specs:["XLR","RCA","Jack","Speaker"],url:"#shop",query:"audio cable XLR RCA"}
+];
 
-$$(".article-open").forEach(btn=>btn.addEventListener("click",()=>openArticle(btn.closest("[data-article]").dataset.article)));
-$(".dialog-close").addEventListener("click",()=>$("#article-dialog").close());
-$("#article-dialog").addEventListener("click",e=>{if(e.target===$("#article-dialog"))$("#article-dialog").close()});
-$$(".chip").forEach(btn=>btn.addEventListener("click",()=>{$$(".chip").forEach(x=>x.classList.remove("active"));btn.classList.add("active");renderReviews(btn.dataset.filter)}));
-$("#menu-button").addEventListener("click",()=>$(".site-header").classList.toggle("menu-open"));
+const brands=[
+["Sony","https://www.sony.co.uk/headphones","Headphones • wireless • pro"],
+["Technics","https://www.technics.com/uk/","Turntables • amplifiers • systems"],
+["Audio-Technica","https://www.audio-technica.com/en-gb/","Cartridges • headphones • microphones"],
+["Sennheiser","https://www.sennheiser-hearing.com/en-UK/","Headphones • wireless"],
+["Shure","https://www.shure.com/en-GB","Microphones • IEM • headphones"],
+["Denon","https://www.denon.com/en-gb/","Amplifiers • AV • streaming"],
+["Marantz","https://www.marantz.com/en-gb/","Amplifiers • CD • streaming"],
+["Yamaha","https://uk.yamaha.com/en/products/audio_visual/","Hi-fi • AV • speakers"],
+["Pioneer DJ","https://www.pioneerdj.com/en-gb/","DJ decks • mixers • monitoring"],
+["Naim","https://www.naimaudio.com/","Streaming • amplification"],
+["Bowers & Wilkins","https://www.bowerswilkins.com/en-gb/","Loudspeakers • headphones"],
+["Cambridge Audio","https://www.cambridgeaudio.com/gbr/en","Amplifiers • streamers • DACs"],
+["Rotel","https://www.rotel.com/en-gb","Amplifiers • CD • DAC"],
+["Focal","https://www.focal.com/","Loudspeakers • headphones"],
+["KEF","https://uk.kef.com/","Loudspeakers • wireless systems"],
+["Rega","https://www.rega.co.uk/","Turntables • amplifiers • cartridges"]
+];
+
+const reviews=[
+{title:"Sony WH‑1000XM6",kind:"Technical brief",category:"Wireless",image:products[0].image,intro:"Sony's current flagship noise-cancelling headphone combines a 30 mm driver, LDAC, LC3 and multipoint connectivity with up to 30 hours playback with noise cancelling enabled.",specs:[["Driver","30 mm"],["Weight","Approx. 254 g"],["Bluetooth","5.3"],["Codecs","SBC / AAC / LDAC / LC3"],["Battery","Max 30 h NC on"],["Wired","3.5 mm, passive supported"]],notes:["The engineering proposition is convenience without abandoning high-resolution wireless support.","For a hi-fi buyer, the important question is whether you want one headphone to cover commuting, calls and serious listening, or a simpler wired design optimised purely for home use."],sources:[["Sony product","https://www.sony.co.uk/headphones/products/wh-1000xm6"],["Sony specifications","https://www.sony.co.uk/electronics/support/wireless-headphones-bluetooth-headphones/wh-1000xm6/specifications"]]},
+{title:"Technics SL‑1200G",kind:"Technical review",category:"Analogue",image:products[1].image,intro:"A heavyweight direct-drive deck built around motor control, platter inertia, cabinet rigidity and a traditional gimbal tonearm rather than convenience features.",specs:[["Drive","Coreless direct drive"],["Speeds","33⅓ / 45 / 78 rpm"],["Wow & flutter","0.025% WRMS"],["Platter","Brass + aluminium"],["Tonearm","230 mm effective length"],["Weight","Approx. 18 kg"]],notes:["This is a machine-first approach to analogue replay: rotational stability, vibration control and cartridge flexibility are the headline engineering choices.","System matching still matters. Cartridge, phono stage, support and isolation can change the final result as much as the deck itself."],sources:[["Technics product","https://www.technics.com/uk/products/grand-class/turntables/sl-1200g.html"]]},
+{title:"Technics SU‑R1000",kind:"Technical review",category:"Amplification",image:products[2].image,intro:"Reference Class integrated amplification with a fully digital signal architecture, load-adaptive correction and unusually serious phono facilities.",specs:[["Output","150W + 150W / 8Ω"],["Output 4Ω","300W + 300W"],["Phono","MM/MC + balanced MC"],["Digital","Optical / coax / USB-B"],["Headphone","6.3 mm"],["Weight","22.8 kg"]],notes:["The feature set makes this less of a minimalist integrated and more of a system control centre.","Its value is strongest where the owner needs high power, analogue and digital flexibility, and intends to keep the amplifier through multiple source or speaker upgrades."],sources:[["Technics product","https://www.technics.com/uk/products/reference-class/su-r1000.html"]]}
+];
+
+function renderProducts(){
+ $("#featured-products").innerHTML=products.map((p,i)=>`<article class="product-card">
+  <div class="product-media"><img loading="${i<2?"eager":"lazy"}" src="${esc(p.image)}" alt="${esc(p.brand+" "+p.name)}" onerror="this.closest('.product-media').classList.add('image-failed');this.style.display='none'"></div>
+  <div class="product-body"><div class="product-brand">${esc(p.brand)} / ${esc(p.category)}</div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p>
+  <div class="spec-line">${p.specs.map(x=>`<span>${esc(x)}</span>`).join("")}</div>
+  <div class="product-actions"><a class="mini-btn" href="${esc(p.url)}" ${p.url.startsWith("http")?'target="_blank" rel="noreferrer"':""}>View product</a><button class="mini-btn secondary source-product" data-query="${esc(p.query)}">Source it</button></div></div>
+ </article>`).join("");
+ $$(".source-product").forEach(b=>b.addEventListener("click",()=>{runSupplierSearch(b.dataset.query);$("#shop").scrollIntoView({behavior:"smooth"});track("source_product",b.dataset.query)}));
+}
+function renderBrands(){
+ $("#brand-grid").innerHTML=brands.map(([name,url,desc])=>`<a class="brand-tile" href="${url}" target="_blank" rel="noreferrer" data-brand="${esc(name)}"><strong>${esc(name)}</strong><span>${esc(desc)}</span></a>`).join("");
+ $$(".brand-tile").forEach(a=>a.addEventListener("click",()=>track("brand_click",a.dataset.brand,a.href)));
+}
+function renderReviews(){
+ $("#review-rail").innerHTML=reviews.map((r,i)=>`<article class="review-card" data-review="${i}"><img loading="lazy" src="${esc(r.image)}" alt="${esc(r.title)}"><div class="review-body"><div class="review-meta"><span>${esc(r.kind)}</span><span>${esc(r.category)}</span></div><h3>${esc(r.title)}</h3><p>${esc(r.intro)}</p><button class="text-btn open-review">Open review →</button></div></article>`).join("");
+ $$(".open-review").forEach(b=>b.addEventListener("click",()=>openReview(Number(b.closest("[data-review]").dataset.review))));
+}
+function openReview(i){
+ const r=reviews[i];if(!r)return;$("#review-body").innerHTML=`<article class="dialog-body"><img class="hero-img" src="${esc(r.image)}" alt=""><p class="eyebrow dark">${esc(r.kind)} / ${esc(r.category)}</p><h1>${esc(r.title)}</h1><p>${esc(r.intro)}</p><div class="spec-grid">${r.specs.map(([k,v])=>`<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join("")}</div>${r.notes.map(n=>`<p>${esc(n)}</p>`).join("")}<div class="source-row">${r.sources.map(([n,u])=>`<a href="${u}" target="_blank" rel="noreferrer">${esc(n)} ↗</a>`).join("")}</div></article>`;
+ $("#review-dialog").showModal();track("review_open",r.title)
+}
+$("#review-close").addEventListener("click",()=>$("#review-dialog").close());$("#review-dialog").addEventListener("click",e=>{if(e.target===$("#review-dialog"))e.currentTarget.close()});
 
 let suppliers=[];
-async function loadSuppliers(){
-  suppliers=await api("/api/suppliers");
-  $("#supplier-select").innerHTML=suppliers.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
+async function loadSuppliers(){try{suppliers=await api("/api/suppliers");$("#supplier-select").innerHTML=suppliers.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("")}catch{$("#supplier-select").innerHTML='<option>Supplier search</option>'}}
+function supplierUrl(s,q){return s.search_url.replace("{query}",encodeURIComponent(q))}
+async function runSupplierSearch(q){
+ q=String(q||$("#shop-search").value||"").trim();if(!q)return;$("#shop-search").value=q;const out=$("#live-products");out.innerHTML='<div class="live-message">Checking the live supplier route…</div>';
+ const id=$("#supplier-select").value||"farnell",s=suppliers.find(x=>x.id===id)||suppliers[0];track("supplier_search",q,s?.homepage||"");
+ if(id==="farnell"){try{const d=await api(`/api/suppliers/farnell/search?q=${encodeURIComponent(q)}`);if(d.products?.length){out.innerHTML=d.products.map(p=>`<div class="product-row">${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:"<div></div>"}<div><b>${esc(p.name||p.sku)}</b><br><small>${esc(p.brand||"Farnell")} • ${esc(p.sku||"")}</small></div>${p.product_url?`<a class="mini-btn supplier-buy" href="${esc(p.product_url)}" target="_blank" rel="noreferrer">View / buy</a>`:""}</div>`).join("");$$(".supplier-buy").forEach(a=>a.addEventListener("click",()=>track("buy_click",q,a.href)));return}}catch{}}
+ const live=s?supplierUrl(s,q):"https://uk.farnell.com/search?st="+encodeURIComponent(q);out.innerHTML=`<div class="live-message"><b>${esc(s?.name||"Supplier")}</b><p>Open the supplier's current search for live stock and pricing.</p><a class="mini-btn" href="${esc(live)}" target="_blank" rel="noreferrer">View live stock</a></div>`
 }
-function supplierLink(s,q){return s.search_url.replace("{query}",encodeURIComponent(q))}
-async function runSupplierSearch(query){
-  const q=String(query||$("#shop-search").value||"").trim();if(!q)return;
-  $("#shop-search").value=q;
-  const supplierId=$("#supplier-select").value||"farnell";
-  const supplier=suppliers.find(s=>s.id===supplierId)||suppliers[0];
-  const out=$("#live-products");
-  out.innerHTML='<div class="live-message">Checking live supplier route…</div>';
-  track("supplier_search",q,supplier?.homepage||"");
-  if(supplierId==="farnell"){
-    try{
-      const data=await api(`/api/suppliers/farnell/search?q=${encodeURIComponent(q)}`);
-      if(data.products?.length){
-        out.innerHTML=data.products.map(p=>`<div class="product-row">
-          ${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:"<div></div>"}
-          <div><h4>${esc(p.name||p.sku)}</h4><small>${esc(p.brand||"Farnell")} • ${esc(p.sku||"")}</small></div>
-          ${p.product_url?`<a class="btn btn-dark supplier-buy" href="${esc(p.product_url)}" target="_blank" rel="noreferrer">View / buy</a>`:""}
-        </div>`).join("");
-        $$(".supplier-buy",out).forEach(a=>a.addEventListener("click",()=>track("purchase_click",a.textContent,a.href)));
-        return;
-      }
-    }catch{}
-  }
-  const live=supplier?supplierLink(supplier,q):"#";
-  out.innerHTML=`<div class="live-message"><b>${esc(supplier?.name||"Supplier")}</b><br>Open the supplier's live search for current price and stock.<br><br><a class="btn btn-dark supplier-buy" href="${esc(live)}" target="_blank" rel="noreferrer">View / buy live</a></div>`;
-  $(".supplier-buy",out)?.addEventListener("click",e=>track("purchase_click",q,e.currentTarget.href));
-}
-$("#shop-search-button").addEventListener("click",()=>runSupplierSearch());
-$("#shop-search").addEventListener("keydown",e=>{if(e.key==="Enter")runSupplierSearch()});
-$$("[data-shop-query]").forEach(el=>el.addEventListener("click",()=>{runSupplierSearch(el.dataset.shopQuery);$("#shop").scrollIntoView({behavior:"smooth"})}));
+$("#shop-search-btn").addEventListener("click",()=>runSupplierSearch());$("#shop-search").addEventListener("keydown",e=>{if(e.key==="Enter")runSupplierSearch()});$$("[data-query]").forEach(x=>x.addEventListener("click",()=>{runSupplierSearch(x.dataset.query);$("#shop").scrollIntoView({behavior:"smooth"})}));
 
-$("#builder-form").addEventListener("submit",e=>{
-  e.preventDefault();const x=Object.fromEntries(new FormData(e.currentTarget));
-  const sourceMap={Vinyl:"Turntable + correctly matched phono stage","Streaming":"Streamer/DAC with stable app support","CD":"CD transport/player with appropriate DAC path","TV + music":"Integrated amplifier with HDMI ARC or optical input","DJ / mixed sources":"Flexible analogue/digital preamp or mixer front end"};
-  const roomMap={"Small room":"compact standmount speakers or controlled small floorstanders","Medium room":"standmount or floorstanding speakers with sensible bass extension","Large room":"higher-output loudspeakers and amplifier current/headroom","Venue / commercial":"professional loudspeakers, protection and installation-first design"};
-  const result={source:x.source,room:x.room,budget:x.budget,priority:x.priority};
-  $("#builder-result").innerHTML=`<div class="system-card"><p class="tag">YOUR MCQ SYSTEM BRIEF</p><h3>${esc(x.source)} / ${esc(x.room)}</h3>
-    <ul><li><b>Source:</b> ${esc(sourceMap[x.source])}</li><li><b>Room:</b> ${esc(roomMap[x.room])}</li><li><b>Budget:</b> ${esc(x.budget)}</li><li><b>Priority:</b> ${esc(x.priority)}</li></ul>
-    <p>Next step: MCQ can turn this brief into a short list using live supplier availability and system-matching constraints.</p>
-    <button class="btn btn-dark" id="builder-lead">Send brief to MCQ</button></div>`;
-  $("#builder-lead").addEventListener("click",()=>{$("#trade").scrollIntoView({behavior:"smooth"});$("[name=interest]",$("#lead-form")).value="system";$("[name=message]",$("#lead-form")).value=`System brief: ${result.source}; ${result.room}; ${result.budget}; priority ${result.priority}.`;track("system_builder","lead")});
-  track("system_builder",JSON.stringify(result));
-});
+$("#system-form").addEventListener("submit",e=>{e.preventDefault();const x=Object.fromEntries(new FormData(e.currentTarget));const map={Vinyl:"Turntable + cartridge + correctly matched phono stage","Streaming":"Streamer/DAC with stable control software and appropriate analogue output","CD":"CD player/transport with a clean conversion path","TV + music":"Integrated amp with HDMI ARC or optical input","DJ / mixed sources":"Flexible analogue front end with robust gain structure"};const room={"Small room":"controlled standmount speakers or compact floorstanders","Medium room":"standmount or floorstanding speakers with moderate bass extension","Large room":"higher-output loudspeakers and greater amplifier current/headroom","Commercial / venue":"professional loudspeaker and installation-first design"};$("#system-result").innerHTML=`<div class="system-card"><p class="eyebrow dark">YOUR MCQ BRIEF</p><h3>${esc(x.source)} / ${esc(x.room)}</h3><p><b>Front end:</b> ${esc(map[x.source])}</p><p><b>Room:</b> ${esc(room[x.room])}</p><p><b>Budget:</b> ${esc(x.budget)}</p><p><b>Priority:</b> ${esc(x.priority)}</p><button class="mini-btn" id="send-brief">Send this brief to MCQ</button></div>`;$("#send-brief").addEventListener("click",()=>{$("#lead-form [name=interest]").value="Hi‑Fi system";$("#lead-form [name=message]").value=`System brief: ${x.source}; ${x.room}; ${x.budget}; priority: ${x.priority}.`;$(".lead-section").scrollIntoView({behavior:"smooth"});track("system_builder",JSON.stringify(x))})});
 
-$("#lead-form").addEventListener("submit",async e=>{
-  e.preventDefault();const form=e.currentTarget,status=$("#lead-status");status.textContent="Sending…";
-  const data=Object.fromEntries(new FormData(form));
-  try{const row=await api("/api/leads",{method:"POST",body:JSON.stringify({...data,source:"mcq-audio-journal"})});status.textContent=`Received — reference ${row.id}. MCQ can follow this up.`;form.reset();track("lead","submitted")}
-  catch(err){status.textContent=err.message}
-});
+$("#lead-form").addEventListener("submit",async e=>{e.preventDefault();const status=$("#lead-status"),data=Object.fromEntries(new FormData(e.currentTarget));status.textContent="Sending…";try{const r=await api("/api/leads",{method:"POST",body:JSON.stringify({...data,source:"mcq-audio"})});status.textContent=`Received — reference ${r.id}.`;e.currentTarget.reset();track("lead","submitted")}catch(err){status.textContent=err.message}});
 
-renderReviews();
-loadSuppliers().catch(()=>{});
+$("#search-open").addEventListener("click",()=>{$("#search-drawer").classList.add("open");$("#search-drawer").setAttribute("aria-hidden","false");setTimeout(()=>$("#global-search").focus(),150)});$("#search-close").addEventListener("click",()=>{$("#search-drawer").classList.remove("open");$("#search-drawer").setAttribute("aria-hidden","true")});
+$("#global-search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();if(!q){$("#global-results").innerHTML="";return}const ps=products.filter(p=>(p.brand+" "+p.name+" "+p.category+" "+p.desc).toLowerCase().includes(q));const bs=brands.filter(b=>(b[0]+" "+b[2]).toLowerCase().includes(q));$("#global-results").innerHTML=ps.map(p=>`<a class="global-result" href="${esc(p.url)}"><img src="${esc(p.image)}" alt=""><div><b>${esc(p.brand)} ${esc(p.name)}</b><p>${esc(p.category)}</p></div></a>`).join("")+bs.map(([n,u,d])=>`<a class="global-result" href="${u}" target="_blank" rel="noreferrer"><div></div><div><b>${esc(n)}</b><p>${esc(d)}</p></div></a>`).join("")});
+
+renderProducts();renderBrands();renderReviews();loadSuppliers();
