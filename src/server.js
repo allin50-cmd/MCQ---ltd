@@ -1,4 +1,5 @@
 import http from "node:http";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -32,7 +33,10 @@ const prettyRoutes=new Map([
   ["/dj","/dj.html"],
   ["/music","/music.html"],
   ["/vinyl-underground","/music.html"],
-  ["/swap-shop","/music.html"]
+  ["/swap-shop","/music.html"],
+  ["/urban","/music.html"],
+  ["/urban-underground","/music.html"],
+  ["/chart","/music.html"]
 ]);
 
 function serveStatic(u,res){
@@ -81,6 +85,77 @@ const server=http.createServer(async(req,res)=>{
         }
       }catch{}
       return json(res,200,{query:q,results:[...internal,...live].slice(0,24)});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/submissions"){
+      const x=await body(req);
+      if(!x.artist_name||!x.title||!x.genre||!x.creator_name||!x.contact||!x.preview_url)throw new Error("artist_name, title, genre, creator_name, contact and preview_url required");
+      if(x.rights_declared!==true)throw new Error("rights declaration required");
+      const stage=String(x.release_stage||"pre-pre-release").trim().toLowerCase();
+      if(!["pre-pre-release","unsigned","independent"].includes(stage))throw new Error("invalid release_stage");
+      const row={
+        id:id("urban"),
+        artist_name:String(x.artist_name).trim(),
+        title:String(x.title).trim(),
+        genre:String(x.genre).trim(),
+        release_stage:stage,
+        creator_type:String(x.creator_type||"music maker").trim(),
+        creator_name:String(x.creator_name).trim(),
+        contact:String(x.contact).trim(),
+        location:String(x.location||"").trim(),
+        artwork_url:String(x.artwork_url||"").trim(),
+        preview_url:String(x.preview_url).trim(),
+        description:String(x.description||"").trim(),
+        socials:String(x.socials||"").trim(),
+        rights_declared:true,
+        status:"LIVE",
+        created_at:new Date().toISOString()
+      };
+      db.urban_submissions.push(row);save(db);
+      return json(res,201,{...row,contact:undefined});
+    }
+
+    if(req.method==="GET"&&u.pathname==="/api/urban/chart"){
+      const genre=String(u.searchParams.get("genre")||"").trim().toLowerCase();
+      const limit=Math.min(100,Math.max(1,Number(u.searchParams.get("limit")||40)));
+      const live=db.urban_submissions.filter(v=>v.status==="LIVE"&&(!genre||String(v.genre).toLowerCase()===genre));
+      const ranked=live.map(v=>{
+        const votes=db.urban_votes.filter(x=>x.submission_id===v.id).length;
+        return {...v,contact:undefined,votes};
+      }).sort((a,b)=>b.votes-a.votes||new Date(b.created_at)-new Date(a.created_at))
+        .slice(0,limit)
+        .map((v,i)=>({...v,rank:i+1}));
+      return json(res,200,{count:ranked.length,ranking:"unique user support votes; ties by newest submission",items:ranked});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/vote"){
+      const x=await body(req);
+      if(!x.submission_id||!x.contact)throw new Error("submission_id and contact required");
+      const submission=db.urban_submissions.find(v=>v.id===x.submission_id&&v.status==="LIVE");
+      if(!submission)throw new Error("submission not found");
+      const voter_hash=crypto.createHash("sha256").update(String(x.contact).trim().toLowerCase()).digest("hex");
+      if(db.urban_votes.some(v=>v.submission_id===submission.id&&v.voter_hash===voter_hash))throw new Error("already supported");
+      const row={id:id("uvote"),submission_id:submission.id,voter_hash,created_at:new Date().toISOString()};
+      db.urban_votes.push(row);save(db);
+      return json(res,201,{ok:true,submission_id:submission.id,votes:db.urban_votes.filter(v=>v.submission_id===submission.id).length});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/report"){
+      const x=await body(req);
+      if(!x.submission_id||!x.reason)throw new Error("submission_id and reason required");
+      if(!db.urban_submissions.some(v=>v.id===x.submission_id))throw new Error("submission not found");
+      const row={id:id("ureport"),submission_id:String(x.submission_id),reason:String(x.reason).slice(0,500),contact:String(x.contact||"").slice(0,200),status:"NEW",created_at:new Date().toISOString()};
+      db.urban_reports.push(row);save(db);return json(res,201,{ok:true,id:row.id});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/moderate"){
+      requireAdmin(req);
+      const x=await body(req);
+      const row=db.urban_submissions.find(v=>v.id===x.submission_id);
+      if(!row)throw new Error("submission not found");
+      const status=String(x.status||"").toUpperCase();
+      if(!["LIVE","HIDDEN","REMOVED"].includes(status))throw new Error("invalid status");
+      row.status=status;row.moderated_at=new Date().toISOString();save(db);return json(res,200,{id:row.id,status:row.status});
     }
 
     if(req.method==="GET"&&u.pathname==="/api/music/catalog"){
@@ -250,7 +325,7 @@ const server=http.createServer(async(req,res)=>{
 
     if(req.method==="GET"&&u.pathname==="/api/admin/summary"){
       requireAdmin(req);
-      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length,leads:db.leads.length,events:db.events.length,music_catalog:db.music_catalog.length,music_orders:db.music_orders.length,swap_offers:db.swap_offers.length,drop_signups:db.drop_signups.length});
+      return json(res,200,{equipment:db.equipment.length,enquiries:db.enquiries.length,quotes:db.quotes.length,bookings:db.bookings.length,payments:db.payments.length,leads:db.leads.length,events:db.events.length,music_catalog:db.music_catalog.length,music_orders:db.music_orders.length,swap_offers:db.swap_offers.length,drop_signups:db.drop_signups.length,urban_submissions:db.urban_submissions.length,urban_votes:db.urban_votes.length,urban_reports:db.urban_reports.length});
     }
 
     if(req.method==="GET"&&serveStatic(u,res)) return;
