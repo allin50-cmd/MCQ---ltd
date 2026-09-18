@@ -18,7 +18,7 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   assert.equal(home.status,200);
   assert.match(await home.text(),/MCQ Audio — Hi‑Fi Magazine/);
 
-  for (const route of ["/microphones","/headphones","/wireless","/dj","/music"]) {
+  for (const route of ["/microphones","/headphones","/wireless","/dj"]) {
     const page=await fetch(base+route);
     assert.equal(page.status,200);
     assert.equal(page.headers.get("x-content-type-options"),"nosniff");
@@ -29,6 +29,16 @@ test("website backend protects admin writes and accepts public hire enquiries", 
     assert.match(html,/site\.webmanifest/);
     assert.match(html,/Skip to content/);
   }
+
+  const musicPage=await fetch(base+"/music");
+  assert.equal(musicPage.status,200);
+  assert.equal(musicPage.headers.get("x-content-type-options"),"nosniff");
+  const musicHtml=await musicPage.text();
+  assert.match(musicHtml,/VINYL UNDERGROUND/);
+  assert.match(musicHtml,/URBAN SWAP SHOP/);
+  assert.match(musicHtml,/MP3 \/ DIGITAL/);
+  assert.match(musicHtml,/site\.webmanifest/);
+  assert.match(musicHtml,/Skip to content/);
 
   for (const route of ["/","/microphones","/headphones","/wireless","/dj","/music"]) {
     const page=await fetch(base+route);
