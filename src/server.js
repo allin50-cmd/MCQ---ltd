@@ -66,12 +66,13 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="POST"&&u.pathname==="/api/hire/request"){
       const x=await body(req);
       if(!x.customer_name||!x.contact||!x.equipment_id||!x.start_at||!x.end_at)throw new Error("customer_name, contact, equipment_id, start_at, end_at required");
-      const eq=db.equipment.find(v=>v.id===x.equipment_id);
-      if(!eq)throw new Error("equipment not found");
-      if(!isAvailable(eq.id,x.start_at,x.end_at,db.bookings))throw new Error("equipment unavailable");
-      const enquiry={id:id("enq"),customer_name:String(x.customer_name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),venue:String(x.venue||"").trim(),event_type:String(x.event_type||"").trim(),notes:String(x.notes||"").trim(),equipment_id:eq.id,start_at:x.start_at,end_at:x.end_at,status:"NEW",created_at:new Date().toISOString()};
-      const quote={id:id("quo"),...createQuote(enquiry,eq)};
-      db.enquiries.push(enquiry);db.quotes.push(quote);save(db);
+      const equipmentId=String(x.equipment_id||"").trim();
+      const eq=equipmentId?db.equipment.find(v=>v.id===equipmentId):null;
+      if(equipmentId&&!eq)throw new Error("equipment not found");
+      if(eq&&!isAvailable(eq.id,x.start_at,x.end_at,db.bookings))throw new Error("equipment unavailable");
+      const enquiry={id:id("enq"),customer_name:String(x.customer_name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),venue:String(x.venue||"").trim(),event_type:String(x.event_type||"").trim(),notes:String(x.notes||"").trim(),equipment_id:eq?.id||null,start_at:x.start_at,end_at:x.end_at,status:"NEW",created_at:new Date().toISOString()};
+      const quote=eq?{id:id("quo"),...createQuote(enquiry,eq)}:null;
+      db.enquiries.push(enquiry);if(quote)db.quotes.push(quote);save(db);
       return json(res,201,{enquiry,quote});
     }
 
