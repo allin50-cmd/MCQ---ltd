@@ -18,6 +18,26 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   assert.equal(home.status,200);
   assert.match(await home.text(),/MCQ Audio — Hi‑Fi Magazine/);
 
+  for (const route of ["/microphones","/headphones","/wireless","/dj"]) {
+    const page=await fetch(base+route);
+    assert.equal(page.status,200);
+    assert.equal(page.headers.get("x-content-type-options"),"nosniff");
+    assert.match(page.headers.get("content-security-policy")||"",/default-src 'self'/);
+    const html=await page.text();
+    assert.match(html,/MCQ Audio/);
+    assert.match(html,/CHEAP → PREMIUM/);
+    assert.match(html,/site\.webmanifest/);
+    assert.match(html,/Skip to content/);
+  }
+
+  const manifest=await fetch(base+"/site.webmanifest");
+  assert.equal(manifest.status,200);
+  assert.match(await manifest.text(),/"name": "MCQ Audio"/);
+
+  const missing=await fetch(base+"/definitely-not-a-real-page");
+  assert.equal(missing.status,404);
+  assert.match(await missing.text(),/That page isn’t here/);
+
   const lead=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
     name:"HiFi Customer",
     contact:"hifi@example.com",
