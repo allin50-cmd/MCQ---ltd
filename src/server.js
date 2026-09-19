@@ -38,6 +38,7 @@ const prettyRoutes=new Map([
   ["/urban-underground","/music.html"],
   ["/chart","/chart.html"],
   ["/shop","/shop.html"],
+  ["/featured","/featured.html"],
   ["/magazine","/magazine.html"],
   ["/hire","/hire.html"],
   ["/hire-install","/hire.html"],
