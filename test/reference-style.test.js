@@ -8,7 +8,7 @@ test("homepage follows the approved dense black MCQ reference structure",()=>{
   const html=read("public/index.html");
   assert.match(html,/reference-style\.css\?v=[a-z0-9-]+/);
   assert.doesNotMatch(html,/rebuild\.css/);
-  for(const text of ["SHOP BY CATEGORY","HARD-TO-FIND ESSENTIALS","URBAN UNDERGROUND","THE PEOPLE'S ART","FEATURED GEAR","FEATURED BRANDS","HIRE & INSTALL"]){
+  for(const text of ["SHOP BY CATEGORY","SPECIALIST SOURCING","URBAN UNDERGROUND","THE PEOPLE'S ART","FEATURED GEAR","FEATURED BRANDS","HIRE & INSTALL"]){
     assert.ok(html.includes(text),text);
   }
   assert.match(html,/URBAN UNDERGROUND <em>LIVE<\/em>/);
