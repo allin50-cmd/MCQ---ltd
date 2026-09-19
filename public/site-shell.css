@@ -22,3 +22,17 @@ header.top,header.mast,header.g-top,header.cinema-nav,.mobile-dock,.dock{display
   .mcq-mobile-nav button,.mcq-mobile-nav a{min-height:68px;border:0;background:transparent;color:#fff;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:800 9px/1 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;text-transform:uppercase;letter-spacing:.04em}
   .mcq-mobile-nav .icon{font-size:20px;line-height:1}.mcq-mobile-nav a[aria-current="page"]{color:var(--mcq-shell-gold)}
 }
+
+/* MCQ reference-style navigation: dense, black, useful. */
+.mcq-shell{background:#05080af7!important;border-bottom:1px solid #263039!important;box-shadow:0 4px 18px #0007}
+.mcq-shell-row{max-width:1600px;margin:0 auto;padding-left:18px!important;padding-right:18px!important}
+.mcq-brand b{font-family:Arial Black,Arial,sans-serif!important;font-size:30px!important;letter-spacing:-.07em!important}
+.mcq-brand span{color:#c4cbd0!important;font-size:9px!important;letter-spacing:.14em!important}
+.mcq-primary{gap:2px!important}
+.mcq-primary a{border-radius:0!important;padding:11px 10px!important;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif!important;font-size:10px!important;letter-spacing:.02em!important;text-transform:none!important}
+.mcq-primary a[aria-current="page"],.mcq-primary a:hover{background:#11181e!important;color:#e5ad30!important}
+.mcq-back,.mcq-home,.mcq-menu-btn{border-radius:2px!important;background:#0d1318!important;border-color:#303a43!important;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif!important}
+.mcq-crumbs{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif!important}
+.mcq-crumbs strong{color:#e5ad30!important}
+.mcq-mobile-nav{background:#05080af7!important;border-color:#29333b!important}
+.mcq-mobile-nav button,.mcq-mobile-nav a{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif!important}
