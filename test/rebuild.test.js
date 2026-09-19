@@ -21,10 +21,10 @@ test("product image trust gate is loaded on commerce surfaces",()=>{
   assert.match(gate,/load-error/);
 });
 
-test("homepage product interactions do not call forEach on single-element selector",()=>{
+test("homepage uses collection selectors and image-verified supplier search",()=>{
   const app=read("public/app.js");
-  assert.doesNotMatch(app,/\$\("\.product-detail"\)\.forEach/);
-  assert.doesNotMatch(app,/\$\("\.brand-tile"\)\.forEach/);
+  assert.match(app,/\$\$\("\.product-detail"\)\.forEach/);
+  assert.match(app,/\$\$\("\.brand-tile"\)\.forEach/);
   assert.match(app,/async function runSupplierSearch/);
   assert.match(app,/filter\(p=>p\.image/);
 });
