@@ -25,6 +25,8 @@ test("reference stylesheet encodes the approved visual contract",()=>{
   assert.match(css,/--mcq-gold:#e5ad30/);
   assert.match(css,/ref-culture-strip/);
   assert.match(css,/home-art-card/);
+  assert.match(css,/\.ref-brand-panel\{min-width:0/);
+  assert.match(css,/overflow-wrap:anywhere/);
 });
 
 test("Urban Underground uses the same graffiti-club visual language",()=>{
