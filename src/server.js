@@ -65,6 +65,12 @@ function serveStatic(u,res){
   const ext=path.extname(target).toLowerCase();
   const immutable=/\.(?:css|js|svg|png|jpe?g|webp|ico)$/.test(ext);
   res.writeHead(200,{...securityHeaders,"content-type":mime[ext]||"application/octet-stream","cache-control":ext===".html"?"no-store":immutable?"public, max-age=3600":"public, max-age=300"});
+  if(ext===".html"){
+    let html=fs.readFileSync(target,"utf8");
+    if(!html.includes("/site-shell.css"))html=html.replace(/<\/head>/i,'<link rel="stylesheet" href="/site-shell.css"></head>');
+    if(!html.includes("/site-shell.js"))html=html.replace(/<\/body>/i,'<script src="/site-shell.js" defer></script></body>');
+    res.end(html);return true;
+  }
   fs.createReadStream(target).pipe(res);
   return true;
 }
