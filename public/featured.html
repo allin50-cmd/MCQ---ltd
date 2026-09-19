@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0b">
+<meta name="description" content="MCQ Audio featured gear — large product imagery, specifications and real purchase or reserve enquiries through MCQ.">
+<title>Featured Gear | MCQ Audio</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/featured.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="top">
+  <a class="logo" href="/"><b>MCQ</b><span>AUDIO</span></a>
+  <nav class="desktop-nav">
+    <a href="/shop">Shop Audio</a><a href="/featured">Featured Gear</a><a href="/urban">Urban Underground</a><a href="/magazine">Magazine</a><a href="/live">Live</a><a href="/hire">Hire & Install</a>
+  </nav>
+  <a class="round featured-home" href="/shop" aria-label="Shop audio">⌕</a>
+</header>
+
+<main id="main">
+<section class="featured-hero">
+  <div class="featured-hero-copy">
+    <p class="eyebrow">MCQ FEATURED GEAR / BUY • RESERVE • SOURCE</p>
+    <h1>Equipment you want to own.</h1>
+    <p>Large-format product stories with a clear next step. Buy or reserve through MCQ, ask us to source a hard-to-find item, or request a suitable alternative.</p>
+    <div class="hero-actions">
+      <a class="cta light" href="#featured-grid">See featured gear</a>
+      <a class="cta glass" href="/shop">Search full shop</a>
+    </div>
+  </div>
+  <img src="https://www.technics.com/content/dam/pim/uk/en/SL/SL-120/SL-1200G/ast-1651355.png.pub.thumb.644.644.png" alt="Technics SL-1200G turntable">
+</section>
+
+<section class="section featured-intro">
+  <div class="section-head">
+    <div><p class="eyebrow dark">FEATURE PAGE</p><h2>See it. Understand it. Get it.</h2></div>
+    <p class="section-note">Prices and stock are not invented. Where MCQ has not published a verified selling price, the page uses a purchase enquiry rather than pretending checkout is available.</p>
+  </div>
+</section>
+
+<section class="featured-grid" id="featured-grid" aria-live="polite"></section>
+
+<section class="feature-service">
+  <div>
+    <p class="eyebrow">MCQ SOURCING DESK</p>
+    <h2>Can't find the exact model?</h2>
+    <p>MCQ can source current equipment, legacy audio, 1210 accessories, cartridges and styli, professional leads, headphone extensions, blank media and venue audio components.</p>
+  </div>
+  <button class="cta light" data-general-source>Ask MCQ to source it</button>
+</section>
+
+<section class="section buying-notes">
+  <div class="section-head">
+    <div><p class="eyebrow dark">HOW PURCHASING WORKS</p><h2>Three ways to buy.</h2></div>
+  </div>
+  <div class="purchase-options">
+    <article><span>01</span><h3>Buy / reserve</h3><p>Send MCQ the exact item and preferred quantity. We confirm current price, stock and collection or delivery before taking payment.</p></article>
+    <article><span>02</span><h3>Source for me</h3><p>For specialist or hard-to-find items, send the model or requirement and MCQ can locate the closest suitable supply route.</p></article>
+    <article><span>03</span><h3>Recommend an alternative</h3><p>If the original item is unavailable, tell us the use case and budget and we can propose an alternative instead of forcing the wrong product.</p></article>
+  </div>
+</section>
+</main>
+
+<dialog id="purchase-dialog">
+  <button class="purchase-close" type="button" aria-label="Close">×</button>
+  <form id="purchase-form" class="purchase-form">
+    <p class="eyebrow dark">MCQ PURCHASE DESK</p>
+    <h2 id="purchase-title">Purchase request</h2>
+    <p id="purchase-copy">We will confirm availability and price before payment.</p>
+    <input type="hidden" name="product">
+    <input type="hidden" name="purchase_action">
+    <label>Name<input name="name" required></label>
+    <label>Email<input name="contact" type="email" required></label>
+    <label>Phone<input name="phone"></label>
+    <label>Quantity<input name="quantity" type="number" min="1" value="1"></label>
+    <label>Budget / target price<input name="budget" placeholder="Optional"></label>
+    <label>Delivery preference<select name="delivery"><option>Collection</option><option>Delivery quote</option><option>Either</option></select></label>
+    <label>Notes<textarea name="message" rows="4" placeholder="Anything MCQ should know?"></textarea></label>
+    <button class="cta dark" type="submit">Send purchase request</button>
+    <p id="purchase-status"></p>
+  </form>
+</dialog>
+
+<footer>
+  <div class="logo footer-logo"><b>MCQ</b><span>AUDIO</span></div>
+  <p>Hi‑Fi • Pro Audio • DJ • Vinyl • Parts • Hire • Installation • Sourcing</p>
+  <p class="legal">Manufacturer names, marks and imagery belong to their respective owners. Product availability and selling price are confirmed by MCQ before payment.</p>
+</footer>
+
+<nav class="mobile-dock" aria-label="Mobile navigation">
+  <a href="/"><span>⌂</span>Home</a>
+  <a href="/shop"><span>⌕</span>Shop</a>
+  <a href="/featured"><span>★</span>Featured</a>
+  <a href="/urban"><span>●</span>Urban</a>
+  <a href="/hire"><span>＋</span>Hire</a>
+</nav>
+<script type="module" src="/featured.js"></script>
+</body>
+</html>
