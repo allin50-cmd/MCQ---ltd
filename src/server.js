@@ -17,7 +17,7 @@ const securityHeaders={
   "content-security-policy":"default-src 'self'; img-src 'self' data: https:; media-src 'self' https: blob:; frame-src https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.element14.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 };
 const json=(res,status,body)=>{res.writeHead(status,{...securityHeaders,"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
-const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>1_000_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
+const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>5_500_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
 const route=(u,...paths)=>paths.includes(u.pathname);
 function requireAdmin(req){
   const expected=(process.env.MCQ_ADMIN_TOKEN||"").trim();
@@ -262,6 +262,75 @@ const server=http.createServer(async(req,res)=>{
       const status=String(x.status||"").toUpperCase();
       if(!["LIVE","HIDDEN","REMOVED"].includes(status))throw new Error("invalid status");
       row.status=status;row.moderated_at=new Date().toISOString();save(db);return json(res,200,{id:row.id,status:row.status});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/art/submissions"){
+      const x=await body(req);
+      if(!x.title||!x.creator_name||!x.contact||!x.image_data)throw new Error("title, creator_name, contact and image required");
+      if(x.rights_declared!==true)throw new Error("rights declaration required");
+      const image=String(x.image_data||"");
+      const m=image.match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/);
+      if(!m)throw new Error("image must be JPEG, PNG or WebP");
+      const approxBytes=Math.floor(m[2].length*3/4);
+      if(approxBytes>3_000_000)throw new Error("image must be 3MB or smaller after optimisation");
+      const row={
+        id:id("uart"),
+        title:String(x.title).trim().slice(0,120),
+        creator_name:String(x.creator_name).trim().slice(0,120),
+        contact:String(x.contact).trim().slice(0,200),
+        artist_credit:String(x.artist_credit||"").trim().slice(0,160),
+        location:String(x.location||"").trim().slice(0,160),
+        story:String(x.story||"").trim().slice(0,1200),
+        image_data:image,
+        rights_declared:true,
+        status:"PENDING",
+        created_at:new Date().toISOString()
+      };
+      db.urban_art_submissions.push(row);save(db);
+      return json(res,201,{id:row.id,status:row.status,title:row.title,created_at:row.created_at});
+    }
+
+    if(req.method==="GET"&&u.pathname==="/api/urban/art/chart"){
+      const limit=Math.min(100,Math.max(1,Number(u.searchParams.get("limit")||50)));
+      const live=db.urban_art_submissions.filter(v=>v.status==="LIVE");
+      const ranked=live.map(v=>{
+        const votes=db.urban_art_votes.filter(x=>x.submission_id===v.id).length;
+        const {contact,...publicRow}=v;
+        return {...publicRow,votes};
+      }).sort((a,b)=>b.votes-a.votes||new Date(b.created_at)-new Date(a.created_at))
+        .slice(0,limit).map((v,i)=>({...v,rank:i+1}));
+      return json(res,200,{count:ranked.length,ranking:"unique public support votes; ties by newest submission",items:ranked});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/art/vote"){
+      const x=await body(req);
+      if(!x.submission_id||!x.contact)throw new Error("submission_id and contact required");
+      const submission=db.urban_art_submissions.find(v=>v.id===x.submission_id&&v.status==="LIVE");
+      if(!submission)throw new Error("art submission not found");
+      const voter_hash=crypto.createHash("sha256").update(String(x.contact).trim().toLowerCase()).digest("hex");
+      if(db.urban_art_votes.some(v=>v.submission_id===submission.id&&v.voter_hash===voter_hash))throw new Error("already voted");
+      db.urban_art_votes.push({id:id("uavote"),submission_id:submission.id,voter_hash,created_at:new Date().toISOString()});
+      save(db);
+      return json(res,201,{ok:true,submission_id:submission.id,votes:db.urban_art_votes.filter(v=>v.submission_id===submission.id).length});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/art/report"){
+      const x=await body(req);
+      if(!x.submission_id||!x.reason)throw new Error("submission_id and reason required");
+      if(!db.urban_art_submissions.some(v=>v.id===x.submission_id))throw new Error("art submission not found");
+      const row={id:id("uareport"),submission_id:String(x.submission_id),reason:String(x.reason).slice(0,500),contact:String(x.contact||"").slice(0,200),status:"NEW",created_at:new Date().toISOString()};
+      db.urban_art_reports.push(row);save(db);return json(res,201,{ok:true,id:row.id});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/urban/art/moderate"){
+      requireAdmin(req);
+      const x=await body(req);
+      const row=db.urban_art_submissions.find(v=>v.id===x.submission_id);
+      if(!row)throw new Error("art submission not found");
+      const status=String(x.status||"").toUpperCase();
+      if(!["LIVE","HIDDEN","REMOVED","PENDING"].includes(status))throw new Error("invalid status");
+      row.status=status;row.moderated_at=new Date().toISOString();save(db);
+      return json(res,200,{id:row.id,status:row.status});
     }
 
     if(req.method==="GET"&&u.pathname==="/api/music/catalog"){
