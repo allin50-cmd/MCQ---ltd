@@ -23,8 +23,15 @@ const productHosts=["sony.scene7.com","shure.widen.net","www.pioneerdj.com","pan
 const urls=new Set();
 
 for(const source of sourceByFile.values()){
-  for(const m of source.matchAll(/https:\/\/[^"'\s)<>]+/g)){
-    const raw=m[0];
+  for(const m of source.matchAll(/<img\b[^>]*\bsrc=["'](https:\/\/[^"']+)["']/gi)){
+    const raw=m[1];
+    try{
+      const u=new URL(raw.replace(/&amp;/g,"&"));
+      if(productHosts.includes(u.hostname)) urls.add(raw);
+    }catch{}
+  }
+  for(const m of source.matchAll(/\bimage\s*:\s*["'](https:\/\/[^"']+)["']/g)){
+    const raw=m[1];
     try{
       const u=new URL(raw.replace(/&amp;/g,"&"));
       if(productHosts.includes(u.hostname)) urls.add(raw);
