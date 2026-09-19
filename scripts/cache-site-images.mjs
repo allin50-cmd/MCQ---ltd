@@ -3,7 +3,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 
 const root=path.resolve("public");
-const outDir=path.join(root,"assets","cached");
+const outDir=path.join(root,"assets","products");
 fs.mkdirSync(outDir,{recursive:true});
 
 const files=[];
@@ -19,11 +19,17 @@ function walk(dir){
 walk(root);
 
 const sourceByFile=new Map(files.map(f=>[f,fs.readFileSync(f,"utf8")]));
+const productHosts=["sony.scene7.com","shure.widen.net","www.pioneerdj.com","panasonic.scene7.com"];
 const urls=new Set();
 
 for(const source of sourceByFile.values()){
-  for(const m of source.matchAll(/<img\b[^>]*\bsrc=["'](https:\/\/[^"']+)["']/gi)) urls.add(m[1]);
-  for(const m of source.matchAll(/\bimage\s*:\s*["'](https:\/\/[^"']+)["']/g)) urls.add(m[1]);
+  for(const m of source.matchAll(/https:\/\/[^"'\s)<>]+/g)){
+    const raw=m[0];
+    try{
+      const u=new URL(raw.replace(/&amp;/g,"&"));
+      if(productHosts.includes(u.hostname)) urls.add(raw);
+    }catch{}
+  }
 }
 
 const extFor=type=>{
@@ -34,13 +40,14 @@ const extFor=type=>{
   return ".jpg";
 };
 
-async function download(url){
+async function download(raw){
+  const url=raw.replace(/&amp;/g,"&");
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),25000);
   let res;
   try{
     res=await fetch(url,{redirect:"follow",signal:controller.signal,headers:{
-      "user-agent":"Mozilla/5.0 (compatible; MCQ-Audio-Asset-Validator/1.0)",
+      "user-agent":"Mozilla/5.0 (compatible; MCQ-Audio-Product-Asset-Validator/2.0)",
       "accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
     }});
   }finally{clearTimeout(timeout)}
@@ -52,17 +59,17 @@ async function download(url){
   const hash=crypto.createHash("sha256").update(url).digest("hex").slice(0,18);
   const filename=hash+extFor(type);
   fs.writeFileSync(path.join(outDir,filename),bytes);
-  return "/assets/cached/"+filename;
+  return "/assets/products/"+filename;
 }
 
 const mapping=new Map();
-for(const url of urls){
+for(const raw of urls){
   try{
-    const local=await download(url);
-    mapping.set(url,local);
-    console.log(`cached ${url} -> ${local}`);
+    const local=await download(raw);
+    mapping.set(raw,local);
+    console.log(`PRODUCT IMAGE VERIFIED: ${raw} -> ${local}`);
   }catch(err){
-    console.error(`REQUIRED IMAGE FAILED: ${url}: ${err.message}`);
+    console.error(`REQUIRED PRODUCT IMAGE FAILED: ${raw}: ${err.message}`);
     process.exitCode=1;
   }
 }
@@ -70,10 +77,9 @@ if(process.exitCode)process.exit(process.exitCode);
 
 for(const [file,source] of sourceByFile){
   let next=source;
-  for(const [url,local] of mapping) next=next.split(url).join(local);
+  for(const [raw,local] of mapping) next=next.split(raw).join(local);
   if(next!==source)fs.writeFileSync(file,next,"utf8");
 }
 
-const manifest=Object.fromEntries([...mapping.entries()].sort((a,b)=>a[0].localeCompare(b[0])));
-fs.writeFileSync(path.join(outDir,"manifest.json"),JSON.stringify(manifest,null,2)+"\n");
-console.log(`MCQ image gate passed: ${mapping.size} remote image assets cached locally.`);
+fs.writeFileSync(path.join(outDir,"manifest.json"),JSON.stringify(Object.fromEntries(mapping),null,2)+"\n");
+console.log(`MCQ PRODUCT IMAGE GATE PASSED: ${mapping.size} manufacturer assets are local.`);
