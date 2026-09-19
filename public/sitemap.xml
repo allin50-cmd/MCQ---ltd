@@ -2,6 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
   <url><loc>/shop</loc></url>
+  <url><loc>/featured</loc></url>
+  <url><loc>/urban-gallery</loc></url>
   <url><loc>/headphones</loc></url>
   <url><loc>/microphones</loc></url>
   <url><loc>/wireless</loc></url>
