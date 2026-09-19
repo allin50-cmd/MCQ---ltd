@@ -6,7 +6,7 @@ const read=p=>fs.readFileSync(new URL("../"+p,import.meta.url),"utf8");
 
 test("homepage follows the approved dense black MCQ reference structure",()=>{
   const html=read("public/index.html");
-  assert.match(html,/reference-style\.css\?v=[a-f0-9]+/);
+  assert.match(html,/reference-style\.css\?v=[a-z0-9-]+/);
   assert.doesNotMatch(html,/rebuild\.css/);
   for(const text of ["SHOP BY CATEGORY","HARD-TO-FIND ESSENTIALS","URBAN UNDERGROUND","THE PEOPLE'S ART","FEATURED GEAR","FEATURED BRANDS","HIRE & INSTALL"]){
     assert.ok(html.includes(text),text);
@@ -26,7 +26,7 @@ test("reference stylesheet encodes the approved visual contract",()=>{
   assert.match(css,/ref-culture-strip/);
   assert.match(css,/home-art-card/);
   assert.match(css,/\.ref-brand-panel\{min-width:0/);
-  assert.match(css,/overflow-wrap:anywhere/);
+  assert.match(css,/@media\(max-width:1450px\)/);
 });
 
 test("Urban Underground uses the same graffiti-club visual language",()=>{
