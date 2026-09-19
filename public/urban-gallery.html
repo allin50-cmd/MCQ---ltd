@@ -1,13 +1,48 @@
-<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#05080a"><meta name="description" content="MCQ Urban Gallery — London street art, sound, people and visual culture."><title>Urban Gallery | MCQ Audio</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/urban-gallery.css"></head><body>
-<header class="g-top"><a class="g-logo" href="/" style="color:white;text-decoration:none">MCQ AUDIO</a><nav class="g-nav"><a href="/shop">Shop</a><a href="/urban">Urban Underground</a><a href="/urban-gallery">Street Art Gallery</a><a href="/chart">Chart</a><a href="/live">Live</a><a href="/hire">Hire</a></nav></header>
-<main><section class="g-hero"><div class="g-hero-copy"><div class="eyebrow">MCQ / PEOPLE • MUSIC • PLACES</div><h1>The city is<br><span>part of the sound.</span></h1><p>Street art is not decoration around MCQ Urban Underground. It is part of the visual culture around the music: walls, people, lettering, protest, colour, memory and the neighbourhoods where scenes grow.</p></div><div class="g-hero-media"><img src="https://images.unsplash.com/photo-1755029458858-ed82172906c8?auto=format&fit=crop&fm=jpg&q=88&w=2200" alt="London street art mural"></div></section>
-<section class="gallery" aria-label="MCQ Urban street art gallery">
-<figure class="art"><img src="https://images.unsplash.com/photo-1528886050511-50b2248e8dcc?auto=format&fit=crop&fm=jpg&q=88&w=2400" alt="Street art in Brick Lane, London"><figcaption class="cap"><strong>Brick Lane</strong>Walls as a living archive.</figcaption></figure>
-<figure class="art"><img src="https://images.unsplash.com/photo-1646395153117-da62f7a4a835?auto=format&fit=crop&fm=jpg&q=88&w=2200" alt="Street artists painting graffiti in London"><figcaption class="cap"><strong>Work in progress</strong>The people making the city visible.</figcaption></figure>
-<figure class="art"><img src="https://images.unsplash.com/photo-1755029458858-ed82172906c8?auto=format&fit=crop&fm=jpg&q=88&w=2200" alt="Colourful London murals"><figcaption class="cap"><strong>Camden colour</strong>Portrait, lettering and place.</figcaption></figure>
-<figure class="art"><img src="https://images.unsplash.com/photo-1607873186427-562af2de3d6b?auto=format&fit=crop&fm=jpg&q=88&w=2200" alt="Layered street posters and urban art"><figcaption class="cap"><strong>Layers</strong>Posters, paste-ups, tags and the marks a city keeps.</figcaption></figure>
-<figure class="art"><img src="https://images.unsplash.com/photo-1546006508-5bd647796a4c?auto=format&fit=crop&fm=jpg&q=88&w=2200" alt="London nightlife crowd under club lighting"><figcaption class="cap"><strong>After dark</strong>Street energy becomes dancefloor energy.</figcaption></figure>
+<!doctype html><html lang="en-GB"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05080a"><meta name="description" content="MCQ Urban Art Chart — upload street-art photography, discover the community gallery and vote for your favourite.">
+<title>Urban Art Chart | MCQ Audio</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/urban-gallery.css">
+</head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="g-top"><a class="g-logo" href="/">MCQ AUDIO</a><nav class="g-nav"><a href="/shop">Shop</a><a href="/urban">Urban Underground</a><a href="/urban-gallery">Urban Art Chart</a><a href="/chart">Music Chart</a><a href="/live">Live</a><a href="/hire">Hire</a></nav></header>
+<main id="main">
+<section class="g-hero">
+ <div class="g-hero-copy"><div class="eyebrow">MCQ / URBAN ART CHART</div><h1>Your walls.<br><span>Your photos.</span><br>Your chart.</h1>
+ <p>Upload street art, murals, paste-ups, lettering and visual culture from your area. Approved submissions enter the MCQ Urban Art Chart and the public votes for the work they want at the top.</p>
+ <div class="hero-actions"><a href="#upload" class="btn gold">Upload your art photo</a><a href="#chart" class="btn ghost">View the chart</a></div></div>
+ <div class="hero-type" aria-hidden="true"><b>ART</b><span>PEOPLE<br>PLACE<br>CULTURE<br>VOTE</span></div>
 </section>
-<section class="manifesto"><h2>Art sets the tone.<br>People set the culture.</h2><div><p>MCQ's Urban Gallery connects visual artists, DJs, producers, collectors and audiences without turning street culture into a generic design theme. The gallery can expand with credited work from artists who choose to participate.</p><a href="/urban">Enter Urban Underground</a></div></section>
-<div class="credits">Photography used under the Unsplash licence. London street-art sources include Peter Blanken, Nick Page, Philippe Bontemps and Sam Fry; nightlife photography by Axville. Artist-submitted MCQ gallery work will be credited individually when supplied.</div></main>
-<nav class="dock"><a href="/">Home</a><a href="/shop">Shop</a><a href="/urban">Urban</a><a href="/live">Live</a><a href="/hire">Hire</a></nav><script src="/image-quality.js"></script></body></html>
+
+<section class="chart-section" id="chart">
+ <div class="section-head"><div><div class="eyebrow">COMMUNITY RANKING</div><h2>Urban Art Chart</h2></div><p>One support vote per email address, per artwork. No paid ranking and no fake seed votes.</p></div>
+ <div class="chart-toolbar"><button data-view="ranked" class="active">Top ranked</button><button data-view="new">Newest</button><button id="refresh-chart">Refresh</button></div>
+ <div id="art-chart" class="art-chart" aria-live="polite"><div class="loading">Loading the Urban Art Chart…</div></div>
+</section>
+
+<section class="upload-section" id="upload">
+ <div class="upload-intro"><div class="eyebrow dark">ADD TO THE WALL</div><h2>Upload your own art photo.</h2><p>Take or choose a photo on your phone. MCQ optimises the image before upload. Submissions are reviewed before appearing publicly so the chart stays useful and safe.</p>
+ <div class="upload-rules"><span>JPEG / PNG / WebP</span><span>Photo is compressed before upload</span><span>Credit the artist where known</span><span>No stolen/private imagery</span></div></div>
+ <form id="art-upload-form" class="upload-form">
+  <label class="dropzone" for="art-file"><input id="art-file" name="file" type="file" accept="image/jpeg,image/png,image/webp" required><span id="drop-copy"><b>Choose art photo</b><small>Tap to select from your iPhone</small></span><img id="art-preview" alt="Selected artwork preview" hidden></label>
+  <div class="fields">
+   <label>Photo title<input name="title" maxlength="120" required placeholder="Give the photo a title"></label>
+   <label>Your name / handle<input name="creator_name" maxlength="120" required placeholder="Who submitted this?"></label>
+   <label>Email<input name="contact" type="email" required autocomplete="email" placeholder="Used for moderation, never shown publicly"></label>
+   <label>Artist credit<input name="artist_credit" maxlength="160" placeholder="Artist name if known"></label>
+   <label>Location<input name="location" maxlength="160" placeholder="e.g. Brixton, London"></label>
+   <label class="wide">Story / context<textarea name="story" rows="4" maxlength="1200" placeholder="What is the piece, wall or moment?"></textarea></label>
+   <label class="check wide"><input name="rights_declared" type="checkbox" required><span>I took this photograph or have permission to submit it, and I understand MCQ may display it publicly after moderation.</span></label>
+   <button class="submit-art wide" type="submit">Submit to MCQ Urban Art</button>
+   <p class="status wide" id="upload-status"></p>
+  </div>
+ </form>
+</section>
+
+<section class="how-section"><div><span>01</span><h3>Upload</h3><p>Choose a photo, add the location and credit.</p></div><div><span>02</span><h3>Review</h3><p>MCQ approves appropriate submissions before publication.</p></div><div><span>03</span><h3>Vote</h3><p>The community supports its favourite work.</p></div><div><span>04</span><h3>Chart</h3><p>Real votes create the ranking.</p></div></section>
+<section class="manifesto"><h2>Art sets the tone.<br>People set the chart.</h2><div><p>The point is not to turn street art into wallpaper. MCQ gives the public a place to document visual culture, credit creators where possible and decide what deserves attention.</p><a href="/urban">Enter Urban Underground</a></div></section>
+</main>
+
+<dialog id="vote-dialog"><button class="close" type="button" aria-label="Close">×</button><form id="vote-form"><div class="eyebrow dark">SUPPORT THIS ART</div><h2 id="vote-title">Vote</h2><input type="hidden" name="submission_id"><label>Email<input name="contact" type="email" required autocomplete="email" placeholder="Used only to prevent duplicate votes"></label><button type="submit">Cast my vote</button><p id="vote-status"></p></form></dialog>
+
+<nav class="dock"><a href="/">Home</a><a href="/shop">Shop</a><a href="/urban">Urban</a><a href="#upload">Upload</a><a href="/live">Live</a></nav>
+<script type="module" src="/urban-gallery.js"></script></body></html>
