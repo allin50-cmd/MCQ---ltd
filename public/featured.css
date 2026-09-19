@@ -1,0 +1,42 @@
+.featured-home{display:grid;place-items:center}
+.featured-hero{min-height:78svh;background:#0d0d0f;color:#fff;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;overflow:hidden}
+.featured-hero-copy{padding:80px var(--pad)}
+.featured-hero h1{font:400 clamp(4rem,8vw,8.5rem)/.9 Georgia,serif;letter-spacing:-.06em;margin:14px 0}
+.featured-hero p:not(.eyebrow){max-width:650px;color:#c8c2b8;font-size:18px;line-height:1.6}
+.featured-hero>img{height:78svh;object-fit:contain;background:radial-gradient(circle,#26211a 0,#111 52%,#080808 100%)}
+.featured-intro{padding-bottom:44px}
+.featured-grid{display:grid;gap:0}
+.feature-product{min-height:760px;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.feature-product:nth-child(even) .feature-image{order:2}
+.feature-image{background:#fff;display:grid;place-items:center;padding:42px;overflow:hidden}
+.feature-image img{width:100%;height:100%;max-height:680px;object-fit:contain;transition:transform .5s ease}
+.feature-product:hover .feature-image img{transform:scale(1.025)}
+.feature-copy{padding:70px max(24px,7vw);display:flex;flex-direction:column;justify-content:center;background:#eee8dd}
+.feature-product:nth-child(3n) .feature-copy{background:#111;color:#fff}
+.feature-product:nth-child(3n) .product-summary,.feature-product:nth-child(3n) .feature-meta{color:#aaa}
+.feature-copy h2{font:400 clamp(3.2rem,6vw,6.2rem)/.91 Georgia,serif;letter-spacing:-.055em;margin:10px 0 18px}
+.product-summary{font-size:17px;line-height:1.6;color:#5c574f;max-width:650px}
+.feature-meta{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0;color:#69635b}
+.feature-meta span{padding:7px 9px;border:1px solid currentColor;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+.purchase-choice{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.purchase-choice button{min-height:48px;border:1px solid #111;background:#111;color:#fff;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
+.purchase-choice button.secondary{background:transparent;color:inherit}
+.feature-service{background:#111;color:#fff;padding:80px var(--pad);display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end}
+.feature-service h2{font:400 clamp(3.6rem,7vw,7rem)/.9 Georgia,serif;margin:10px 0}
+.feature-service p:not(.eyebrow){max-width:760px;color:#bbb4aa;line-height:1.6}
+.purchase-options{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.purchase-options article{background:#fff;border:1px solid var(--line);padding:26px}
+.purchase-options span{font:400 40px Georgia,serif;color:#8b4f28}
+.purchase-options h3{font:400 32px Georgia,serif;margin:18px 0 8px}
+.purchase-options p{color:#68635c;line-height:1.6}
+#purchase-dialog{width:min(680px,calc(100vw - 24px));border:0;padding:0;background:#f4f1e9;box-shadow:0 30px 100px #0008}
+#purchase-dialog::backdrop{background:#000b}
+.purchase-close{position:absolute;right:14px;top:14px;width:44px;height:44px;border:1px solid var(--line);background:#fff;font-size:27px;z-index:2}
+.purchase-form{display:grid;gap:10px;padding:58px 30px 30px}
+.purchase-form h2{font:400 clamp(2.8rem,6vw,5rem)/.93 Georgia,serif;margin:5px 0}
+.purchase-form>p{color:#6c665e}
+.purchase-form label{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.07em}
+.purchase-form input,.purchase-form select,.purchase-form textarea{display:block;width:100%;margin-top:6px;padding:13px;border:1px solid var(--line);background:#fff}
+#purchase-status{min-height:22px;color:#4f6546}
+@media(max-width:900px){.featured-hero,.feature-product{grid-template-columns:1fr}.featured-hero>img{height:52svh;order:-1}.feature-product:nth-child(even) .feature-image{order:0}.feature-image{min-height:48svh}.purchase-options{grid-template-columns:1fr}.feature-service{grid-template-columns:1fr}}
+@media(max-width:600px){.featured-hero-copy{padding:44px 18px}.featured-hero h1{font-size:4rem}.feature-copy{padding:46px 18px}.feature-copy h2{font-size:3.6rem}.purchase-choice{grid-template-columns:1fr}.feature-image{padding:20px;min-height:52svh}.feature-service{padding:64px 18px}.purchase-form{padding:60px 18px 22px}}
