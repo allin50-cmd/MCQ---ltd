@@ -44,12 +44,12 @@ function renderProducts(){
   <div class="spec-line">${p.specs.map(x=>`<span>${esc(x)}</span>`).join("")}</div>
   <div class="product-actions"><button class="mini-btn product-detail" data-index="${i}">View details</button><button class="mini-btn secondary source-product" data-query="${esc(p.query)}" data-product="${esc(p.brand+" "+p.name)}">Buy / source from MCQ</button></div></div>
  </article>`).join("");
- $(".product-detail").forEach(b=>b.addEventListener("click",()=>openProduct(Number(b.dataset.index))));
- $(".source-product").forEach(b=>b.addEventListener("click",()=>prepareLead(b.dataset.product,b.dataset.query)));
+ $$(".product-detail").forEach(b=>b.addEventListener("click",()=>openProduct(Number(b.dataset.index))));
+ $$(".source-product").forEach(b=>b.addEventListener("click",()=>prepareLead(b.dataset.product,b.dataset.query)));
 }
 function renderBrands(){
  $("#brand-grid").innerHTML=brands.map(([name,url,desc])=>`<button class="brand-tile brand-button" type="button" data-brand="${esc(name)}"><strong>${esc(name)}</strong><span>${esc(desc)}</span></button>`).join("");
- $(".brand-tile").forEach(a=>a.addEventListener("click",()=>prepareLead(a.dataset.brand,a.dataset.brand)));
+ $$(".brand-tile").forEach(a=>a.addEventListener("click",()=>prepareLead(a.dataset.brand,a.dataset.brand)));
 }
 function renderReviews(){
  $("#review-rail").innerHTML=reviews.map((r,i)=>`<article class="review-card" data-review="${i}"><img data-product-image="required" loading="lazy" src="${esc(r.image)}" alt="${esc(r.title)}"><div class="review-body"><div class="review-meta"><span>${esc(r.kind)}</span><span>${esc(r.category)}</span></div><h3>${esc(r.title)}</h3><p>${esc(r.intro)}</p><button class="text-btn open-review">Open review →</button></div></article>`).join("");
@@ -74,7 +74,7 @@ async function runSupplierSearch(forcedQuery=""){
   const visible=(d.results||[]).filter(p=>p.image&&/^https:\/\//i.test(p.image));
   if(!visible.length){out.innerHTML='<div class="live-message"><strong>No image-verified public result yet.</strong><br>MCQ will not display a broken or image-less product. Use the sourcing form and we can find it properly.</div>';return}
   out.innerHTML=visible.map(p=>`<article class="product-row" data-product-card><img data-product-image="required" src="${esc(p.image)}" alt="${esc((p.brand||"")+" "+p.name)}"><div><b>${esc((p.brand||"")+" "+p.name)}</b><p>${esc(p.summary||p.category||"Audio product")}</p><small>${esc(p.availability||p.source||"Ask MCQ")}</small></div><button class="mini-btn supplier-source" data-product="${esc((p.brand||"")+" "+p.name)}" data-query="${esc(q)}">Buy / source</button></article>`).join("");
-  $(".supplier-source",out).forEach(b=>b.addEventListener("click",()=>prepareLead(b.dataset.product,b.dataset.query)));
+  $$(".supplier-source",out).forEach(b=>b.addEventListener("click",()=>prepareLead(b.dataset.product,b.dataset.query)));
  }catch(err){out.innerHTML=`<div class="live-message">Search unavailable: ${esc(err.message)}</div>`}
 }
 function openProduct(i){
@@ -103,7 +103,7 @@ $("#system-form").addEventListener("submit",e=>{e.preventDefault();const x=Objec
 $("#lead-form").addEventListener("submit",async e=>{e.preventDefault();const status=$("#lead-status"),data=Object.fromEntries(new FormData(e.currentTarget));status.textContent="Sending…";try{const r=await api("/api/leads",{method:"POST",body:JSON.stringify({...data,source:"mcq-audio"})});status.textContent=`Received — reference ${r.id}.`;e.currentTarget.reset();track("lead","submitted")}catch(err){status.textContent=err.message}});
 
 $("#search-open").addEventListener("click",()=>{$("#search-drawer").classList.add("open");$("#search-drawer").setAttribute("aria-hidden","false");setTimeout(()=>$("#global-search").focus(),150)});$("#search-close").addEventListener("click",()=>{$("#search-drawer").classList.remove("open");$("#search-drawer").setAttribute("aria-hidden","true")});
-$("#global-search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();if(!q){$("#global-results").innerHTML="";return}const ps=products.filter(p=>(p.brand+" "+p.name+" "+p.category+" "+p.desc).toLowerCase().includes(q));const bs=brands.filter(b=>(b[0]+" "+b[2]).toLowerCase().includes(q));$("#global-results").innerHTML=ps.map((p,i)=>`<button class="global-result global-action" data-product="${esc(p.brand+" "+p.name)}" data-query="${esc(p.query)}"><img data-product-image="required" src="${esc(p.image)}" alt=""><div><b>${esc(p.brand)} ${esc(p.name)}</b><p>${esc(p.category)} — source through MCQ</p></div></button>`).join("")+bs.map(([n,u,d])=>`<button class="global-result global-action" data-product="${esc(n)}" data-query="${esc(n)}"><div></div><div><b>${esc(n)}</b><p>${esc(d)} — ask MCQ</p></div></button>`).join("");$(".global-action",$("#global-results")).forEach(b=>b.addEventListener("click",()=>{$("#search-drawer").classList.remove("open");prepareLead(b.dataset.product,b.dataset.query)}))});
+$("#global-search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();if(!q){$("#global-results").innerHTML="";return}const ps=products.filter(p=>(p.brand+" "+p.name+" "+p.category+" "+p.desc).toLowerCase().includes(q));const bs=brands.filter(b=>(b[0]+" "+b[2]).toLowerCase().includes(q));$("#global-results").innerHTML=ps.map((p,i)=>`<button class="global-result global-action" data-product="${esc(p.brand+" "+p.name)}" data-query="${esc(p.query)}"><img data-product-image="required" src="${esc(p.image)}" alt=""><div><b>${esc(p.brand)} ${esc(p.name)}</b><p>${esc(p.category)} — source through MCQ</p></div></button>`).join("")+bs.map(([n,u,d])=>`<button class="global-result global-action" data-product="${esc(n)}" data-query="${esc(n)}"><div></div><div><b>${esc(n)}</b><p>${esc(d)} — ask MCQ</p></div></button>`).join("");$$(".global-action",$("#global-results")).forEach(b=>b.addEventListener("click",()=>{$("#search-drawer").classList.remove("open");prepareLead(b.dataset.product,b.dataset.query)}))});
 
 renderProducts();renderBrands();renderReviews();loadSuppliers();
 $$('[data-query].cta').forEach(b=>b.addEventListener('click',()=>prepareLead(b.dataset.query,b.dataset.query)));
