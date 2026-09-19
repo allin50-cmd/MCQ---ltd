@@ -34,3 +34,13 @@ test("branded homepage product cards use explicit image-required gate",()=>{
   const matches=home.match(/data-product-image="required"/g)||[];
   assert.ok(matches.length>=6);
 });
+
+test("production package hard-gates manufacturer product images",()=>{
+  const pkg=JSON.parse(read("package.json"));
+  assert.equal(pkg.scripts.postinstall,"node scripts/cache-site-images.mjs");
+  const script=read("scripts/cache-site-images.mjs");
+  assert.match(script,/REQUIRED PRODUCT IMAGE FAILED/);
+  assert.match(script,/assets","products/);
+  assert.match(script,/sony\.scene7\.com/);
+  assert.match(script,/panasonic\.scene7\.com/);
+});
