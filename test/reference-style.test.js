@@ -6,7 +6,7 @@ const read=p=>fs.readFileSync(new URL("../"+p,import.meta.url),"utf8");
 
 test("homepage follows the approved dense black MCQ reference structure",()=>{
   const html=read("public/index.html");
-  assert.match(html,/reference-style\.css/);
+  assert.match(html,/reference-style\.css\?v=[a-f0-9]+/);
   assert.doesNotMatch(html,/rebuild\.css/);
   for(const text of ["SHOP BY CATEGORY","HARD-TO-FIND ESSENTIALS","URBAN UNDERGROUND","THE PEOPLE'S ART","FEATURED GEAR","FEATURED BRANDS","HIRE & INSTALL"]){
     assert.ok(html.includes(text),text);
