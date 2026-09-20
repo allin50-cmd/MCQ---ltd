@@ -1,3 +1,5 @@
+import {evaluateCatalogRow,CATALOG_STATES,IMAGE_PERMISSION_STATES} from "./catalog_contract.js";
+
 const CATALOG = [
   {id:"sony-wh1000xm6",brand:"Sony",name:"WH-1000XM6",category:"headphones",price_band:"premium",image:"https://sony.scene7.com/is/image/sonyglobalsolutions/GGB-8071_Olive_Gray_Gallery-1?$originalDimensions$=",summary:"Flagship wireless noise cancelling with 30 mm drivers, LDAC/LC3 and long battery life.",specs:["30 mm driver","Bluetooth 5.3","LDAC / LC3","Up to 30h ANC"]},
   {id:"sony-wf1000xm6",brand:"Sony",name:"WF-1000XM6",category:"headphones",price_band:"premium",image:"https://sony.scene7.com/is/image/sonyglobalsolutions/WF-1000XM6_Image-Gallery_image01_d?$originalDimensions$=&fmt=png-alpha",summary:"Flagship true-wireless earbuds with current-generation Sony noise cancelling.",specs:["True wireless","ANC","Portable","Hi-res"]},
@@ -15,16 +17,35 @@ const CATALOG = [
   {id:"sony-ultfield7",brand:"Sony",name:"ULT FIELD 7",category:"wireless",price_band:"mid",image:"",summary:"Large portable party speaker with mic/guitar input and long battery life.",specs:["30h","IP67","Mic/guitar","Party Connect"]}
 ];
 
+function evaluatedInternalCatalog(){
+  return CATALOG.map(p=>evaluateCatalogRow({
+    ...p,
+    model:p.name,
+    requested_state:CATALOG_STATES.DRAFT,
+    images:p.image?[{
+      url:p.image,
+      source:"manufacturer/editorial reference",
+      permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+      verified:false,
+      width:null,
+      height:null
+    }]:[],
+    source_url:"",
+    source_note:"Editorial/internal catalogue reference only. Supplier, rights, cost, delivery and retail evidence are incomplete.",
+    last_checked:""
+  }));
+}
+
 export function searchInternalCatalog(query){
   const q=String(query||"").trim().toLowerCase();
   if(!q)return [];
   const tokens=q.split(/\s+/).filter(Boolean);
-  return CATALOG.filter(p=>{
+  return evaluatedInternalCatalog().filter(p=>p.public_display).filter(p=>{
     const hay=(p.brand+" "+p.name+" "+p.category+" "+p.summary+" "+p.specs.join(" ")).toLowerCase();
     return tokens.every(t=>hay.includes(t));
   }).map(p=>({...p,source:"MCQ catalogue",availability:"ASK_MCQ"}));
 }
 
 export function listInternalCatalog(){
-  return CATALOG.map(p=>({...p,source:"MCQ catalogue",availability:"ASK_MCQ"}));
+  return evaluatedInternalCatalog().map(p=>({...p,source:"MCQ catalogue",availability:"DRAFT"}));
 }
