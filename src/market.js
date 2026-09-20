@@ -769,7 +769,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-g4m-hercules-control-mix", brand:"Hercules", name:"DJControl Mix", model:"DJControl Mix", category:"dj",
     image:"https://dyproaudio.co.uk/cdn/shop/products/hercules-djcontrol-mix-dj-controller-for-smart-phone-or-tablet-dy-pro-audio-1.jpg?v=1759245741",
-    images:[{url:"https://dyproaudio.co.uk/cdn/shop/products/hercules-djcontrol-mix-dj-controller-for-smart-phone-or-tablet-dy-pro-audio-1.jpg?v=1759245741",source:"https://dyproaudio.co.uk/products/hercules-djcontrol-mix-dj-controller-for-smart-phone-or-tablet",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://dyproaudio.co.uk/cdn/shop/products/hercules-djcontrol-mix-dj-controller-for-smart-phone-or-tablet-dy-pro-audio-1.jpg?v=1759245741",source:"https://dyproaudio.co.uk/products/hercules-djcontrol-mix-dj-controller-for-smart-phone-or-tablet",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:2000,height:2000}],
     image_source:"https://dyproaudio.co.uk/products/hercules-djcontrol-mix-dj-controller-for-smart-phone-or-tablet", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
