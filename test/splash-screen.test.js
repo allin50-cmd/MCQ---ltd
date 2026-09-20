@@ -5,7 +5,7 @@ import fs from "node:fs";
 test("homepage splash uses supplied high-quality MCQ artwork with invisible live hotspots",()=>{
   const js=fs.readFileSync(new URL("../public/site-shell.js",import.meta.url),"utf8");
   const css=fs.readFileSync(new URL("../public/site-shell.css",import.meta.url),"utf8");
-  assert.match(js,/\/mcq-splash-production\.webp/);
+  assert.match(js,/\/mcq-splash-production\.jpg/);
   assert.doesNotMatch(js,/mcq-splash-production\.jpg/);
   assert.match(js,/ENTER MCQ AUDIO/);
   for(const href of ["/","/shop","/dj","/featured","/hire","/vinyl","/club","/urban","/about"]){
