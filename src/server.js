@@ -47,6 +47,7 @@ const prettyRoutes=new Map([
   ["/hire","/hire.html"],
   ["/hire-install","/hire.html"],
   ["/trade","/trade.html"],
+  ["/club","/club.html"],
   ["/about","/about.html"],
   ["/contact","/about.html"],
   ["/live","/live.html"],
