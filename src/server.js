@@ -798,5 +798,8 @@ const server=http.createServer(async(req,res)=>{
     return json(res,status,{error:e.message});
   }
 });
-if(process.env.NODE_ENV!=="test"){\n  await load();\n  server.listen(Number(process.env.PORT||3000),()=>console.log(`MCQ Audio listening on ${process.env.PORT||3000}`));\n}
+if(process.env.NODE_ENV!=="test"){
+  await load();
+  server.listen(Number(process.env.PORT||3000),()=>console.log(`MCQ Audio listening on ${process.env.PORT||3000}`));
+}
 export default server;
