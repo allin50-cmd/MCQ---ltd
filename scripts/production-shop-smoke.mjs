@@ -46,6 +46,32 @@ await retry(async()=>{
   assert(shop.text.includes('id="regular-products-grid"'),"shop missing regular-products-grid");
   assert(shop.text.includes("/shop-products.js"),"shop missing product loader");
 
+  const feature=await get("/insights/djs-ditching-laptops");
+  assert(feature.r.status===200,`feature status ${feature.r.status}`);
+  assert(feature.text.includes("Laptop or<br>USB sticks?"),"feature hero missing");
+  assert(feature.text.includes("MacBook Air 13-inch M4 — 16GB / 512GB"),"feature laptop recommendation missing");
+  assert(feature.text.includes("SanDisk Extreme PRO USB-A — 256GB"),"feature SanDisk recommendation missing");
+  assert(feature.text.includes("Samsung BAR Plus — 128GB or 256GB"),"feature Samsung recommendation missing");
+  assert(feature.text.includes("Carry two independently exported USB drives"),"feature backup guidance missing");
+
+  const featureImages=[...feature.text.matchAll(/<img[^>]+src="(https:[^"]+)"/g)].map(m=>m[1]);
+  assert(featureImages.length>=4,`expected at least 4 feature images, got ${featureImages.length}`);
+  const featureImageFailures=[];
+  for(const url of [...new Set(featureImages)]){
+    try{
+      const r=await fetch(url,{redirect:"follow",headers:{"user-agent":"MCQ-Audio-production-smoke/1.0"}});
+      assert(r.ok,`HTTP ${r.status}`);
+      const type=(r.headers.get("content-type")||"").toLowerCase();
+      assert(type.startsWith("image/"),`non-image content-type ${type}`);
+      const buf=Buffer.from(await r.arrayBuffer());
+      assert(buf.length>=5000,`payload too small (${buf.length})`);
+    }catch(e){featureImageFailures.push({url,error:e.message})}
+  }
+  if(featureImageFailures.length){
+    console.error(JSON.stringify({feature_image_failures:featureImageFailures},null,2));
+    throw new Error(`${featureImageFailures.length} DJ feature image(s) failed production checks`);
+  }
+
   const cat=await get("/api/market/catalog");
   assert(cat.r.status===200,`catalog status ${cat.r.status}`);
   const data=JSON.parse(cat.text); const items=data.items||[];
