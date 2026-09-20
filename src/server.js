@@ -27,6 +27,13 @@ function requireAdmin(req){
   const auth=req.headers.authorization||"";
   if(auth!==`Bearer ${expected}`)throw new Error("unauthorized");
 }
+function requireCrmAgent(req){
+  const admin=(process.env.MCQ_ADMIN_TOKEN||"").trim();
+  const agent=(process.env.MCQ_AGENT_TOKEN||"").trim();
+  if(!admin&&!agent)throw new Error("CRM access is not configured");
+  const auth=req.headers.authorization||"";
+  if(![admin,agent].filter(Boolean).some(token=>auth===`Bearer ${token}`))throw new Error("unauthorized");
+}
 
 const prettyRoutes=new Map([
   ["/microphones","/microphones.html"],
@@ -556,7 +563,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="GET"&&u.pathname==="/api/admin/crm"){
-      requireAdmin(req);
+      requireCrmAgent(req);
       const openStatuses=new Set(["NEW","CONTACT","QUALIFIED","QUOTE","FOLLOW_UP","WAITING_CUSTOMER"]);
       const decorate=(type,row)=>({
         entity_type:type,
@@ -598,7 +605,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="POST"&&u.pathname==="/api/admin/crm/update"){
-      requireAdmin(req);
+      requireCrmAgent(req);
       const x=await body(req);
       const maps={lead:db.leads,enquiry:db.enquiries,swap_offer:db.swap_offers};
       const rows=maps[String(x.entity_type||"")];
