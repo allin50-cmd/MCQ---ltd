@@ -55,6 +55,14 @@ await retry(async()=>{
   assert(!shellCss.text.includes(".mcq-splash-skip"),"extra splash skip UI still present");
   assert(shellCss.text.includes("aspect-ratio:1122/1402"),"splash artwork aspect ratio drifted");
 
+  const crmPage=await get("/crm");
+  assert(crmPage.r.status===200,`/crm status ${crmPage.r.status}`);
+  assert(crmPage.text.includes("CUSTOMER CONTROL"),"CRM operator surface missing");
+  assert(crmPage.text.includes("/api/admin/crm/detail"),"CRM detail wiring missing");
+  assert(crmPage.text.includes("/api/admin/crm/update"),"CRM update wiring missing");
+  const unauthCrm=await get("/api/admin/crm");
+  assert(unauthCrm.r.status===401,`unauthenticated CRM should be 401, got ${unauthCrm.r.status}`);
+
   const swap=await get("/swap");
   assert(swap.r.status===200,`/swap status ${swap.r.status}`);
   for(const required of ["Technics","M1","M6","RTX 3090","network"]){
