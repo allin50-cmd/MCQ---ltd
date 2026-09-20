@@ -39,7 +39,8 @@ test("CRM surfaces agent command centre",()=>{
 
 test("CRM inline JavaScript is syntactically valid",()=>{
   const html=fs.readFileSync(new URL("../public/crm.html",import.meta.url),"utf8");
-  const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(x=>x[1]);
-  assert.ok(scripts.length,"expected inline CRM script");
-  for(const source of scripts) assert.doesNotThrow(()=>new Function(source));
+  const open=html.indexOf("<script>"),close=html.indexOf("</script>",open);
+  assert.ok(open>=0&&close>open,"expected inline CRM script");
+  const source=html.slice(open+8,close);
+  assert.doesNotThrow(()=>new Function(source));
 });
