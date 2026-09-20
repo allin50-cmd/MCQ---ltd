@@ -75,7 +75,7 @@ await retry(async()=>{
   const cat=await get("/api/market/catalog");
   assert(cat.r.status===200,`catalog status ${cat.r.status}`);
   const data=JSON.parse(cat.text); const items=data.items||[];
-  assert(items.length===22,`expected 22 catalogue rows, got ${items.length}`);
+  assert(items.length===50,`expected 50 catalogue rows, got ${items.length}`);
   for(const p of items){
     assert(p.id&&p.brand&&p.name,`identity missing for ${p.id||"unknown"}`);
     assert(/^https:\/\//.test(p.image||""),`image missing for ${p.id}`);

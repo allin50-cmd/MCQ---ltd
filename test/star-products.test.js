@@ -3,9 +3,9 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import {listMarketCatalog} from "../src/market.js";
 
-test("star regular product catalogue contains all 22 researched rows",()=>{
+test("star regular product catalogue contains all 50 researched rows",()=>{
   const items=listMarketCatalog();
-  assert.equal(items.length,22);
+  assert.equal(items.length,50);
   for(const item of items){
     assert.ok(item.id);
     assert.ok(item.brand);
