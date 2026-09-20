@@ -49,7 +49,7 @@ await retry(async()=>{
 
   const shop=await get("/shop");
   assert(shop.r.status===200,`/shop status ${shop.r.status}`);
-  assert(shop.text.includes("STAR REGULAR PRODUCTS"),"shop missing Star Regular Products heading");
+  assert(shop.text.includes("MCQ 100 PRODUCT RESEARCH CATALOGUE"),"shop missing 100-product research catalogue heading");
   assert(shop.text.includes('id="regular-products-grid"'),"shop missing regular-products-grid");
   assert(shop.text.includes("/shop-products.js"),"shop missing product loader");
   assert(shop.text.includes("ALL 100 RESEARCHED PRODUCTS"),"shop missing full 100-product catalogue section");
