@@ -36,3 +36,23 @@ header.top,header.mast,header.g-top,header.cinema-nav,.mobile-dock,.dock{display
 .mcq-crumbs strong{color:#e5ad30!important}
 .mcq-mobile-nav{background:#05080af7!important;border-color:#29333b!important}
 .mcq-mobile-nav button,.mcq-mobile-nav a{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif!important}
+
+
+/* One-time MCQ entrance splash — homepage only, once per browser session. */
+.mcq-splash{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;overflow:hidden;background:#030506;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;transition:opacity .5s ease,visibility .5s ease}
+.mcq-splash::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 50% 45%,rgba(227,173,50,.18),transparent 28%),linear-gradient(115deg,transparent 35%,rgba(255,255,255,.035) 50%,transparent 65%);animation:mcqSplashSweep 2.6s ease-out both}
+.mcq-splash-noise{position:absolute;inset:0;opacity:.12;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 4px);pointer-events:none}
+.mcq-splash-inner{position:relative;z-index:1;width:min(88vw,820px);text-align:center;padding:34px 20px}
+.mcq-splash-mark{font-family:Arial Black,Arial,sans-serif;font-size:clamp(5rem,19vw,12rem);line-height:.72;letter-spacing:-.09em;transform:scale(.88);opacity:0;animation:mcqSplashMark .65s cubic-bezier(.2,.75,.25,1) .08s forwards}
+.mcq-splash-mark span{display:block;margin-top:.32em;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-size:.13em;letter-spacing:.62em;padding-left:.62em;color:#e3ad32}
+.mcq-splash-rule{height:1px;width:0;margin:34px auto 24px;background:linear-gradient(90deg,transparent,#e3ad32,transparent);animation:mcqSplashRule .7s ease .45s forwards}
+.mcq-splash p{margin:0 0 10px;font-size:clamp(.72rem,1.8vw,.95rem);font-weight:900;letter-spacing:.28em;color:#e3ad32;opacity:0;animation:mcqSplashText .45s ease .7s forwards}
+.mcq-splash h1{margin:0;font-size:clamp(1rem,3vw,1.5rem);font-weight:800;letter-spacing:.16em;opacity:0;animation:mcqSplashText .45s ease .82s forwards}
+.mcq-splash-bars{height:38px;margin:30px auto 22px;display:flex;align-items:center;justify-content:center;gap:6px;opacity:0;animation:mcqSplashText .4s ease .95s forwards}
+.mcq-splash-bars i{display:block;width:4px;height:10px;background:#e3ad32;animation:mcqBar 760ms ease-in-out infinite alternate}.mcq-splash-bars i:nth-child(2){animation-delay:-.5s}.mcq-splash-bars i:nth-child(3){animation-delay:-.2s}.mcq-splash-bars i:nth-child(4){animation-delay:-.65s}.mcq-splash-bars i:nth-child(5){animation-delay:-.35s}.mcq-splash-bars i:nth-child(6){animation-delay:-.1s}.mcq-splash-bars i:nth-child(7){animation-delay:-.55s}.mcq-splash-bars i:nth-child(8){animation-delay:-.28s}
+.mcq-splash-enter{appearance:none;border:1px solid #e3ad32;background:transparent;color:#fff;padding:13px 24px;min-height:46px;font:900 11px/1 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;letter-spacing:.16em;cursor:pointer;opacity:0;animation:mcqSplashText .45s ease 1.05s forwards}.mcq-splash-enter:hover,.mcq-splash-enter:focus-visible{background:#e3ad32;color:#05080a;outline:none}
+.mcq-splash.closing{opacity:0;visibility:hidden}.mcq-splash.closing .mcq-splash-mark{transform:scale(1.05);transition:transform .5s ease}
+.mcq-splash-open{overflow:hidden}
+@keyframes mcqSplashMark{to{opacity:1;transform:scale(1)}}@keyframes mcqSplashRule{to{width:min(520px,72vw)}}@keyframes mcqSplashText{to{opacity:1}}@keyframes mcqBar{to{height:34px}}@keyframes mcqSplashSweep{from{transform:translateX(-18%)}to{transform:translateX(18%)}}
+@media(max-width:720px){.mcq-splash-inner{padding:24px 18px}.mcq-splash-mark{font-size:clamp(5.8rem,30vw,9rem)}.mcq-splash h1{font-size:.92rem;letter-spacing:.11em}.mcq-splash p{letter-spacing:.18em}}
+@media(prefers-reduced-motion:reduce){.mcq-splash *,.mcq-splash::before{animation:none!important}.mcq-splash-mark,.mcq-splash p,.mcq-splash h1,.mcq-splash-bars,.mcq-splash-enter{opacity:1;transform:none}.mcq-splash-rule{width:min(520px,72vw)}}
