@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const file=process.env.MCQ_DATA_FILE||path.join(process.cwd(),"data","mcq.json");
-const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[],urban_art_submissions:[],urban_art_votes:[],urban_art_reports:[],live_stream_events:[],stream_reminders:[],stream_track_submissions:[]};
+const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],crm_events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[],urban_art_submissions:[],urban_art_votes:[],urban_art_reports:[],live_stream_events:[],stream_reminders:[],stream_track_submissions:[]};
 
 export function load(){
   try{
@@ -15,6 +15,7 @@ export function load(){
       bookings:Array.isArray(parsed.bookings)?parsed.bookings:[],
       leads:Array.isArray(parsed.leads)?parsed.leads:[],
       events:Array.isArray(parsed.events)?parsed.events:[],
+      crm_events:Array.isArray(parsed.crm_events)?parsed.crm_events:[],
       music_catalog:Array.isArray(parsed.music_catalog)?parsed.music_catalog:[],
       music_orders:Array.isArray(parsed.music_orders)?parsed.music_orders:[],
       swap_offers:Array.isArray(parsed.swap_offers)?parsed.swap_offers:[],
