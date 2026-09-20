@@ -123,8 +123,8 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-thomann-eris35", brand:"PreSonus", name:"Eris 3.5 2nd Gen", model:"Eris 3.5 2nd Gen", category:"studio",
-    image:"https://hdradio.vn/upload/hinhanh/loa-kiem-am/presonus/eris-35-2nd-gen/loa-presonus-eris-3-5-2nd-gen-avt1.jpg",
-    images:[{url:"https://hdradio.vn/upload/hinhanh/loa-kiem-am/presonus/eris-35-2nd-gen/loa-presonus-eris-3-5-2nd-gen-avt1.jpg",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    image:"https://produtos.egitana.pt/presonus-eris-35-2nd-gen_652d136f6b2ef.jpg?v=2026-04-15+09%3A30%3A11",
+    images:[{url:"https://produtos.egitana.pt/presonus-eris-35-2nd-gen_652d136f6b2ef.jpg?v=2026-04-15+09%3A30%3A11",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
     image_source:"public manufacturer/supplier media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
