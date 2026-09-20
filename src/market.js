@@ -379,7 +379,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-athm40x", brand:"Audio-Technica", name:"ATH-M40X", model:"ATH-M40X", category:"headphones",
     image:"https://www.audio-wave.com/cdn/shop/files/7b5d516e-1f801e_dd5d0568f00847f2a8dd1ead63ebb7a7_mv2.png?v=1766844151&width=1946",
-    images:[{url:"https://www.audio-wave.com/cdn/shop/files/7b5d516e-1f801e_dd5d0568f00847f2a8dd1ead63ebb7a7_mv2.png?v=1766844151&width=1946",source:"public product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
+    images:[{url:"https://www.audio-wave.com/cdn/shop/files/7b5d516e-1f801e_dd5d0568f00847f2a8dd1ead63ebb7a7_mv2.png?v=1766844151&width=1946",source:"public product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:2000,height:2000}],
     image_source:"public product media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -408,9 +408,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-sm7b", brand:"Shure", name:"SM7B", model:"SM7B", category:"microphones",
-    image:"https://thumbs.static-thomann.de/thumb//bdbmagic/pics/prod/129929.jpg",
-    images:[{url:"https://thumbs.static-thomann.de/thumb//bdbmagic/pics/prod/129929.jpg",source:"https://www.thomann.co.uk/shure_sm_7b_studiomikro.htm",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
-    image_source:"https://www.thomann.co.uk/shure_sm_7b_studiomikro.htm", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"https://media.guitarcenter.com/is/image/MMGS7/SM7B-Cardioid-Dynamic-Vocal-Microphone/270247000000000-00-2000x2000.jpg",
+    images:[{url:"https://media.guitarcenter.com/is/image/MMGS7/SM7B-Cardioid-Dynamic-Vocal-Microphone/270247000000000-00-2000x2000.jpg",source:"https://www.guitarcenter.com/Shure/SM7B-Cardioid-Dynamic-Vocal-Microphone-1274034478268.gc",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
+    image_source:"https://www.guitarcenter.com/Shure/SM7B-Cardioid-Dynamic-Vocal-Microphone-1274034478268.gc", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
     observed_public_price_inc_vat_gbp:344, delivery_cost_inc_vat_gbp:0,
