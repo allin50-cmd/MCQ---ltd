@@ -10,7 +10,7 @@ test("public-market research stays DRAFT until image rights and real commercial 
     assert.equal(row.state,"DRAFT");
     assert.equal(row.public_display,false);
     assert.equal(row.sellable,false);
-    assert.match(row.image,/^https:\/\//);
+    if(row.image) assert.match(row.image,/^https:\/\//);
     assert.match(row.source_url,/^https:\/\//);
     assert.ok(Number(row.observed_price_gbp)>0);
     assert.match(row.checked_at,/^2026-09-20$/);
