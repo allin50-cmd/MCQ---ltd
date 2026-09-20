@@ -27,7 +27,7 @@ await retry(async()=>{
 
   const shellJs=await get("/site-shell.js");
   assert(shellJs.r.status===200,`/site-shell.js status ${shellJs.r.status}`);
-  assert(shellJs.text.includes("/mcq-splash-production.webp"),"splash missing supplied production artwork");
+  assert(shellJs.text.includes("/mcq-splash-production.jpg"),"splash missing supplied production artwork");
   assert(shellJs.text.includes("ENTER MCQ AUDIO"),"splash missing corrected MCQ entry CTA");
   assert(shellJs.text.includes("hs-turntables")&&shellJs.text.includes("hs-djgear")&&shellJs.text.includes("hs-studio")&&shellJs.text.includes("hs-live")&&shellJs.text.includes("hs-vinyl")&&shellJs.text.includes("hs-accessories"),"splash category hotspots missing");
   assert(shellJs.text.includes('href="/urban"')&&shellJs.text.includes('href="/about"'),"splash supporting hotspots missing");
@@ -35,12 +35,12 @@ await retry(async()=>{
   assert(!/rabbit/i.test(shellJs.text),"irrelevant rabbit artwork found in production splash");
   assert(!shellJs.text.includes("setTimeout(closeSplash"),"production splash still auto-dismisses");
 
-  const splashAsset=await get("/mcq-splash-production.webp");
-  assert(splashAsset.r.status===200,`/mcq-splash-production.webp status ${splashAsset.r.status}`);
-  assert((splashAsset.r.headers.get("content-type")||"").includes("image/webp"),"splash asset is not WebP");
+  const splashAsset=await get("/mcq-splash-production.jpg");
+  assert(splashAsset.r.status===200,`/mcq-splash-production.jpg status ${splashAsset.r.status}`);
+  assert((splashAsset.r.headers.get("content-type")||"").includes("image/jpeg"),"splash asset is not JPEG");
   assert(splashAsset.buf.length>400000,`splash asset unexpectedly small (${splashAsset.buf.length})`);
   const splashHash=(await import("node:crypto")).createHash("sha256").update(splashAsset.buf).digest("hex");
-  assert(splashHash==="af058ff161898e462ff85ca38539efe1cb068124ef216eac7196fc6107c44980",`splash asset drifted: ${splashHash}`);
+  assert(splashHash==="67015e59de1c121c62ce6a1521926062f7395655678332ca571fed7ae017fe67",`splash asset drifted: ${splashHash}`);
   for(const route of ["/shop","/dj","/featured","/hire","/vinyl","/club","/urban","/about"]){
     const page=await get(route);
     assert(page.r.status===200,`splash destination ${route} status ${page.r.status}`);
