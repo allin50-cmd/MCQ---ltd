@@ -93,8 +93,15 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   const catalog=await fetch(base+"/api/catalog/search?q=Sony%20WH-1000XM6");
   assert.equal(catalog.status,200);
   const catalogBody=await catalog.json();
-  assert.ok(catalogBody.results.length>0);
-  assert.equal("product_url" in catalogBody.results[0],false);
+  assert.equal(catalogBody.results.length,0);
+
+  const validation=await fetch(base+"/api/admin/catalog/validation",{headers:{authorization:"Bearer test-admin"}});
+  assert.equal(validation.status,200);
+  const validationBody=await validation.json();
+  assert.ok(validationBody.summary.total>0);
+  assert.equal(validationBody.summary.public_display,0);
+  assert.equal(validationBody.summary.sellable,0);
+  assert.equal(validationBody.summary.draft,validationBody.summary.total);
 
   const urbanSubmit1=await fetch(base+"/api/urban/submissions",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
     artist_name:"Bedroom Producer",
