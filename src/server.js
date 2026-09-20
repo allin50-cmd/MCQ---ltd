@@ -28,13 +28,6 @@ const customerKey=row=>{
   const phone=normalizePhone(row.phone);
   return email?`email:${email}`:phone?`phone:${phone}`:`record:${row.id}`;
 };
-const normalizeEmail=v=>String(v||"").trim().toLowerCase();
-const normalizePhone=v=>String(v||"").replace(/\D/g,"").slice(-11);
-const customerKey=row=>{
-  const email=normalizeEmail(row.contact);
-  const phone=normalizePhone(row.phone);
-  return email?`email:${email}`:phone?`phone:${phone}`:`record:${row.id}`;
-};
 function requireAdmin(req){
   const expected=(process.env.MCQ_ADMIN_TOKEN||"").trim();
   if(!expected)throw new Error("admin access is not configured");
