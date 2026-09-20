@@ -44,13 +44,14 @@ test("complete real row may become AVAILABLE_TO_ORDER",()=>{
   assert.deepEqual(x.validation.sellable_errors,[]);
 });
 
-test("missing image permission forces DRAFT",()=>{
+test("image permission is non-blocking during development",()=>{
   const row=completeRow();
   row.images[0].permission_status=IMAGE_PERMISSION_STATES.UNVERIFIED;
   const x=evaluateCatalogRow(row);
-  assert.equal(x.state,CATALOG_STATES.DRAFT);
-  assert.equal(x.public_display,false);
-  assert.ok(x.validation.common_errors.includes("images:verified_exact_high_resolution_with_permission"));
+  assert.equal(x.state,CATALOG_STATES.AVAILABLE_TO_ORDER);
+  assert.equal(x.public_display,true);
+  assert.equal(x.sellable,true);
+  assert.deepEqual(x.validation.common_errors,[]);
 });
 
 test("modelled cost can never substitute for real sellable cost",()=>{
