@@ -394,7 +394,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-beta58a", brand:"Shure", name:"Beta 58A", model:"Beta 58A", category:"microphones",
     image:"https://www.jpmusical.com/cdn/shop/products/BETA_58-SHURE-1024x1024_1_8a7414c2-4afa-4d85-b362-be050c17329f.jpg?v=1590187997",
-    images:[{url:"https://www.jpmusical.com/cdn/shop/products/BETA_58-SHURE-1024x1024_1_8a7414c2-4afa-4d85-b362-be050c17329f.jpg?v=1590187997",source:"https://www.jpmusical.com/products/microfono-shure-beta58a",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://www.jpmusical.com/cdn/shop/products/BETA_58-SHURE-1024x1024_1_8a7414c2-4afa-4d85-b362-be050c17329f.jpg?v=1590187997",source:"https://www.jpmusical.com/products/microfono-shure-beta58a",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1024,height:1024}],
     image_source:"https://www.jpmusical.com/products/microfono-shure-beta58a", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -484,7 +484,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-focusrite-2i2-4g", brand:"Focusrite", name:"Scarlett 2i2 4th Gen", model:"Scarlett 2i2 4th Gen", category:"audio-interfaces",
     image:"https://images.tcdn.com.br/img/img_prod/928221/scarlett_2i2_4th_interface_de_audio_2_canais_focusrite_1951_1_96a0bc6ed2125324904767e703a9a701.jpg",
-    images:[{url:"https://images.tcdn.com.br/img/img_prod/928221/scarlett_2i2_4th_interface_de_audio_2_canais_focusrite_1951_1_96a0bc6ed2125324904767e703a9a701.jpg",source:"https://www.sunsetmusicshop.com.br/home-studio/interface-de-audio/scarlett-2i2-4th-interface-de-audio-2-canais-focusrite",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://images.tcdn.com.br/img/img_prod/928221/scarlett_2i2_4th_interface_de_audio_2_canais_focusrite_1951_1_96a0bc6ed2125324904767e703a9a701.jpg",source:"https://www.sunsetmusicshop.com.br/home-studio/interface-de-audio/scarlett-2i2-4th-interface-de-audio-2-canais-focusrite",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
     image_source:"https://www.sunsetmusicshop.com.br/home-studio/interface-de-audio/scarlett-2i2-4th-interface-de-audio-2-canais-focusrite", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -604,7 +604,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-shure-mv7-plus", brand:"Shure", name:"MV7 Plus", model:"MV7 Plus", category:"microphones",
     image:"https://content.abt.com/image.php/53a3dbee513968d6d742b801a311aa1c?canvas=&ck=2&height=1500&image=%2Fimages%2Fproducts%2FBDP_Images%2Fshure-microphone-MV7PLUS-K-front-right.jpg&width=1500",
-    images:[{url:"https://content.abt.com/image.php/53a3dbee513968d6d742b801a311aa1c?canvas=&ck=2&height=1500&image=%2Fimages%2Fproducts%2FBDP_Images%2Fshure-microphone-MV7PLUS-K-front-right.jpg&width=1500",source:"https://www.abt.com/Shure-MV7-Plus-Black-Podcasting-Microphone-MV7PLUSK/p/151875.html",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://content.abt.com/image.php/53a3dbee513968d6d742b801a311aa1c?canvas=&ck=2&height=1500&image=%2Fimages%2Fproducts%2FBDP_Images%2Fshure-microphone-MV7PLUS-K-front-right.jpg&width=1500",source:"https://www.abt.com/Shure-MV7-Plus-Black-Podcasting-Microphone-MV7PLUSK/p/151875.html",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1500,height:1500}],
     image_source:"https://www.abt.com/Shure-MV7-Plus-Black-Podcasting-Microphone-MV7PLUSK/p/151875.html", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -649,7 +649,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-krk-rp7-g5", brand:"KRK", name:"Rokit RP7 G5", model:"Rokit RP7 G5", category:"studio",
     image:"https://qlxltd.2dimg.com/1/preview-18_2643024747.jpg",
-    images:[{url:"https://qlxltd.2dimg.com/1/preview-18_2643024747.jpg",source:"https://www.getinthemix.com/krk-rokit-rp7-g5.htm",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://qlxltd.2dimg.com/1/preview-18_2643024747.jpg",source:"https://www.getinthemix.com/krk-rokit-rp7-g5.htm",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1400,height:1400}],
     image_source:"https://www.getinthemix.com/krk-rokit-rp7-g5.htm", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -679,7 +679,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-genelec-8010ap", brand:"Genelec", name:"8010 AP", model:"8010 AP", category:"studio",
     image:"https://www.musicland.co.jp/shop/item/musiclandkey/picture/goods/50076_thumbnail.jpg",
-    images:[{url:"https://www.musicland.co.jp/shop/item/musiclandkey/picture/goods/50076_thumbnail.jpg",source:"https://www.musicland.co.jp/fs/musiclandkey/gnlc-8010ap-pair",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://www.musicland.co.jp/shop/item/musiclandkey/picture/goods/50076_thumbnail.jpg",source:"https://www.musicland.co.jp/fs/musiclandkey/gnlc-8010ap-pair",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1000,height:1000}],
     image_source:"https://www.musicland.co.jp/fs/musiclandkey/gnlc-8010ap-pair", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -694,7 +694,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-kali-lp6-2w", brand:"Kali Audio", name:"LP-6 2nd Wave", model:"LP-6 2nd Wave", category:"studio",
     image:"https://www.jpstore.se/PICTURE/11671-82-kali-audio-lp-6-v2_0x6k5.jpg",
-    images:[{url:"https://www.jpstore.se/PICTURE/11671-82-kali-audio-lp-6-v2_0x6k5.jpg",source:"https://www.jpstore.se/kali-audio/lp-6-v2",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://www.jpstore.se/PICTURE/11671-82-kali-audio-lp-6-v2_0x6k5.jpg",source:"https://www.jpstore.se/kali-audio/lp-6-v2",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:950,height:950}],
     image_source:"https://www.jpstore.se/kali-audio/lp-6-v2", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -784,7 +784,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-g4m-mixtrack-go", brand:"Numark", name:"MixTrack Go", model:"MixTrack Go", category:"dj",
     image:"https://cdn-image.bonedo.de/wp-media-folder-bonedo/2026/07/05_Numark_Mixtrack_Go.jpg",
-    images:[{url:"https://cdn-image.bonedo.de/wp-media-folder-bonedo/2026/07/05_Numark_Mixtrack_Go.jpg",source:"https://www.bonedo.de/artikel/testmarathon-aktive-klein-pa-systeme/",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://cdn-image.bonedo.de/wp-media-folder-bonedo/2026/07/05_Numark_Mixtrack_Go.jpg",source:"https://www.bonedo.de/artikel/testmarathon-aktive-klein-pa-systeme/",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:2032,height:1219}],
     image_source:"https://www.bonedo.de/artikel/testmarathon-aktive-klein-pa-systeme/", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -859,7 +859,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-g4m-control-mix-ultra", brand:"Hercules", name:"DJControl Mix Ultra", model:"DJControl Mix Ultra", category:"dj",
     image:"https://dam.elcorteingles.es/producto/www-001028648300581-00.jpg",
-    images:[{url:"https://dam.elcorteingles.es/producto/www-001028648300581-00.jpg",source:"https://www.elcorteingles.es/electronica/A55112097-controladora-dj-hercules-djcontrol-mix-ultra-portatil/",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://dam.elcorteingles.es/producto/www-001028648300581-00.jpg",source:"https://www.elcorteingles.es/electronica/A55112097-controladora-dj-hercules-djcontrol-mix-ultra-portatil/",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1200,height:1200}],
     image_source:"https://www.elcorteingles.es/electronica/A55112097-controladora-dj-hercules-djcontrol-mix-ultra-portatil/", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -1249,7 +1249,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-g4m-yamaha-dbr15", brand:"Yamaha", name:"DBR15", model:"DBR15", category:"pa",
     image:"https://images.tcdn.com.br/img/editor/up/553565/dbr15_1200.jpg",
-    images:[{url:"https://images.tcdn.com.br/img/editor/up/553565/dbr15_1200.jpg",source:"https://www.atproaudio.com.br/caixas-de-som/monitores-de-palco/ativos-15/caixa-ativa-yamaha-dbr15",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://images.tcdn.com.br/img/editor/up/553565/dbr15_1200.jpg",source:"https://www.atproaudio.com.br/caixas-de-som/monitores-de-palco/ativos-15/caixa-ativa-yamaha-dbr15",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1200,height:872}],
     image_source:"https://www.atproaudio.com.br/caixas-de-som/monitores-de-palco/ativos-15/caixa-ativa-yamaha-dbr15", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -1339,7 +1339,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-g4m-qsc-k82", brand:"QSC", name:"K8.2", model:"K8.2", category:"pa",
     image:"https://musicworldacademy.com/cdn/shop/files/QSC-K8_2-Active-Powered-Speaker-with-Axisymetric-with-8-Speaker-2000-Watts-QSC-Music-World-Academy_1200x1200.jpg?v=1684423370",
-    images:[{url:"https://musicworldacademy.com/cdn/shop/files/QSC-K8_2-Active-Powered-Speaker-with-Axisymetric-with-8-Speaker-2000-Watts-QSC-Music-World-Academy_1200x1200.jpg?v=1684423370",source:"https://musicworldacademy.com/products/k82_qsc-k8-2-active-powered-speaker-with-axisymetric-with-8-speaker-2000-watts",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://musicworldacademy.com/cdn/shop/files/QSC-K8_2-Active-Powered-Speaker-with-Axisymetric-with-8-Speaker-2000-Watts-QSC-Music-World-Academy_1200x1200.jpg?v=1684423370",source:"https://musicworldacademy.com/products/k82_qsc-k8-2-active-powered-speaker-with-axisymetric-with-8-speaker-2000-watts",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1200,height:1200}],
     image_source:"https://musicworldacademy.com/products/k82_qsc-k8-2-active-powered-speaker-with-axisymetric-with-8-speaker-2000-watts", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -1429,7 +1429,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-g4m-chauvet-dfi-usb2", brand:"Chauvet DJ", name:"D-Fi USB 2", model:"D-Fi USB 2", category:"lighting",
     image:"https://media.sweetwater.com/m/products/image/f57d73b2659y9tPJ1wnRbAQemIiVJ4CIGv36yjgg.jpg?ha=f57d73b265aebf93a1c4686410a2b82ebe4f85b5&quality=82",
-    images:[{url:"https://media.sweetwater.com/m/products/image/f57d73b2659y9tPJ1wnRbAQemIiVJ4CIGv36yjgg.jpg?ha=f57d73b265aebf93a1c4686410a2b82ebe4f85b5&quality=82",source:"https://www.sweetwater.com/store/detail/DFIUSB2--chauvet-dj-d-fi-usb-2-wireless-dmx-transceiver",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://media.sweetwater.com/m/products/image/f57d73b2659y9tPJ1wnRbAQemIiVJ4CIGv36yjgg.jpg?ha=f57d73b265aebf93a1c4686410a2b82ebe4f85b5&quality=82",source:"https://www.sweetwater.com/store/detail/DFIUSB2--chauvet-dj-d-fi-usb-2-wireless-dmx-transceiver",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:2318,height:2263}],
     image_source:"https://www.sweetwater.com/store/detail/DFIUSB2--chauvet-dj-d-fi-usb-2-wireless-dmx-transceiver", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
@@ -1444,7 +1444,7 @@ export const MARKET_CATALOG = [
   {
     id:"mkt-g4m-enttec-open-dmx-usb", brand:"Enttec", name:"Open DMX USB", model:"Open DMX USB", category:"lighting",
     image:"https://www.simplysoundandlighting.co.uk/cdn/shop/files/dc3c14ce-f098-4937-9de4-7c0910976afb.jpg?v=1745816635",
-    images:[{url:"https://www.simplysoundandlighting.co.uk/cdn/shop/files/dc3c14ce-f098-4937-9de4-7c0910976afb.jpg?v=1745816635",source:"https://www.simplysoundandlighting.co.uk/products/enttec-open-dmx-usb-interface-compact-usb-to-dmx-controller",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    images:[{url:"https://www.simplysoundandlighting.co.uk/cdn/shop/files/dc3c14ce-f098-4937-9de4-7c0910976afb.jpg?v=1745816635",source:"https://www.simplysoundandlighting.co.uk/products/enttec-open-dmx-usb-interface-compact-usb-to-dmx-controller",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1200,height:1200}],
     image_source:"https://www.simplysoundandlighting.co.uk/products/enttec-open-dmx-usb-interface-compact-usb-to-dmx-controller", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
