@@ -100,7 +100,7 @@ function serveStatic(u,res){
 const server=http.createServer(async(req,res)=>{
   try{
     const u=new URL(req.url,"http://localhost");
-    const db=load();
+    const db=await load();
 
     if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{ok:true,service:"mcq-hire"});
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
@@ -118,7 +118,7 @@ const server=http.createServer(async(req,res)=>{
       const deterministic=runAgentCommand(db,[...listInternalCatalog(),...listMarketCatalog()],command);
       const result=await enrichAgentCommand(deterministic);
       db.crm_events.push({id:id("agent"),entity_type:"agent_command",entity_id:result.requested_agent,status:result.status,owner:"operator",next_action:result.approval_required?"Approve or reject proposed restricted action":"Review agent recommendations",note:JSON.stringify({instruction:result.instruction,agents_invoked:result.responses.map(x=>x.agent),evidence:result.responses.map(x=>x.evidence),approval_required:result.approval_required,executed_restricted_action:false}),created_at:result.generated_at});
-      save(db);
+      await save(db);
       return json(res,200,result);
     }
     if(req.method==="GET"&&u.pathname==="/api/admin/catalog/validation"){
@@ -237,7 +237,7 @@ const server=http.createServer(async(req,res)=>{
       };
       const i=db.live_stream_events.findIndex(v=>v.id===row.id);
       if(i>=0)db.live_stream_events[i]=row;else db.live_stream_events.push(row);
-      save(db);return json(res,200,row);
+      await save(db);return json(res,200,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/urban/live/remind"){
@@ -248,7 +248,7 @@ const server=http.createServer(async(req,res)=>{
       const event_id=String(x.event_id||"urban-live-launch");
       if(db.stream_reminders.some(v=>v.event_id===event_id&&v.email_hash===email_hash))return json(res,200,{ok:true,already_registered:true});
       db.stream_reminders.push({id:id("remind"),event_id,email_hash,created_at:new Date().toISOString()});
-      save(db);return json(res,201,{ok:true,event_id});
+      await save(db);return json(res,201,{ok:true,event_id});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/urban/live/submit-track"){
@@ -261,7 +261,7 @@ const server=http.createServer(async(req,res)=>{
       const event_id=String(x.event_id||"urban-live-launch");
       if(db.stream_track_submissions.some(v=>v.event_id===event_id&&v.submission_id===track.id))return json(res,200,{ok:true,already_submitted:true});
       const row={id:id("streamtrack"),event_id,submission_id:track.id,status:"SUBMITTED",created_at:new Date().toISOString()};
-      db.stream_track_submissions.push(row);save(db);return json(res,201,row);
+      db.stream_track_submissions.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="GET"&&u.pathname==="/api/urban/live/submissions"){
@@ -305,7 +305,7 @@ const server=http.createServer(async(req,res)=>{
         status:"LIVE",
         created_at:new Date().toISOString()
       };
-      db.urban_submissions.push(row);save(db);
+      db.urban_submissions.push(row);await save(db);
       return json(res,201,{...row,contact:undefined});
     }
 
@@ -330,7 +330,7 @@ const server=http.createServer(async(req,res)=>{
       const voter_hash=crypto.createHash("sha256").update(String(x.contact).trim().toLowerCase()).digest("hex");
       if(db.urban_votes.some(v=>v.submission_id===submission.id&&v.voter_hash===voter_hash))throw new Error("already supported");
       const row={id:id("uvote"),submission_id:submission.id,voter_hash,created_at:new Date().toISOString()};
-      db.urban_votes.push(row);save(db);
+      db.urban_votes.push(row);await save(db);
       return json(res,201,{ok:true,submission_id:submission.id,votes:db.urban_votes.filter(v=>v.submission_id===submission.id).length});
     }
 
@@ -339,7 +339,7 @@ const server=http.createServer(async(req,res)=>{
       if(!x.submission_id||!x.reason)throw new Error("submission_id and reason required");
       if(!db.urban_submissions.some(v=>v.id===x.submission_id))throw new Error("submission not found");
       const row={id:id("ureport"),submission_id:String(x.submission_id),reason:String(x.reason).slice(0,500),contact:String(x.contact||"").slice(0,200),status:"NEW",created_at:new Date().toISOString()};
-      db.urban_reports.push(row);save(db);return json(res,201,{ok:true,id:row.id});
+      db.urban_reports.push(row);await save(db);return json(res,201,{ok:true,id:row.id});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/urban/moderate"){
@@ -349,7 +349,7 @@ const server=http.createServer(async(req,res)=>{
       if(!row)throw new Error("submission not found");
       const status=String(x.status||"").toUpperCase();
       if(!["LIVE","HIDDEN","REMOVED"].includes(status))throw new Error("invalid status");
-      row.status=status;row.moderated_at=new Date().toISOString();save(db);return json(res,200,{id:row.id,status:row.status});
+      row.status=status;row.moderated_at=new Date().toISOString();await save(db);return json(res,200,{id:row.id,status:row.status});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/urban/art/submissions"){
@@ -374,7 +374,7 @@ const server=http.createServer(async(req,res)=>{
         status:"PENDING",
         created_at:new Date().toISOString()
       };
-      db.urban_art_submissions.push(row);save(db);
+      db.urban_art_submissions.push(row);await save(db);
       return json(res,201,{id:row.id,status:row.status,title:row.title,created_at:row.created_at});
     }
 
@@ -398,7 +398,7 @@ const server=http.createServer(async(req,res)=>{
       const voter_hash=crypto.createHash("sha256").update(String(x.contact).trim().toLowerCase()).digest("hex");
       if(db.urban_art_votes.some(v=>v.submission_id===submission.id&&v.voter_hash===voter_hash))throw new Error("already voted");
       db.urban_art_votes.push({id:id("uavote"),submission_id:submission.id,voter_hash,created_at:new Date().toISOString()});
-      save(db);
+      await save(db);
       return json(res,201,{ok:true,submission_id:submission.id,votes:db.urban_art_votes.filter(v=>v.submission_id===submission.id).length});
     }
 
@@ -407,7 +407,7 @@ const server=http.createServer(async(req,res)=>{
       if(!x.submission_id||!x.reason)throw new Error("submission_id and reason required");
       if(!db.urban_art_submissions.some(v=>v.id===x.submission_id))throw new Error("art submission not found");
       const row={id:id("uareport"),submission_id:String(x.submission_id),reason:String(x.reason).slice(0,500),contact:String(x.contact||"").slice(0,200),status:"NEW",created_at:new Date().toISOString()};
-      db.urban_art_reports.push(row);save(db);return json(res,201,{ok:true,id:row.id});
+      db.urban_art_reports.push(row);await save(db);return json(res,201,{ok:true,id:row.id});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/urban/art/moderate"){
@@ -417,7 +417,7 @@ const server=http.createServer(async(req,res)=>{
       if(!row)throw new Error("art submission not found");
       const status=String(x.status||"").toUpperCase();
       if(!["LIVE","HIDDEN","REMOVED","PENDING"].includes(status))throw new Error("invalid status");
-      row.status=status;row.moderated_at=new Date().toISOString();save(db);
+      row.status=status;row.moderated_at=new Date().toISOString();await save(db);
       return json(res,200,{id:row.id,status:row.status});
     }
 
@@ -464,7 +464,7 @@ const server=http.createServer(async(req,res)=>{
         if(existing>=0)db.music_catalog[existing]=row;else db.music_catalog.push(row);
         imported.push(row.id);
       }
-      save(db);return json(res,200,{imported:imported.length,ids:imported});
+      await save(db);return json(res,200,{imported:imported.length,ids:imported});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/music/order-interest"){
@@ -473,21 +473,21 @@ const server=http.createServer(async(req,res)=>{
       const item=db.music_catalog.find(v=>v.id===x.item_id);
       if(!item)throw new Error("music item not found");
       const row={id:id("morder"),item_id:item.id,name:String(x.name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),quantity:Math.max(1,Number(x.quantity||1)),status:"NEW",created_at:new Date().toISOString()};
-      db.music_orders.push(row);save(db);return json(res,201,row);
+      db.music_orders.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/music/drop-signup"){
       const x=await body(req);
       if(!x.contact)throw new Error("contact required");
       const row={id:id("drop"),name:String(x.name||"").trim(),contact:String(x.contact).trim(),interests:Array.isArray(x.interests)?x.interests.map(String):[],created_at:new Date().toISOString()};
-      db.drop_signups.push(row);save(db);return json(res,201,row);
+      db.drop_signups.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/swap/offer"){
       const x=await body(req);
       if(!x.name||!x.contact||!x.item_type||!x.description)throw new Error("name, contact, item_type and description required");
       const row={id:id("swap"),name:String(x.name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),item_type:String(x.item_type).trim(),artist:String(x.artist||"").trim(),title:String(x.title||"").trim(),quantity:Math.max(1,Number(x.quantity||1)),condition:String(x.condition||"unspecified").trim(),description:String(x.description).trim(),asking_price:String(x.asking_price||"").trim(),status:"NEW",created_at:new Date().toISOString()};
-      db.swap_offers.push(row);save(db);return json(res,201,row);
+      db.swap_offers.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/leads"){
@@ -506,13 +506,13 @@ const server=http.createServer(async(req,res)=>{
         status:"NEW",
         created_at:new Date().toISOString()
       };
-      db.leads.push(row);save(db);return json(res,201,row);
+      db.leads.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/events"){
       const x=await body(req);
       const row={id:id("evt"),type:String(x.type||"interaction").slice(0,80),label:String(x.label||"").slice(0,200),href:String(x.href||"").slice(0,500),created_at:new Date().toISOString()};
-      db.events.push(row);save(db);return json(res,201,{ok:true});
+      db.events.push(row);await save(db);return json(res,201,{ok:true});
     }
 
     if(req.method==="GET"&&u.pathname==="/api/suppliers/farnell/search"){
@@ -526,7 +526,7 @@ const server=http.createServer(async(req,res)=>{
       assertPence(x.price_pence);
       if(!x.name)throw new Error("name required");
       const row={id:id("eq"),name:String(x.name).trim(),category:String(x.category||"PA").trim(),description:String(x.description||"").trim(),price_pence:x.price_pence,image_url:String(x.image_url||"").trim()};
-      db.equipment.push(row);save(db);return json(res,201,row);
+      db.equipment.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="GET"&&route(u,"/availability","/api/availability")){
@@ -543,7 +543,7 @@ const server=http.createServer(async(req,res)=>{
       if(!db.equipment.some(e=>e.id===x.equipment_id))throw new Error("equipment not found");
       if(!isAvailable(x.equipment_id,x.start_at,x.end_at,db.bookings))throw new Error("equipment unavailable");
       const row={id:id("enq"),customer_name:String(x.customer_name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),venue:String(x.venue||"").trim(),event_type:String(x.event_type||"").trim(),notes:String(x.notes||"").trim(),equipment_id:x.equipment_id,start_at:x.start_at,end_at:x.end_at,status:"NEW",created_at:new Date().toISOString()};
-      db.enquiries.push(row);save(db);return json(res,201,row);
+      db.enquiries.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/hire/request"){
@@ -556,7 +556,7 @@ const server=http.createServer(async(req,res)=>{
       if(eq&&!isAvailable(eq.id,x.start_at,x.end_at,db.bookings))throw new Error("equipment unavailable");
       const enquiry={id:id("enq"),customer_name:String(x.customer_name).trim(),contact:String(x.contact).trim(),phone:String(x.phone||"").trim(),venue:String(x.venue||"").trim(),event_type:String(x.event_type||"").trim(),notes:String(x.notes||"").trim(),equipment_id:eq?.id||null,start_at:x.start_at,end_at:x.end_at,status:"NEW",created_at:new Date().toISOString()};
       const quote=eq?{id:id("quo"),...createQuote(enquiry,eq)}:null;
-      db.enquiries.push(enquiry);if(quote)db.quotes.push(quote);save(db);
+      db.enquiries.push(enquiry);if(quote)db.quotes.push(quote);await save(db);
       return json(res,201,{enquiry,quote});
     }
 
@@ -566,7 +566,7 @@ const server=http.createServer(async(req,res)=>{
       if(!enq)throw new Error("enquiry not found");
       const eq=db.equipment.find(v=>v.id===enq.equipment_id);
       if(!eq)throw new Error("equipment not found");
-      const row={id:id("quo"),...createQuote(enq,eq)};db.quotes.push(row);save(db);return json(res,201,row);
+      const row={id:id("quo"),...createQuote(enq,eq)};db.quotes.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&route(u,"/payments/confirm","/api/payments/confirm")){
@@ -575,7 +575,7 @@ const server=http.createServer(async(req,res)=>{
       if(!x.reference)throw new Error("real payment reference required");
       if(!db.quotes.some(q=>q.id===x.quote_id))throw new Error("quote not found");
       const row={id:id("pay"),quote_id:x.quote_id,amount_pence:x.amount_pence,reference:String(x.reference).trim(),status:"RECEIVED",received_at:new Date().toISOString()};
-      db.payments.push(row);save(db);return json(res,201,row);
+      db.payments.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&route(u,"/bookings","/api/bookings")){
@@ -584,7 +584,7 @@ const server=http.createServer(async(req,res)=>{
       if(!quote||!payment)throw new Error("quote and received deposit required");
       const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);
       const row={id:id("book"),...confirmBooking({quote,payment,start_at:enq.start_at,end_at:enq.end_at,bookings:db.bookings}),enquiry_id:enq.id,quote_id:quote.id,confirmed_at:new Date().toISOString()};
-      db.bookings.push(row);save(db);return json(res,201,row);
+      db.bookings.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="GET"&&u.pathname==="/api/admin/crm"){
@@ -749,7 +749,7 @@ const server=http.createServer(async(req,res)=>{
       enq.crm_updated_at=new Date().toISOString();
       const event={id:id("crm"),entity_type:"enquiry",entity_id:enq.id,status:"QUOTE",owner:enq.crm_owner||"",next_action:enq.crm_next_action||"",next_action_at:enq.crm_next_action_at||"",note:"Quote created from CRM",created_at:enq.crm_updated_at};
       db.crm_events.push(event);
-      save(db);
+      await save(db);
       return json(res,201,{ok:true,created:true,quote:row,event});
     }
 
@@ -774,7 +774,7 @@ const server=http.createServer(async(req,res)=>{
       row.crm_updated_at=new Date().toISOString();
       const event={id:id("crm"),entity_type:String(x.entity_type),entity_id:row.id,status:row.status||"NEW",owner:row.crm_owner||"",next_action:row.crm_next_action||"",next_action_at:row.crm_next_action_at||"",note:row.crm_note||"",created_at:row.crm_updated_at};
       db.crm_events.push(event);
-      save(db);
+      await save(db);
       return json(res,200,{ok:true,item:row,event});
     }
 
