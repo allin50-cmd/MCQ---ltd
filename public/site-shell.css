@@ -56,3 +56,12 @@ header.top,header.mast,header.g-top,header.cinema-nav,.mobile-dock,.dock{display
 @keyframes mcqSplashMark{to{opacity:1;transform:scale(1)}}@keyframes mcqSplashRule{to{width:min(520px,72vw)}}@keyframes mcqSplashText{to{opacity:1}}@keyframes mcqBar{to{height:34px}}@keyframes mcqSplashSweep{from{transform:translateX(-18%)}to{transform:translateX(18%)}}
 @media(max-width:720px){.mcq-splash-inner{padding:24px 18px}.mcq-splash-mark{font-size:clamp(5.8rem,30vw,9rem)}.mcq-splash h1{font-size:.92rem;letter-spacing:.11em}.mcq-splash p{letter-spacing:.18em}}
 @media(prefers-reduced-motion:reduce){.mcq-splash *,.mcq-splash::before{animation:none!important}.mcq-splash-mark,.mcq-splash p,.mcq-splash h1,.mcq-splash-bars,.mcq-splash-enter{opacity:1;transform:none}.mcq-splash-rule{width:min(520px,72vw)}}
+
+.mcq-splash-logo-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.mcq-splash-logo{width:72px;height:72px;border-radius:16px;box-shadow:0 0 0 1px rgba(227,173,50,.36),0 16px 44px rgba(0,0,0,.45);opacity:0;transform:translateY(10px);animation:mcqSplashText .45s ease .05s forwards}
+.mcq-splash-legacy{margin-bottom:12px!important}
+.mcq-splash-about{max-width:690px;margin:16px auto 0!important;color:#c8d0d6!important;font-size:clamp(.82rem,1.8vw,1rem)!important;font-weight:600!important;line-height:1.55!important;letter-spacing:.015em!important;opacity:0;animation:mcqSplashText .45s ease .9s forwards}
+.mcq-splash-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px auto 2px;opacity:0;animation:mcqSplashText .45s ease 1s forwards}
+.mcq-splash-tags span{border:1px solid #36414a;background:#0d1318;color:#eef1f3;padding:8px 10px;font-size:10px;font-weight:900;letter-spacing:.1em}
+@media(max-width:720px){.mcq-splash-logo{width:58px;height:58px}.mcq-splash-about{max-width:92%;font-size:.8rem!important;line-height:1.45!important}.mcq-splash-tags{gap:6px;margin-top:18px}.mcq-splash-tags span{font-size:8px;padding:7px 8px}.mcq-splash-bars{margin-top:20px}}
+@media(prefers-reduced-motion:reduce){.mcq-splash-logo,.mcq-splash-about,.mcq-splash-tags{opacity:1;transform:none}}
