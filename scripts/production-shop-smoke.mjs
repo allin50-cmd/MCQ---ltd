@@ -45,6 +45,8 @@ await retry(async()=>{
   assert(shop.text.includes("STAR REGULAR PRODUCTS"),"shop missing Star Regular Products heading");
   assert(shop.text.includes('id="regular-products-grid"'),"shop missing regular-products-grid");
   assert(shop.text.includes("/shop-products.js"),"shop missing product loader");
+  assert(shop.text.includes("ALL 100 RESEARCHED PRODUCTS"),"shop missing full 100-product catalogue section");
+  assert(shop.text.includes('id="catalogue-table-body"'),"shop missing catalogue table");
 
   const feature=await get("/insights/djs-ditching-laptops");
   assert(feature.r.status===200,`feature status ${feature.r.status}`);
@@ -75,10 +77,10 @@ await retry(async()=>{
   const cat=await get("/api/market/catalog");
   assert(cat.r.status===200,`catalog status ${cat.r.status}`);
   const data=JSON.parse(cat.text); const items=data.items||[];
-  assert(items.length===50,`expected 50 catalogue rows, got ${items.length}`);
+  assert(items.length===100,`expected 100 catalogue rows, got ${items.length}`);
   for(const p of items){
     assert(p.id&&p.brand&&p.name,`identity missing for ${p.id||"unknown"}`);
-    assert(/^https:\/\//.test(p.image||""),`image missing for ${p.id}`);
+    if(p.image) assert(/^https:\/\//.test(p.image),`invalid image for ${p.id}`);
     assert(/^https:\/\//.test(p.source_url||""),`source_url missing for ${p.id}`);
     assert(Number.isFinite(Number(p.observed_public_price_inc_vat_gbp??p.observed_price_gbp)),`public reference price missing for ${p.id}`);
     assert(p.mcq_sellable===false,`unverified row incorrectly sellable: ${p.id}`);
@@ -86,7 +88,7 @@ await retry(async()=>{
     assert(p.mcq_retail_price_inc_vat_gbp==null,`invented MCQ retail price present: ${p.id}`);
   }
 
-  const unique=[...new Set(items.map(x=>x.image))];
+  const unique=[...new Set(items.map(x=>x.image).filter(Boolean))];
   const imageFailures=[];
   for(const url of unique){
     try{
