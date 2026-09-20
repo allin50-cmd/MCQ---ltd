@@ -1,19 +1,22 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {MARKET_CATALOG,COMPETITORS,searchMarketCatalog} from "../src/market.js";
+import {MARKET_CATALOG,COMPETITORS,searchMarketCatalog,listMarketCatalog} from "../src/market.js";
 
-test("market catalogue is evidence-labelled and never claims MCQ stock",()=>{
+test("public-market research stays DRAFT until image rights and real commercial evidence exist",()=>{
   assert.ok(MARKET_CATALOG.length>=7);
-  for(const row of MARKET_CATALOG){
+  const evaluated=listMarketCatalog();
+  for(const row of evaluated){
     assert.equal(row.evidence_state,"PUBLIC_MARKET");
-    assert.equal(row.mcq_sellable,false);
-    assert.equal(row.sell_status,"TRADE_TERMS_REQUIRED");
+    assert.equal(row.state,"DRAFT");
+    assert.equal(row.public_display,false);
+    assert.equal(row.sellable,false);
     assert.match(row.image,/^https:\/\//);
     assert.match(row.source_url,/^https:\/\//);
     assert.ok(Number(row.observed_price_gbp)>0);
     assert.match(row.checked_at,/^2026-09-20$/);
+    assert.ok(row.validation.common_errors.length>0 || row.validation.sellable_errors.length>0);
   }
-  assert.ok(searchMarketCatalog("DDJ FLX4").some(x=>x.name==="DDJ-FLX4"));
+  assert.equal(searchMarketCatalog("DDJ FLX4").length,0);
 });
 
 test("competitor baseline has current watch targets and source URLs",()=>{
