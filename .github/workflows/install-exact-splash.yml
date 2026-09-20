@@ -1,0 +1,36 @@
+name: Install exact MCQ splash asset
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/install-exact-splash.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download exact supplied artwork
+        env:
+          ASSET_URL: "https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-f300-8210-8022-49cdee850168/raw?se=2026-09-20T12%3A03%3A00Z&sp=r&sv=2026-02-06&sr=b&scid=86050788-edf3-5adf-a721-8c4708f534c2&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-20T09%3A27%3A02Z&ske=2026-09-21T09%3A27%3A02Z&sks=b&skv=2026-02-06&sig=qrqdcfmIdF38Khw3Zjk1dkZ46mTeF2Jlzj%2B9mD1x9ow%3D"
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error "$ASSET_URL" -o public/mcq-splash-production.webp
+          test "$(wc -c < public/mcq-splash-production.webp)" -eq 500200
+          echo "af058ff161898e462ff85ca38539efe1cb068124ef216eac7196fc6107c44980  public/mcq-splash-production.webp" | sha256sum -c -
+      - name: Commit production asset and remove transfer scaffold
+        run: |
+          set -euo pipefail
+          rm -f .asset-chunks/000.txt
+          rm -f .github/workflows/install-exact-splash.yml
+          git config user.name "MCQ Production Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Install exact supplied MCQ splash asset"
+          git push origin HEAD:main
