@@ -95,6 +95,87 @@ Preferred image order:
 3. authorised supplier feed/media;
 4. otherwise do not publish the commercial card.
 
+
+## Required catalogue row contract
+
+For every product MCQ may want to sell, the catalogue record must carry the following fields before it can progress beyond DRAFT:
+
+- exact brand;
+- exact model;
+- category;
+- at least one high-resolution image;
+- image source;
+- image permission / licence status;
+- supplier;
+- supplier SKU / product code;
+- real current availability;
+- observed public price inc VAT where relevant;
+- real supplier cost price when known;
+- delivery / carriage cost;
+- MCQ retail price;
+- last-checked date;
+- source URL;
+- source / evidence note.
+
+Commercial calculation fields should also be present:
+
+- Public Net ex VAT;
+- Estimated Trade Cost ex VAT;
+- Estimated Landed Cost ex VAT;
+- Suggested MCQ Retail inc VAT;
+- Max Buy Cost ex VAT @ Target GM;
+- Required Supplier Discount vs Public Net;
+- Projected GM %;
+- Decision.
+
+### Critical interpretation rules
+
+`Estimated Trade Cost ex VAT` and `Estimated Landed Cost ex VAT` are planning values only unless they are backed by a real supplier quote, invoice, trade account price or authorised feed.
+
+`Suggested MCQ Retail inc VAT` is not automatically the live selling price. It becomes publishable only after real landed cost and margin have been confirmed.
+
+`VIABLE (MODEL)` means commercially viable under the model assumptions only. It does **not** mean MCQ can sell the item yet.
+
+A row may become `AVAILABLE_TO_ORDER` only when:
+- supplier route is approved,
+- supplier SKU is known,
+- current supplier availability is verified,
+- real cost price is confirmed,
+- delivery cost is confirmed,
+- image rights are acceptable,
+- margin is acceptable,
+- MCQ retail price is approved.
+
+A row may become `IN_STOCK_MCQ` only when MCQ itself holds the stock and that stock position is evidenced.
+
+Otherwise the correct state is `SOURCE_THROUGH_MCQ` or `DRAFT`.
+
+### Public-market example rows
+
+The 2026-09-20 market workbook contains researched public-market rows for products including:
+- Sennheiser HD 25;
+- Audio-Technica ATH-M50X;
+- Shure SM58 LC;
+- Shure SM57 LC;
+- Sennheiser e835;
+- Yamaha HS5;
+- ADAM Audio T5V;
+- JBL 305P MKII;
+- PreSonus Eris 3.5 2nd Gen;
+- Denon DJ SC Live 4;
+- Numark Mixstream Pro+;
+- Technics SL-1210MK7;
+- Alto TS412;
+- JBL EON715;
+- Zoom H4essential;
+- Ortofon Concorde Mix MKII System;
+- Pioneer DJ DDJ-FLX10;
+- Pioneer DJ DDJ-FLX4;
+- AlphaTheta DDJ-GRV6.
+
+These rows are public-market evidence and planning inputs. They are not proof of MCQ stock, MCQ trade cost, supplier permission or final MCQ retail price.
+
+
 ## Inventory and ecommerce truth states
 
 Do not confuse public-market research with MCQ inventory.
