@@ -2,7 +2,7 @@ const BASE=(process.env.MCQ_BASE_URL||"https://mcq-audio.onrender.com").replace(
 
 function assert(cond,msg){if(!cond)throw new Error(msg)}
 async function get(path,opts={}){
-  const r=await fetch(BASE+path,{redirect:"follow",...opts});
+  const r=await fetch(BASE+path,{redirect:"follow",signal:AbortSignal.timeout(12000),...opts});
   const body=await r.arrayBuffer();
   return {r,buf:Buffer.from(body),text:Buffer.from(body).toString("utf8")};
 }
@@ -27,6 +27,33 @@ function jpegSize(buf){
   }
   return null;
 }
+async function checkImage(url,{minWidth=0,minHeight=0}={}){
+  const r=await fetch(url,{redirect:"follow",signal:AbortSignal.timeout(12000),headers:{"user-agent":"MCQ-Audio-production-smoke/1.0"}});
+  assert(r.ok,`HTTP ${r.status}`);
+  const type=(r.headers.get("content-type")||"").toLowerCase();
+  assert(type.startsWith("image/"),`non-image content-type ${type}`);
+  const buf=Buffer.from(await r.arrayBuffer());
+  assert(buf.length>=5000,`payload too small (${buf.length})`);
+  if(minWidth||minHeight){
+    const size=pngSize(buf)||jpegSize(buf);
+    assert(size,"unsupported/unreadable PNG/JPEG image");
+    assert(size.width>=minWidth&&size.height>=minHeight,`below site threshold ${size.width}x${size.height}`);
+  }
+}
+async function checkImageSet(urls,options={}){
+  const unique=[...new Set(urls.filter(Boolean))];
+  const failures=[];
+  const workers=Math.min(8,unique.length);
+  let next=0;
+  await Promise.all(Array.from({length:workers},async()=>{
+    while(next<unique.length){
+      const url=unique[next++];
+      try{await checkImage(url,options)}catch(e){failures.push({url,error:e.message})}
+    }
+  }));
+  return {unique,failures};
+}
+
 async function retry(fn,{attempts=18,delayMs=5000}={}){
   let last;
   for(let i=1;i<=attempts;i++){
@@ -86,20 +113,10 @@ await retry(async()=>{
 
   const featureImages=[...feature.text.matchAll(/<img[^>]+src="(https:[^"]+)"/g)].map(m=>m[1]);
   assert(featureImages.length>=4,`expected at least 4 feature images, got ${featureImages.length}`);
-  const featureImageFailures=[];
-  for(const url of [...new Set(featureImages)]){
-    try{
-      const r=await fetch(url,{redirect:"follow",headers:{"user-agent":"MCQ-Audio-production-smoke/1.0"}});
-      assert(r.ok,`HTTP ${r.status}`);
-      const type=(r.headers.get("content-type")||"").toLowerCase();
-      assert(type.startsWith("image/"),`non-image content-type ${type}`);
-      const buf=Buffer.from(await r.arrayBuffer());
-      assert(buf.length>=5000,`payload too small (${buf.length})`);
-    }catch(e){featureImageFailures.push({url,error:e.message})}
-  }
-  if(featureImageFailures.length){
-    console.error(JSON.stringify({feature_image_failures:featureImageFailures},null,2));
-    throw new Error(`${featureImageFailures.length} DJ feature image(s) failed production checks`);
+  const featureCheck=await checkImageSet(featureImages);
+  if(featureCheck.failures.length){
+    console.error(JSON.stringify({feature_image_failures:featureCheck.failures},null,2));
+    throw new Error(`${featureCheck.failures.length} DJ feature image(s) failed production checks`);
   }
 
   const cat=await get("/api/market/catalog");
@@ -116,25 +133,11 @@ await retry(async()=>{
     assert(p.mcq_retail_price_inc_vat_gbp==null,`invented MCQ retail price present: ${p.id}`);
   }
 
-  const unique=[...new Set(items.map(x=>x.image).filter(Boolean))];
-  const imageFailures=[];
-  for(const url of unique){
-    try{
-      const r=await fetch(url,{redirect:"follow",headers:{"user-agent":"MCQ-Audio-production-smoke/1.0"}});
-      assert(r.ok,`HTTP ${r.status}`);
-      const type=(r.headers.get("content-type")||"").toLowerCase();
-      assert(type.startsWith("image/"),`non-image content-type ${type}`);
-      const buf=Buffer.from(await r.arrayBuffer());
-      assert(buf.length>=5000,`payload too small (${buf.length})`);
-      const size=pngSize(buf)||jpegSize(buf);
-      assert(size,"unsupported/unreadable PNG/JPEG image");
-      assert(size.width>=500&&size.height>=300,`below site threshold ${size.width}x${size.height}`);
-    }catch(e){imageFailures.push({url,error:e.message})}
-  }
-  if(imageFailures.length){
-    console.error(JSON.stringify({image_failures:imageFailures},null,2));
-    throw new Error(`${imageFailures.length} product image(s) failed production quality checks`);
+  const imageCheck=await checkImageSet(items.map(x=>x.image),{minWidth:500,minHeight:300});
+  if(imageCheck.failures.length){
+    console.error(JSON.stringify({image_failures:imageCheck.failures},null,2));
+    throw new Error(`${imageCheck.failures.length} product image(s) failed production quality checks`);
   }
 
-  console.log(JSON.stringify({ok:true,base:BASE,products:items.length,unique_images:unique.length},null,2));
+  console.log(JSON.stringify({ok:true,base:BASE,products:items.length,unique_images:imageCheck.unique.length},null,2));
 },{attempts:Number(process.env.MCQ_SMOKE_ATTEMPTS||18),delayMs:Number(process.env.MCQ_SMOKE_DELAY_MS||5000)});
