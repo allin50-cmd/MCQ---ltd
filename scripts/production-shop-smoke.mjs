@@ -27,19 +27,19 @@ await retry(async()=>{
 
   const shellJs=await get("/site-shell.js");
   assert(shellJs.r.status===200,`/site-shell.js status ${shellJs.r.status}`);
-  assert(shellJs.text.includes("MCQ</strong><span>AUDIO</span>"),"splash missing MCQ AUDIO wordmark");
-  assert(shellJs.text.includes("PROFESSIONAL AUDIO • DJ • HI-FI"),"splash missing business identity");
-  assert(shellJs.text.includes("Audio equipment, DJ gear, microphones, speakers, specialist parts, PA hire and installation."),"splash missing plain-English business description");
-  assert(shellJs.text.includes("VINYL & SPECIALIST SOURCING"),"splash missing specialist sourcing");
+  assert(shellJs.text.includes("/mcq-splash-production.jpg"),"splash missing supplied production artwork");
+  assert(shellJs.text.includes("ENTER MCQ AUDIO"),"splash missing corrected MCQ entry CTA");
+  assert(shellJs.text.includes("hs-turntables")&&shellJs.text.includes("hs-djgear")&&shellJs.text.includes("hs-studio")&&shellJs.text.includes("hs-live")&&shellJs.text.includes("hs-vinyl")&&shellJs.text.includes("hs-accessories"),"splash category hotspots missing");
+  assert(shellJs.text.includes('href="/urban"')&&shellJs.text.includes('href="/about"'),"splash supporting hotspots missing");
   assert(shellJs.text.includes("ENTER MCQ AUDIO"),"splash missing explicit entry action");
   assert(!/rabbit/i.test(shellJs.text),"irrelevant rabbit artwork found in production splash");
-  assert(!shellJs.text.includes("http://")&&!shellJs.text.includes("https://"),"production splash shell contains an external URL dependency");
+  assert(!shellCss.text.includes("unsplash.com"),"production splash still depends on substitute stock imagery");
   assert(!shellJs.text.includes("setTimeout(closeSplash"),"production splash still auto-dismisses");
 
   const shellCss=await get("/site-shell.css");
   assert(shellCss.r.status===200,`/site-shell.css status ${shellCss.r.status}`);
-  assert(shellCss.text.includes(".mcq-splash-wordmark"),"splash wordmark styling missing");
-  assert(shellCss.text.includes(".mcq-splash-services"),"splash services styling missing");
+  assert(shellCss.text.includes(".mcq-splash-artboard"),"splash artwork styling missing");
+  assert(shellCss.text.includes(".mcq-hotspot"),"splash hotspot styling missing");
 
   const swap=await get("/swap");
   assert(swap.r.status===200,`/swap status ${swap.r.status}`);
