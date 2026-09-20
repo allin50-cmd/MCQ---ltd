@@ -93,8 +93,8 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-thomann-t5v", brand:"ADAM Audio", name:"T5V", model:"T5V", category:"studio",
-    image:"https://store.gomusic.cl/cdn/shop/products/adam-t5v-all_1000x.jpg?v=1651152442",
-    images:[{url:"https://store.gomusic.cl/cdn/shop/products/adam-t5v-all_1000x.jpg?v=1651152442",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    image:"https://m.media-amazon.com/images/S/aplus-media-library-service-media/8b7df165-3524-4f71-a5e5-6dc16d12357a.__CR0%2C0%2C1940%2C1200_PT0_SX970_V1___.jpg",
+    images:[{url:"https://m.media-amazon.com/images/S/aplus-media-library-service-media/8b7df165-3524-4f71-a5e5-6dc16d12357a.__CR0%2C0%2C1940%2C1200_PT0_SX970_V1___.jpg",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
     image_source:"public manufacturer/supplier media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
@@ -123,8 +123,8 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-thomann-eris35", brand:"PreSonus", name:"Eris 3.5 2nd Gen", model:"Eris 3.5 2nd Gen", category:"studio",
-    image:"https://absolutepromusic.com/cdn/shop/products/71H1ywQoeEL._AC_SL1500_1280x.jpg?v=1709752920",
-    images:[{url:"https://absolutepromusic.com/cdn/shop/products/71H1ywQoeEL._AC_SL1500_1280x.jpg?v=1709752920",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    image:"https://hdradio.vn/upload/hinhanh/loa-kiem-am/presonus/eris-35-2nd-gen/loa-presonus-eris-3-5-2nd-gen-avt1.jpg",
+    images:[{url:"https://hdradio.vn/upload/hinhanh/loa-kiem-am/presonus/eris-35-2nd-gen/loa-presonus-eris-3-5-2nd-gen-avt1.jpg",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
     image_source:"public manufacturer/supplier media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
@@ -213,8 +213,8 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-thomann-h4essential", brand:"Zoom", name:"H4essential", model:"H4essential", category:"recorders",
-    image:"https://cdn11.bigcommerce.com/s-mfjemmh3xf/images/stencil/1280x1280/products/27098/38194/06_H4essential_Product_copy__01398.1735725292.jpg?c=1",
-    images:[{url:"https://cdn11.bigcommerce.com/s-mfjemmh3xf/images/stencil/1280x1280/products/27098/38194/06_H4essential_Product_copy__01398.1735725292.jpg?c=1",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    image:"https://cdn.uniquephoto.com/resources/uniquephoto/images/products/processed/ZOM3065.superZoom.l.jpg",
+    images:[{url:"https://cdn.uniquephoto.com/resources/uniquephoto/images/products/processed/ZOM3065.superZoom.l.jpg",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
     image_source:"public manufacturer/supplier media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
@@ -303,8 +303,8 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-g4m-grv6", brand:"AlphaTheta", name:"DDJ-GRV6", model:"DDJ-GRV6", category:"dj",
-    image:"https://microfusatienda.b-cdn.net/media/wysiwyg/DDJ-GRV6_CGI_Angle_3300x2088.jpg",
-    images:[{url:"https://microfusatienda.b-cdn.net/media/wysiwyg/DDJ-GRV6_CGI_Angle_3300x2088.jpg",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    image:"https://cf1.zzounds.com/media/productmedia/fit%2C2018by3200/quality%2C85/APT_DDJGRV6_Angle_891889-5ba349dfa7d8510f7e3f7781ed0c02ba.jpg",
+    images:[{url:"https://cf1.zzounds.com/media/productmedia/fit%2C2018by3200/quality%2C85/APT_DDJGRV6_Angle_891889-5ba349dfa7d8510f7e3f7781ed0c02ba.jpg",source:"public manufacturer/supplier media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
     image_source:"public manufacturer/supplier media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
