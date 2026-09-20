@@ -408,9 +408,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-sm7b", brand:"Shure", name:"SM7B", model:"SM7B", category:"microphones",
-    image:"https://shure.widen.net/content/svjr7we9dr/webp/SM7B_HERO_HANGING_LEFT_web.webp?color=ffffffff&position=c&quality=80&u=qzv3fy",
-    images:[{url:"https://shure.widen.net/content/svjr7we9dr/webp/SM7B_HERO_HANGING_LEFT_web.webp?color=ffffffff&position=c&quality=80&u=qzv3fy",source:"https://www.shure.com/en-GB/applications/home-recording",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
-    image_source:"https://www.shure.com/en-GB/applications/home-recording", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"https://d2dfnis7z3ac76.cloudfront.net/shure_product_db/product_images/files/e05/77f/cc-/header_transparent/d8a05cd2b4d977f58caf81dc553dbfb4.png",
+    images:[{url:"https://d2dfnis7z3ac76.cloudfront.net/shure_product_db/product_images/files/e05/77f/cc-/header_transparent/d8a05cd2b4d977f58caf81dc553dbfb4.png",source:"https://www.shure.com/en-GB/products/microphones/sm7b?variant=SM7B",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
+    image_source:"https://www.shure.com/en-GB/products/microphones/sm7b?variant=SM7B", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
     observed_public_price_inc_vat_gbp:344, delivery_cost_inc_vat_gbp:0,
