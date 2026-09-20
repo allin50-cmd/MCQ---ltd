@@ -25,6 +25,11 @@ await retry(async()=>{
   assert(home.text.includes('/site-shell.css'),"homepage missing production shell stylesheet");
   assert(home.text.includes('/site-shell.js'),"homepage missing production shell script");
 
+  const splashAsset=await get("/mcq-splash-production.jpg");
+  assert(splashAsset.r.status===200,`/mcq-splash-production.jpg status ${splashAsset.r.status}`);
+  assert((splashAsset.r.headers.get("content-type")||"").startsWith("image/"),"splash artwork is not served as an image");
+  assert(splashAsset.buf.length>=150000,`splash artwork payload unexpectedly small (${splashAsset.buf.length})`);
+
   const shellJs=await get("/site-shell.js");
   assert(shellJs.r.status===200,`/site-shell.js status ${shellJs.r.status}`);
   assert(shellJs.text.includes("/mcq-splash-production.webp"),"splash missing supplied production artwork");
@@ -47,6 +52,8 @@ await retry(async()=>{
   assert(shellCss.r.status===200,`/site-shell.css status ${shellCss.r.status}`);
   assert(shellCss.text.includes(".mcq-splash-artboard"),"splash artwork styling missing");
   assert(shellCss.text.includes(".mcq-hotspot"),"splash hotspot styling missing");
+  assert(!shellCss.text.includes(".mcq-splash-backdrop"),"decorative substitute splash backdrop still present");
+  assert(!shellCss.text.includes(".mcq-splash-skip"),"extra splash skip UI still present");
   assert(shellCss.text.includes("aspect-ratio:1122/1402"),"splash artwork aspect ratio drifted");
 
   const swap=await get("/swap");
