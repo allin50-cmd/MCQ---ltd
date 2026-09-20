@@ -13,6 +13,8 @@ on:
       - "public/swap.html"
       - "test/splash-screen.test.js"
       - "src/market.js"
+      - "data/market-research-100.csv"
+      - "data/product-image-audit-100.csv"
       - "src/server.js"
       - "scripts/production-shop-smoke.mjs"
       - ".github/workflows/production-shop-smoke.yml"
