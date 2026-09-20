@@ -107,9 +107,6 @@ function renderAgents(){
   const target=qs("#agentTarget"),selected=target.value;
   target.innerHTML='<option value="all">All Agents</option>'+(a.agents||[]).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join("");
   target.value=selected||"all";
-  const target=qs("#agentTarget"),selected=target.value;
-  target.innerHTML='<option value="all">All Agents</option>'+(a.agents||[]).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join("");
-  target.value=selected||"all";
   qs("#agentRoster").innerHTML=(a.agents||[]).map(x=>'<div class="metric"><b style="font-size:15px">'+esc(x.name)+'</b><span>'+esc(x.role)+'</span><div class="sub" style="margin-top:7px">'+esc(x.mode)+'</div></div>').join("");
 }
 
@@ -178,7 +175,8 @@ async function createQuote(){
   catch(e){st.textContent=e.message;st.className="status bad"}
 }
 ["#search","#statusFilter","#ownerFilter","#typeFilter","#attentionFilter"].forEach(s=>qs(s).addEventListener(s==="#search"?"input":"change",renderList));
-qs("#runAgents").onclick=runAgents;qs("#agentInput").addEventListener("keydown",e=>{if(e.key==="Enter")runAgents()});\nqs("#refresh").onclick=load;qs("#connect").onclick=connect;qs("#token").addEventListener("keydown",e=>{if(e.key==="Enter")connect()});
+qs("#runAgents").onclick=runAgents;qs("#agentInput").addEventListener("keydown",e=>{if(e.key==="Enter")runAgents()});
+qs("#refresh").onclick=load;qs("#connect").onclick=connect;qs("#token").addEventListener("keydown",e=>{if(e.key==="Enter")connect()});
 qs("#logout").onclick=()=>{sessionStorage.removeItem("mcq-crm-token");state.token="";location.reload()};
 if(state.token){qs("#token").value=state.token;connect()}
 </script>
