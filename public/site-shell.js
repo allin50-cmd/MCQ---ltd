@@ -18,12 +18,13 @@ const pages={
 "/magazine":{label:"Magazine",parent:"/"},
 "/hire":{label:"Hire & Install",parent:"/"},
 "/trade":{label:"Trade",parent:"/"},
+"/club":{label:"MCQ Club",parent:"/"},
 "/about":{label:"About & Contact",parent:"/"},
 "/future":{label:"Future Experience",parent:"/"}
 };
 const aliases={"/urban-underground":"/urban","/vinyl-underground":"/urban","/swap-shop":"/urban","/self-publish":"/publish","/hire-install":"/hire","/contact":"/about","/white-labels":"/vinyl","/prototype":"/future"};
 const canonical=aliases[path]||path;const meta=pages[canonical]||{label:document.title.split("|")[0].trim()||"MCQ",parent:"/"};
-const nav=[["/shop","Shop"],["/urban","Urban"],["/urban-gallery","Art Chart"],["/magazine","Magazine"],["/live","Live"],["/hire","Hire"],["/trade","Trade"],["/about","About"]];
+const nav=[["/shop","Shop"],["/urban","Urban"],["/urban-gallery","Art Chart"],["/magazine","Magazine"],["/live","Live"],["/hire","Hire"],["/trade","Trade"],["/club","Club"],["/about","About"]];
 const section=canonical==="/"?"Home":meta.label;
 const back=()=>{let same=false;try{same=document.referrer&&new URL(document.referrer).origin===location.origin}catch{}if(same&&history.length>1)history.back();else location.href=meta.parent||"/"};
 const shell=document.createElement("div");shell.className="mcq-shell";
@@ -35,7 +36,7 @@ shell.innerHTML='<div class="mcq-shell-row">'+
 '<button class="mcq-menu-btn" type="button" aria-label="Open menu">Menu</button></div>';
 document.body.prepend(shell);
 const sheet=document.createElement("div");sheet.className="mcq-sheet";sheet.setAttribute("aria-hidden","true");sheet.innerHTML='<div class="mcq-sheet-head"><b>Explore MCQ</b><button class="mcq-sheet-close" type="button" aria-label="Close menu">×</button></div><div class="mcq-sheet-grid">'+[
-["/shop","Shop Audio","Products & sourcing"],["/featured","Featured Gear","Selected equipment"],["/urban","Urban Underground","Music & culture"],["/urban-gallery","Urban Art Chart","Upload & vote"],["/chart","Music Chart","Listen & support"],["/publish","Publish","Submit music"],["/live","Live","Shows & streams"],["/vinyl","Vinyl","White labels & archive"],["/swap","Swap Shop","Buy, sell, trade"],["/magazine","Magazine","Stories & reviews"],["/hire","Hire & Install","PA & systems"],["/trade","Trade","Business supply"],["/about","About & Contact","MCQ story & help"]
+["/shop","Shop Audio","Products & sourcing"],["/featured","Featured Gear","Selected equipment"],["/urban","Urban Underground","Music & culture"],["/urban-gallery","Urban Art Chart","Upload & vote"],["/chart","Music Chart","Listen & support"],["/publish","Publish","Submit music"],["/live","Live","Shows & streams"],["/vinyl","Vinyl","White labels & archive"],["/swap","Swap Shop","Buy, sell, trade"],["/magazine","Magazine","Stories & reviews"],["/hire","Hire & Install","PA & systems"],["/trade","Trade","Business supply"],["/club","MCQ Club","Listeners · trade · creators"],["/about","About & Contact","MCQ story & help"]
 ].map(x=>'<a href="'+x[0]+'">'+x[1]+'<span>'+x[2]+'</span></a>').join("")+'</div>';document.body.append(sheet);
 const mobile=document.createElement("nav");mobile.className="mcq-mobile-nav";mobile.setAttribute("aria-label","Mobile navigation");mobile.innerHTML='<button type="button" data-mcq-back><span class="icon">←</span>Back</button><a href="/"><span class="icon">⌂</span>Home</a><a href="/shop"'+(canonical==="/shop"?' aria-current="page"':'')+'><span class="icon">⌕</span>Shop</a><a href="/urban"'+(canonical==="/urban"?' aria-current="page"':'')+'><span class="icon">●</span>Urban</a><button type="button" data-mcq-menu><span class="icon">☰</span>Menu</button>';document.body.append(mobile);
 const open=()=>{sheet.classList.add("open");sheet.setAttribute("aria-hidden","false")},close=()=>{sheet.classList.remove("open");sheet.setAttribute("aria-hidden","true")};
