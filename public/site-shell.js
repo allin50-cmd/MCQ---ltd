@@ -24,11 +24,11 @@ const pages={
 };
 const aliases={"/urban-underground":"/urban","/vinyl-underground":"/urban","/swap-shop":"/urban","/self-publish":"/publish","/hire-install":"/hire","/contact":"/about","/white-labels":"/vinyl","/prototype":"/future"};
 const canonical=aliases[path]||path;
-const showSplash=()=>{if(canonical!=="/")return;let seen=false;try{seen=sessionStorage.getItem("mcq-splash-seen")==="1"}catch{}if(seen)return;
+const showSplash=()=>{if(canonical!=="/")return;let enteredFromInside=false;try{enteredFromInside=!!document.referrer&&new URL(document.referrer).origin===location.origin}catch{}if(enteredFromInside)return;
 const splash=document.createElement("div");splash.className="mcq-splash";splash.setAttribute("role","dialog");splash.setAttribute("aria-label","Welcome to MCQ Audio");
 splash.innerHTML='<div class="mcq-splash-noise"></div><div class="mcq-splash-inner"><div class="mcq-splash-mark">MCQ<span>AUDIO</span></div><div class="mcq-splash-rule"></div><p>55 YEARS OF REAL SOUND</p><h1>SOUND • MUSIC • CULTURE</h1><div class="mcq-splash-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><button type="button" class="mcq-splash-enter">ENTER MCQ</button></div>';
 document.body.prepend(splash);document.documentElement.classList.add("mcq-splash-open");
-const closeSplash=()=>{if(splash.classList.contains("closing"))return;splash.classList.add("closing");try{sessionStorage.setItem("mcq-splash-seen","1")}catch{}setTimeout(()=>{splash.remove();document.documentElement.classList.remove("mcq-splash-open")},520)};
+const closeSplash=()=>{if(splash.classList.contains("closing"))return;splash.classList.add("closing");setTimeout(()=>{splash.remove();document.documentElement.classList.remove("mcq-splash-open")},520)};
 splash.querySelector(".mcq-splash-enter")?.addEventListener("click",closeSplash);setTimeout(closeSplash,2600);
 };
 const meta=pages[canonical]||{label:document.title.split("|")[0].trim()||"MCQ",parent:"/"};
