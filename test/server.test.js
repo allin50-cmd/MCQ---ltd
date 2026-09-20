@@ -296,6 +296,7 @@ test("market evidence APIs expose public benchmarks separately from MCQ stock", 
 
 test("admin CRM aggregates real customer records and supports governed updates", async (t)=>{
   process.env.MCQ_ADMIN_TOKEN="crm-admin";
+  process.env.MCQ_AGENT_TOKEN="crm-agent";
   const {default:server}=await import(`../src/server.js?crmtest=${Date.now()}`);
   await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
@@ -305,7 +306,7 @@ test("admin CRM aggregates real customer records and supports governed updates",
   assert.equal(r.status,201);
   const created=await r.json();
 
-  const headers={authorization:"Bearer crm-admin"};
+  const headers={authorization:"Bearer crm-agent"};
   r=await fetch(base+"/api/admin/crm",{headers});
   assert.equal(r.status,200);
   let payload=await r.json();
