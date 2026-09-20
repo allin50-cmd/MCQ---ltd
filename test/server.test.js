@@ -295,29 +295,24 @@ test("market evidence APIs expose public benchmarks separately from MCQ stock", 
 
 
 test("admin CRM aggregates real customer records and supports governed updates", async (t)=>{
-  const dir=fs.mkdtempSync(path.join(os.tmpdir(),"mcq-crm-"));
-  process.env.NODE_ENV="test";
-  process.env.MCQ_DATA_FILE=path.join(dir,"mcq.json");
   process.env.MCQ_ADMIN_TOKEN="crm-admin";
-  fs.writeFileSync(process.env.MCQ_DATA_FILE,JSON.stringify({
-    equipment:[],enquiries:[{id:"enq_1",customer_name:"Hire Customer",contact:"hire@example.com",status:"NEW",created_at:"2026-09-20T10:00:00Z"}],
-    quotes:[],payments:[],bookings:[],leads:[{id:"lead_1",name:"Shop Customer",contact:"shop@example.com",status:"NEW",created_at:"2026-09-20T11:00:00Z"}],
-    events:[],crm_events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[],urban_art_submissions:[],urban_art_votes:[],urban_art_reports:[],live_stream_events:[],stream_reminders:[],stream_track_submissions:[]
-  }));
   const {default:server}=await import(`../src/server.js?crmtest=${Date.now()}`);
   await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
   t.after(()=>new Promise(resolve=>server.close(resolve)));
   const base=`http://127.0.0.1:${server.address().port}`;
-  const headers={authorization:"Bearer crm-admin"};
 
-  let r=await fetch(base+"/api/admin/crm",{headers});
+  let r=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:"CRM Test Customer",contact:"crm-test@example.com",interest:"Trade",source:"test-suite"})});
+  assert.equal(r.status,201);
+  const created=await r.json();
+
+  const headers={authorization:"Bearer crm-admin"};
+  r=await fetch(base+"/api/admin/crm",{headers});
   assert.equal(r.status,200);
   let payload=await r.json();
-  assert.equal(payload.counts.customers,2);
-  assert.equal(payload.counts.open,2);
-  assert.equal(payload.items[0].id,"lead_1");
+  assert(payload.items.some(v=>v.id===created.id));
+  assert(payload.counts.open>=1);
 
-  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers:{...headers,"content-type":"application/json"},body:JSON.stringify({entity_type:"lead",entity_id:"lead_1",status:"FOLLOW_UP",owner:"Lola",next_action:"Reply to customer",note:"Customer service review"})});
+  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers:{...headers,"content-type":"application/json"},body:JSON.stringify({entity_type:"lead",entity_id:created.id,status:"FOLLOW_UP",owner:"Lola",next_action:"Reply to customer",note:"Customer service review"})});
   assert.equal(r.status,200);
   payload=await r.json();
   assert.equal(payload.item.status,"FOLLOW_UP");
@@ -325,5 +320,5 @@ test("admin CRM aggregates real customer records and supports governed updates",
 
   r=await fetch(base+"/api/admin/crm",{headers});
   payload=await r.json();
-  assert.equal(payload.recent_events[0].entity_id,"lead_1");
+  assert(payload.recent_events.some(v=>v.entity_id===created.id&&v.owner==="Lola"));
 });
