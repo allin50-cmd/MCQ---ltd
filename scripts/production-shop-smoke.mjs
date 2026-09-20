@@ -61,16 +61,23 @@ await retry(async()=>{
   }
 
   const unique=[...new Set(items.map(x=>x.image))];
+  const imageFailures=[];
   for(const url of unique){
-    const r=await fetch(url,{redirect:"follow",headers:{"user-agent":"MCQ-Audio-production-smoke/1.0"}});
-    assert(r.ok,`image HTTP ${r.status}: ${url}`);
-    const type=(r.headers.get("content-type")||"").toLowerCase();
-    assert(type.startsWith("image/"),`non-image content-type ${type}: ${url}`);
-    const buf=Buffer.from(await r.arrayBuffer());
-    assert(buf.length>=5000,`image payload too small (${buf.length}): ${url}`);
-    const size=pngSize(buf)||jpegSize(buf);
-    assert(size,`unsupported/unreadable PNG/JPEG image: ${url}`);
-    assert(size.width>=500&&size.height>=300,`image below site threshold ${size.width}x${size.height}: ${url}`);
+    try{
+      const r=await fetch(url,{redirect:"follow",headers:{"user-agent":"MCQ-Audio-production-smoke/1.0"}});
+      assert(r.ok,`HTTP ${r.status}`);
+      const type=(r.headers.get("content-type")||"").toLowerCase();
+      assert(type.startsWith("image/"),`non-image content-type ${type}`);
+      const buf=Buffer.from(await r.arrayBuffer());
+      assert(buf.length>=5000,`payload too small (${buf.length})`);
+      const size=pngSize(buf)||jpegSize(buf);
+      assert(size,"unsupported/unreadable PNG/JPEG image");
+      assert(size.width>=500&&size.height>=300,`below site threshold ${size.width}x${size.height}`);
+    }catch(e){imageFailures.push({url,error:e.message})}
+  }
+  if(imageFailures.length){
+    console.error(JSON.stringify({image_failures:imageFailures},null,2));
+    throw new Error(`${imageFailures.length} product image(s) failed production quality checks`);
   }
 
   console.log(JSON.stringify({ok:true,base:BASE,products:items.length,unique_images:unique.length},null,2));
