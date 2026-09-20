@@ -43,6 +43,7 @@ const prettyRoutes=new Map([
   ["/featured","/featured.html"],
   ["/urban-gallery","/urban-gallery.html"],
   ["/magazine","/magazine.html"],
+  ["/insights/djs-ditching-laptops","/djs-ditching-laptops.html"],
   ["/hire","/hire.html"],
   ["/hire-install","/hire.html"],
   ["/trade","/trade.html"],
