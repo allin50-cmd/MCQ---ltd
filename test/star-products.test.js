@@ -10,7 +10,7 @@ test("star regular product catalogue contains all 100 researched rows",()=>{
     assert.ok(item.id);
     assert.ok(item.brand);
     assert.ok(item.name);
-    if(item.image) assert.ok(item.image.startsWith("https://"));
+    assert.ok(item.image&&item.image.startsWith("https://"));
     assert.ok(Number.isFinite(Number(item.observed_public_price_inc_vat_gbp)));
     assert.ok(item.source_url&&item.source_url.startsWith("https://"));
     assert.equal(item.mcq_sellable,false);
