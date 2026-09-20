@@ -675,6 +675,33 @@ const server=http.createServer(async(req,res)=>{
       return json(res,200,{source:"MCQ production",generated_at:new Date().toISOString(),items:rows});
     }
 
+    if(req.method==="GET"&&u.pathname==="/api/admin/crm/queue"){
+      requireCrmAccess(req);
+      const openStatuses=new Set(["NEW","CONTACT","QUALIFIED","QUOTE","FOLLOW_UP","WAITING_CUSTOMER"]);
+      const now=Date.now();
+      const rows=[
+        ...db.leads.map(v=>({entity_type:"lead",...v})),
+        ...db.enquiries.map(v=>({entity_type:"enquiry",...v})),
+        ...db.swap_offers.map(v=>({entity_type:"swap_offer",...v}))
+      ].map(row=>{
+        const status=String(row.status||"NEW").toUpperCase();
+        const nextAt=row.crm_next_action_at||"";
+        const nextMs=nextAt?Date.parse(nextAt):NaN;
+        return {
+          entity_type:row.entity_type,id:row.id,name:row.name||row.customer_name||"",contact:row.contact||"",
+          status,owner:row.crm_owner||"",next_action:row.crm_next_action||"",next_action_at:nextAt,
+          overdue:Number.isFinite(nextMs)&&nextMs<now&&!["WON","LOST","CLOSED"].includes(status),
+          customer_key:customerKey(row),created_at:row.created_at||""
+        };
+      }).filter(v=>openStatuses.has(v.status))
+      .sort((a,b)=>{
+        if(a.overdue!==b.overdue)return a.overdue?-1:1;
+        if(!!a.next_action_at!==!!b.next_action_at)return a.next_action_at?-1:1;
+        return String(a.next_action_at||a.created_at).localeCompare(String(b.next_action_at||b.created_at));
+      });
+      return json(res,200,{source:"MCQ production",generated_at:new Date().toISOString(),items:rows});
+    }
+
     if(req.method==="GET"&&u.pathname==="/api/admin/crm/detail"){
       requireCrmAccess(req);
       const entityType=String(u.searchParams.get("entity_type")||"");
