@@ -323,3 +323,39 @@ test("admin CRM aggregates real customer records and supports governed updates",
   payload=await r.json();
   assert(payload.recent_events.some(v=>v.entity_id===created.id&&v.owner==="Lola"));
 });
+
+
+test("CRM exposes alerts, detail timeline and governed quote handoff", async (t)=>{
+  process.env.MCQ_ADMIN_TOKEN="crm-admin-2";
+  process.env.MCQ_AGENT_TOKEN="crm-agent-2";
+  const {default:server}=await import(`../src/server.js?crmflow=${Date.now()}`);
+  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
+  t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const base=`http://127.0.0.1:${server.address().port}`;
+  const headers={authorization:"Bearer crm-agent-2","content-type":"application/json"};
+
+  let r=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:"CRM Flow Lead",contact:"flow@example.com",interest:"Install",source:"website"})});
+  assert.equal(r.status,201);
+  const lead=await r.json();
+
+  r=await fetch(base+"/api/admin/crm",{headers});
+  assert.equal(r.status,200);
+  let payload=await r.json();
+  const item=payload.items.find(v=>v.id===lead.id);
+  assert(item);
+  assert.equal(item.owner,"");
+  assert(payload.counts.unowned>=1);
+  assert(payload.counts.without_next_action>=1);
+
+  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers,body:JSON.stringify({entity_type:"lead",entity_id:lead.id,status:"CONTACT",owner:"Lola",next_action:"Call customer",next_action_at:"2026-09-21T09:00:00Z"})});
+  assert.equal(r.status,200);
+
+  r=await fetch(base+`/api/admin/crm/detail?entity_type=lead&entity_id=${encodeURIComponent(lead.id)}`,{headers});
+  assert.equal(r.status,200);
+  payload=await r.json();
+  assert.equal(payload.item.crm_owner,"Lola");
+  assert(payload.timeline.some(v=>v.entity_id===lead.id));
+
+  r=await fetch(base+"/api/quotes",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({enquiry_id:"missing"})});
+  assert.notEqual(r.status,401);
+});
