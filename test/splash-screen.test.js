@@ -6,7 +6,8 @@ test("homepage entrance splash is branded, dismissible and shown on fresh site e
   const js=fs.readFileSync(new URL("../public/site-shell.js",import.meta.url),"utf8");
   const css=fs.readFileSync(new URL("../public/site-shell.css",import.meta.url),"utf8");
   assert.match(js,/canonical!=="\/"/);
-  assert.match(js,/sessionStorage\.getItem\("mcq-splash-seen"\)/);
+  assert.match(js,/document\.referrer/);
+  assert.match(js,/new URL\(document\.referrer\)\.origin===location\.origin/);
   assert.match(js,/55 YEARS OF REAL SOUND/);
   assert.match(js,/ENTER MCQ/);
   assert.match(js,/setTimeout\(closeSplash,2600\)/);
