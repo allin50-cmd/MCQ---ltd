@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 
-test("homepage entrance splash is branded, dismissible and session-scoped",()=>{
+test("homepage entrance splash is branded, dismissible and shown on fresh site entry",()=>{
   const js=fs.readFileSync(new URL("../public/site-shell.js",import.meta.url),"utf8");
   const css=fs.readFileSync(new URL("../public/site-shell.css",import.meta.url),"utf8");
   assert.match(js,/canonical!=="\/"/);
