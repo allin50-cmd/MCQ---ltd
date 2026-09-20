@@ -38,34 +38,21 @@ header.top,header.mast,header.g-top,header.cinema-nav,.mobile-dock,.dock{display
 .mcq-mobile-nav button,.mcq-mobile-nav a{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif!important}
 
 
-/* One-time MCQ entrance splash — homepage only, once per browser session. */
-.mcq-splash{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;overflow:hidden;background:#030506;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;transition:opacity .5s ease,visibility .5s ease}
-.mcq-splash::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 50% 45%,rgba(227,173,50,.18),transparent 28%),linear-gradient(115deg,transparent 35%,rgba(255,255,255,.035) 50%,transparent 65%);animation:mcqSplashSweep 2.6s ease-out both}
-.mcq-splash-noise{position:absolute;inset:0;opacity:.12;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 4px);pointer-events:none}
-.mcq-splash-inner{position:relative;z-index:1;width:min(88vw,820px);text-align:center;padding:34px 20px}
-.mcq-splash-mark{font-family:Arial Black,Arial,sans-serif;font-size:clamp(5rem,19vw,12rem);line-height:.72;letter-spacing:-.09em;transform:scale(.88);opacity:0;animation:mcqSplashMark .65s cubic-bezier(.2,.75,.25,1) .08s forwards}
-.mcq-splash-mark span{display:block;margin-top:.32em;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;font-size:.13em;letter-spacing:.62em;padding-left:.62em;color:#e3ad32}
-.mcq-splash-rule{height:1px;width:0;margin:34px auto 24px;background:linear-gradient(90deg,transparent,#e3ad32,transparent);animation:mcqSplashRule .7s ease .45s forwards}
-.mcq-splash p{margin:0 0 10px;font-size:clamp(.72rem,1.8vw,.95rem);font-weight:900;letter-spacing:.28em;color:#e3ad32;opacity:0;animation:mcqSplashText .45s ease .7s forwards}
-.mcq-splash h1{margin:0;font-size:clamp(1rem,3vw,1.5rem);font-weight:800;letter-spacing:.16em;opacity:0;animation:mcqSplashText .45s ease .82s forwards}
-.mcq-splash-bars{height:38px;margin:30px auto 22px;display:flex;align-items:center;justify-content:center;gap:6px;opacity:0;animation:mcqSplashText .4s ease .95s forwards}
-.mcq-splash-bars i{display:block;width:4px;height:10px;background:#e3ad32;animation:mcqBar 760ms ease-in-out infinite alternate}.mcq-splash-bars i:nth-child(2){animation-delay:-.5s}.mcq-splash-bars i:nth-child(3){animation-delay:-.2s}.mcq-splash-bars i:nth-child(4){animation-delay:-.65s}.mcq-splash-bars i:nth-child(5){animation-delay:-.35s}.mcq-splash-bars i:nth-child(6){animation-delay:-.1s}.mcq-splash-bars i:nth-child(7){animation-delay:-.55s}.mcq-splash-bars i:nth-child(8){animation-delay:-.28s}
-.mcq-splash-enter{appearance:none;border:1px solid #e3ad32;background:transparent;color:#fff;padding:13px 24px;min-height:46px;font:900 11px/1 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;letter-spacing:.16em;cursor:pointer;opacity:0;animation:mcqSplashText .45s ease 1.05s forwards}.mcq-splash-enter:hover,.mcq-splash-enter:focus-visible{background:#e3ad32;color:#05080a;outline:none}
-.mcq-splash.closing{opacity:0;visibility:hidden}.mcq-splash.closing .mcq-splash-mark{transform:scale(1.05);transition:transform .5s ease}
+
+/* MCQ production entrance: no decorative imagery or external splash dependencies. */
+.mcq-splash{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;background:#05080a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;transition:opacity .28s ease,visibility .28s ease}
+.mcq-splash-inner{width:min(90vw,760px);padding:34px 20px;text-align:center}
+.mcq-splash-wordmark{display:inline-flex;align-items:flex-end;gap:12px;margin-bottom:26px}
+.mcq-splash-wordmark strong{font-family:Arial Black,Arial,sans-serif;font-size:clamp(5.5rem,20vw,11rem);line-height:.72;letter-spacing:-.09em}
+.mcq-splash-wordmark span{margin-bottom:.6rem;color:#e3ad32;font-size:clamp(.75rem,2vw,1.05rem);font-weight:900;letter-spacing:.36em}
+.mcq-splash-legacy{margin:0 0 12px;color:#e3ad32;font-size:clamp(.72rem,1.8vw,.95rem);font-weight:900;letter-spacing:.22em}
+.mcq-splash h1{margin:0;font-size:clamp(1.2rem,4vw,2rem);letter-spacing:.08em}
+.mcq-splash-about{max-width:660px;margin:18px auto 0;color:#c8d0d6;font-size:clamp(.9rem,2vw,1.05rem);font-weight:650;line-height:1.5}
+.mcq-splash-services{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:24px auto}
+.mcq-splash-services span{border:1px solid #36414a;background:#0d1318;padding:9px 11px;font-size:9px;font-weight:900;letter-spacing:.08em}
+.mcq-splash-enter{appearance:none;border:1px solid #e3ad32;background:#e3ad32;color:#05080a;min-height:48px;padding:0 22px;font:900 11px/1 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;letter-spacing:.12em;cursor:pointer}
+.mcq-splash-enter:hover,.mcq-splash-enter:focus-visible{background:#fff;border-color:#fff;outline:none}
+.mcq-splash.closing{opacity:0;visibility:hidden}
 .mcq-splash-open{overflow:hidden}
-@keyframes mcqSplashMark{to{opacity:1;transform:scale(1)}}@keyframes mcqSplashRule{to{width:min(520px,72vw)}}@keyframes mcqSplashText{to{opacity:1}}@keyframes mcqBar{to{height:34px}}@keyframes mcqSplashSweep{from{transform:translateX(-18%)}to{transform:translateX(18%)}}
-@media(max-width:720px){.mcq-splash-inner{padding:24px 18px}.mcq-splash-mark{font-size:clamp(5.8rem,30vw,9rem)}.mcq-splash h1{font-size:.92rem;letter-spacing:.11em}.mcq-splash p{letter-spacing:.18em}}
-@media(prefers-reduced-motion:reduce){.mcq-splash *,.mcq-splash::before{animation:none!important}.mcq-splash-mark,.mcq-splash p,.mcq-splash h1,.mcq-splash-bars,.mcq-splash-enter{opacity:1;transform:none}.mcq-splash-rule{width:min(520px,72vw)}}
-
-
-/* MCQ splash product identity — real catalogue imagery only. */
-.mcq-splash-product-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:24px auto 4px;max-width:760px;opacity:0;animation:mcqSplashText .45s ease .55s forwards}
-.mcq-splash-product{position:relative;min-height:150px;background:#0b0f12;border:1px solid #2d3740;overflow:hidden}
-.mcq-splash-product img{width:100%;height:150px;display:block;object-fit:contain;background:#f2f2f2}
-.mcq-splash-product span{position:absolute;left:8px;bottom:8px;background:#05080ae6;border:1px solid #e3ad32;color:#fff;padding:6px 8px;font-size:9px;font-weight:900;letter-spacing:.12em}
-.mcq-splash-legacy{margin-bottom:12px!important}
-.mcq-splash-about{max-width:690px;margin:16px auto 0!important;color:#c8d0d6!important;font-size:clamp(.82rem,1.8vw,1rem)!important;font-weight:600!important;line-height:1.55!important;letter-spacing:.015em!important;opacity:0;animation:mcqSplashText .45s ease .9s forwards}
-.mcq-splash-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px auto 18px;opacity:0;animation:mcqSplashText .45s ease 1s forwards}
-.mcq-splash-tags span{border:1px solid #36414a;background:#0d1318;color:#eef1f3;padding:8px 10px;font-size:10px;font-weight:900;letter-spacing:.1em}
-@media(max-width:720px){.mcq-splash-product-strip{gap:6px;margin-top:18px}.mcq-splash-product{min-height:94px}.mcq-splash-product img{height:94px}.mcq-splash-product span{font-size:7px;padding:5px 6px;left:5px;bottom:5px}.mcq-splash-about{max-width:94%;font-size:.78rem!important;line-height:1.42!important}.mcq-splash-tags{gap:6px;margin-top:16px}.mcq-splash-tags span{font-size:8px;padding:7px 8px}}
-@media(prefers-reduced-motion:reduce){.mcq-splash-product-strip,.mcq-splash-about,.mcq-splash-tags{opacity:1;transform:none}}
+@media(max-width:720px){.mcq-splash-inner{padding:28px 16px}.mcq-splash-wordmark{display:block;margin-bottom:24px}.mcq-splash-wordmark span{display:block;margin:18px 0 0;padding-left:.35em}.mcq-splash-services{gap:6px;margin:20px auto}.mcq-splash-services span{font-size:8px;padding:8px}}
+@media(prefers-reduced-motion:reduce){.mcq-splash{transition:none}}
