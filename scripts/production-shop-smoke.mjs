@@ -54,7 +54,7 @@ await retry(async()=>{
   assert(shellJs.text.includes("VINYL & SPECIALIST SOURCING"),"splash missing specialist sourcing");
   assert(shellJs.text.includes("ENTER MCQ AUDIO"),"splash missing explicit entry action");
   assert(!/rabbit/i.test(shellJs.text),"irrelevant rabbit artwork found in production splash");
-  assert(!/https?:\\/\\//.test(shellJs.text),"production splash shell contains an external URL dependency");
+  assert(!shellJs.text.includes("http://")&&!shellJs.text.includes("https://"),"production splash shell contains an external URL dependency");
   assert(!/setTimeout\\(closeSplash/.test(shellJs.text),"production splash still auto-dismisses");
 
   const shellCss=await get("/site-shell.css");
