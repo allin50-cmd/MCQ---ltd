@@ -408,9 +408,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-sm7b", brand:"Shure", name:"SM7B", model:"SM7B", category:"microphones",
-    image:"https://beatmusic.hk/cdn/shop/files/Untitled_design_44.png?v=1718877941&width=1200",
-    images:[{url:"https://beatmusic.hk/cdn/shop/files/Untitled_design_44.png?v=1718877941&width=1200",source:"https://beatmusic.hk/products/shure-sm7b-%E5%B0%88%E6%A5%AD%E9%8C%84%E9%9F%B3%E5%AE%A4%E4%BA%BA%E8%81%B2%E9%8C%84%E9%9F%B3-microphone-%E9%A6%99%E6%B8%AF%E8%A1%8C%E8%B2%A8",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
-    image_source:"https://beatmusic.hk/products/shure-sm7b-%E5%B0%88%E6%A5%AD%E9%8C%84%E9%9F%B3%E5%AE%A4%E4%BA%BA%E8%81%B2%E9%8C%84%E9%9F%B3-microphone-%E9%A6%99%E6%B8%AF%E8%A1%8C%E8%B2%A8", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"https://shure.widen.net/content/svjr7we9dr/webp/SM7B_HERO_HANGING_LEFT_web.webp?color=ffffffff&position=c&quality=80&u=qzv3fy",
+    images:[{url:"https://shure.widen.net/content/svjr7we9dr/webp/SM7B_HERO_HANGING_LEFT_web.webp?color=ffffffff&position=c&quality=80&u=qzv3fy",source:"https://www.shure.com/en-GB/applications/home-recording",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:true,width:1080,height:1080}],
+    image_source:"https://www.shure.com/en-GB/applications/home-recording", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.SOURCE_THROUGH_MCQ,
     observed_public_price_inc_vat_gbp:344, delivery_cost_inc_vat_gbp:0,
