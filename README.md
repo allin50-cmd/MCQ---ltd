@@ -56,7 +56,6 @@ Required data:
 - category
 - high-resolution image
 - image source
-- permission/licence status
 - supplier
 - supplier SKU
 - current availability
@@ -89,8 +88,10 @@ Commercial product imagery must be the exact product/model and suitable for the 
 Preferred sources:
 
 1. MCQ-owned photography
-2. authorised manufacturer/reseller media
-3. authorised supplier feeds
+2. manufacturer product media
+3. supplier product media
+
+During development, permission/licence status is not a catalogue publication blocker. Exact product match, image quality, successful loading and image-source recording remain mandatory. Permission/licence review may be reinstated before full ecommerce launch.
 
 Wrong-model substitutions, generated branded lookalikes, broken images and text/icon product placeholders are rejected.
 
