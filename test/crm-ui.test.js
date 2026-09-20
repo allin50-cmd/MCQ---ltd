@@ -35,3 +35,11 @@ test("CRM surfaces agent command centre",()=>{
   assert.match(html,/\/api\/admin\/agents\/command/);
   assert.match(html,/APPROVAL REQUIRED/);
 });
+
+
+test("CRM inline JavaScript is syntactically valid",()=>{
+  const html=fs.readFileSync(new URL("../public/crm.html",import.meta.url),"utf8");
+  const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(x=>x[1]);
+  assert.ok(scripts.length,"expected inline CRM script");
+  for(const source of scripts) assert.doesNotThrow(()=>new Function(source));
+});
