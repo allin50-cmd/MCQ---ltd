@@ -23,7 +23,7 @@ test("star regular product catalogue contains all 100 researched rows",()=>{
 test("shop surfaces Star Regular Products and real enquiry workflow",()=>{
   const html=fs.readFileSync(new URL("../public/shop.html",import.meta.url),"utf8");
   const js=fs.readFileSync(new URL("../public/shop-products.js",import.meta.url),"utf8");
-  assert.match(html,/STAR REGULAR PRODUCTS/);
+  assert.match(html,/MCQ 100 PRODUCT RESEARCH CATALOGUE/);
   assert.match(html,/id="regular-products-grid"/);
   assert.match(html,/id="catalogue-table-body"/);
   assert.match(html,/ALL 100 RESEARCHED PRODUCTS/);
