@@ -40,6 +40,34 @@ await retry(async()=>{
   assert(h.r.status===200,`/health status ${h.r.status}`);
   const j=JSON.parse(h.text); assert(j.ok===true,"health ok!=true");
 
+
+  const home=await get("/");
+  assert(home.r.status===200,`/ status ${home.r.status}`);
+  assert(home.text.includes('/site-shell.css'),"homepage missing production shell stylesheet");
+  assert(home.text.includes('/site-shell.js'),"homepage missing production shell script");
+
+  const shellJs=await get("/site-shell.js");
+  assert(shellJs.r.status===200,`/site-shell.js status ${shellJs.r.status}`);
+  assert(shellJs.text.includes("MCQ</strong><span>AUDIO</span>"),"splash missing MCQ AUDIO wordmark");
+  assert(shellJs.text.includes("PROFESSIONAL AUDIO • DJ • HI-FI"),"splash missing business identity");
+  assert(shellJs.text.includes("Audio equipment, DJ gear, microphones, speakers, specialist parts, PA hire and installation."),"splash missing plain-English business description");
+  assert(shellJs.text.includes("VINYL & SPECIALIST SOURCING"),"splash missing specialist sourcing");
+  assert(shellJs.text.includes("ENTER MCQ AUDIO"),"splash missing explicit entry action");
+  assert(!/rabbit/i.test(shellJs.text),"irrelevant rabbit artwork found in production splash");
+  assert(!/https?:\\/\\//.test(shellJs.text),"production splash shell contains an external URL dependency");
+  assert(!/setTimeout\\(closeSplash/.test(shellJs.text),"production splash still auto-dismisses");
+
+  const shellCss=await get("/site-shell.css");
+  assert(shellCss.r.status===200,`/site-shell.css status ${shellCss.r.status}`);
+  assert(shellCss.text.includes(".mcq-splash-wordmark"),"splash wordmark styling missing");
+  assert(shellCss.text.includes(".mcq-splash-services"),"splash services styling missing");
+
+  const swap=await get("/swap");
+  assert(swap.r.status===200,`/swap status ${swap.r.status}`);
+  for(const required of ["Technics","M1","M6","RTX 3090","network"]){
+    assert(swap.text.toLowerCase().includes(required.toLowerCase()),`swap page missing ${required}`);
+  }
+
   const shop=await get("/shop");
   assert(shop.r.status===200,`/shop status ${shop.r.status}`);
   assert(shop.text.includes("STAR REGULAR PRODUCTS"),"shop missing Star Regular Products heading");
