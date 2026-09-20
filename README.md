@@ -44,6 +44,44 @@ Public retailer data is market research, not MCQ stock.
 
 No fake MCQ inventory or prices are seeded.
 
+
+## Catalogue data contract
+
+Every sellable product record must be traceable from source evidence through margin and publish state.
+
+Required data:
+
+- brand
+- model
+- category
+- high-resolution image
+- image source
+- permission/licence status
+- supplier
+- supplier SKU
+- current availability
+- observed public price where relevant
+- confirmed supplier cost when available
+- delivery/carriage cost
+- MCQ retail price
+- last checked
+- source URL
+- source note
+
+Planning and margin fields:
+
+- Public Net ex VAT
+- Estimated Trade Cost ex VAT
+- Estimated Landed Cost ex VAT
+- Suggested MCQ Retail inc VAT
+- Max Buy Cost ex VAT @ Target GM
+- Required Supplier Discount vs Public Net
+- Projected GM %
+- Decision
+
+Estimated fields must stay clearly labelled as estimates until replaced by real supplier/account evidence. A modelled viable result is not permission to publish or sell.
+
+
 ## Image policy
 
 Commercial product imagery must be the exact product/model and suitable for the displayed size.
