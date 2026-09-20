@@ -7,6 +7,7 @@ import { load, save, id } from "./store.js";
 import { assertPence, isAvailable, createQuote, confirmBooking } from "./core.js";
 import { listSuppliers, searchFarnell } from "./suppliers.js";
 import { searchInternalCatalog, listInternalCatalog } from "./catalog.js";
+import { listMarketCatalog, searchMarketCatalog, listCompetitors } from "./market.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
@@ -84,9 +85,12 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
     if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers().map(({id,name,kind,api_status})=>({id,name,kind,api_status})));
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
+    if(req.method==="GET"&&u.pathname==="/api/market/catalog") return json(res,200,{items:listMarketCatalog()});
+    if(req.method==="GET"&&u.pathname==="/api/market/competitors") return json(res,200,{items:listCompetitors()});
     if(req.method==="GET"&&u.pathname==="/api/catalog/search"){
       const q=u.searchParams.get("q")||"";
       const internal=searchInternalCatalog(q);
+      const market=searchMarketCatalog(q);
       let live=[];
       try{
         const result=await searchFarnell(q);
@@ -107,7 +111,7 @@ const server=http.createServer(async(req,res)=>{
           }));
         }
       }catch{}
-      return json(res,200,{query:q,results:[...internal,...live].slice(0,24)});
+      return json(res,200,{query:q,results:[...market,...internal,...live].slice(0,24)});
     }
 
     if(req.method==="GET"&&u.pathname==="/api/urban/live"){
