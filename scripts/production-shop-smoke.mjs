@@ -25,11 +25,6 @@ await retry(async()=>{
   assert(home.text.includes('/site-shell.css'),"homepage missing production shell stylesheet");
   assert(home.text.includes('/site-shell.js'),"homepage missing production shell script");
 
-  const splashAsset=await get("/mcq-splash-production.jpg");
-  assert(splashAsset.r.status===200,`/mcq-splash-production.jpg status ${splashAsset.r.status}`);
-  assert((splashAsset.r.headers.get("content-type")||"").startsWith("image/"),"splash artwork is not served as an image");
-  assert(splashAsset.buf.length>=150000,`splash artwork payload unexpectedly small (${splashAsset.buf.length})`);
-
   const shellJs=await get("/site-shell.js");
   assert(shellJs.r.status===200,`/site-shell.js status ${shellJs.r.status}`);
   assert(shellJs.text.includes("/mcq-splash-production.webp"),"splash missing supplied production artwork");
@@ -43,9 +38,13 @@ await retry(async()=>{
   const splashAsset=await get("/mcq-splash-production.webp");
   assert(splashAsset.r.status===200,`/mcq-splash-production.webp status ${splashAsset.r.status}`);
   assert((splashAsset.r.headers.get("content-type")||"").includes("image/webp"),"splash asset is not WebP");
-  assert(splashAsset.buf.length>200000,`splash asset unexpectedly small (${splashAsset.buf.length})`);
+  assert(splashAsset.buf.length>400000,`splash asset unexpectedly small (${splashAsset.buf.length})`);
   const splashHash=(await import("node:crypto")).createHash("sha256").update(splashAsset.buf).digest("hex");
-  assert(splashHash==="681556b219630066d1a2694dfd2c297cf934e4e70f9638cefaa30281568a50d3",`splash asset drifted: ${splashHash}`);
+  assert(splashHash==="af058ff161898e462ff85ca38539efe1cb068124ef216eac7196fc6107c44980",`splash asset drifted: ${splashHash}`);
+  for(const route of ["/shop","/dj","/featured","/hire","/vinyl","/club","/urban","/about"]){
+    const page=await get(route);
+    assert(page.r.status===200,`splash destination ${route} status ${page.r.status}`);
+  }
 
   const shellCss=await get("/site-shell.css");
   assert(!shellCss.text.includes("unsplash.com"),"production splash still depends on substitute stock imagery");
