@@ -1,0 +1,27 @@
+name: install-exact-mcq-splash
+on:
+  push:
+    paths:
+      - ".github/workflows/install-exact-mcq-splash.yml"
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install supplied MCQ splash artwork
+        env:
+          SPLASH_URL: "https://sdmntprukwest.oaiusercontent.com/files/00000000-2e24-8243-9df4-a9f908ee8601/raw?se=2026-09-20T11%3A59%3A42Z&sp=r&sv=2026-02-06&sr=b&scid=6b9b4b84-0fe0-50f1-9644-cee7391a5eae&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-20T06%3A21%3A26Z&ske=2026-09-21T06%3A21%3A26Z&sks=b&skv=2026-02-06&sig=HKckmDzc6QRikGCAgJQl2ahz8L1MxaVTm7lV3DETVec%3D"
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 "$SPLASH_URL" -o public/mcq-splash-production.jpg
+          echo "67015e59de1c121c62ce6a1521926062f7395655678332ca571fed7ae017fe67  public/mcq-splash-production.jpg" | sha256sum -c -
+          test "$(stat -c%s public/mcq-splash-production.jpg)" -eq 667989
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/mcq-splash-production.jpg
+          git commit -m "Install exact supplied MCQ splash artwork"
+          git push origin HEAD:main
