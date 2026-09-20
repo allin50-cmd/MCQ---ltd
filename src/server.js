@@ -21,18 +21,26 @@ const securityHeaders={
 const json=(res,status,body)=>{res.writeHead(status,{...securityHeaders,"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
 const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>5_500_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
 const route=(u,...paths)=>paths.includes(u.pathname);
+const normalizeEmail=v=>String(v||"").trim().toLowerCase();
+const normalizePhone=v=>String(v||"").replace(/\D/g,"").slice(-11);
+const customerKey=row=>{
+  const email=normalizeEmail(row.contact);
+  const phone=normalizePhone(row.phone);
+  return email?`email:${email}`:phone?`phone:${phone}`:`record:${row.id}`;
+};
 function requireAdmin(req){
   const expected=(process.env.MCQ_ADMIN_TOKEN||"").trim();
   if(!expected)throw new Error("admin access is not configured");
   const auth=req.headers.authorization||"";
   if(auth!==`Bearer ${expected}`)throw new Error("unauthorized");
 }
-function requireCrmAgent(req){
+function requireCrmAccess(req){
   const admin=(process.env.MCQ_ADMIN_TOKEN||"").trim();
+  const operator=(process.env.MCQ_OPERATOR_TOKEN||"").trim();
   const agent=(process.env.MCQ_AGENT_TOKEN||"").trim();
-  if(!admin&&!agent)throw new Error("CRM access is not configured");
+  if(!admin&&!operator&&!agent)throw new Error("CRM access is not configured");
   const auth=req.headers.authorization||"";
-  if(![admin,agent].filter(Boolean).some(token=>auth===`Bearer ${token}`))throw new Error("unauthorized");
+  if(![admin,operator,agent].filter(Boolean).some(token=>auth===`Bearer ${token}`))throw new Error("unauthorized");
 }
 
 const prettyRoutes=new Map([
@@ -538,7 +546,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="POST"&&route(u,"/quotes","/api/quotes")){
-      requireCrmAgent(req);
+      requireCrmAccess(req);
       const x=await body(req),enq=db.enquiries.find(v=>v.id===x.enquiry_id);
       if(!enq)throw new Error("enquiry not found");
       const eq=db.equipment.find(v=>v.id===enq.equipment_id);
@@ -565,7 +573,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="GET"&&u.pathname==="/api/admin/crm"){
-      requireCrmAgent(req);
+      requireCrmAccess(req);
       const openStatuses=new Set(["NEW","CONTACT","QUALIFIED","QUOTE","FOLLOW_UP","WAITING_CUSTOMER"]);
       const now=Date.now();
       const decorate=(type,row)=>{
@@ -580,6 +588,7 @@ const server=http.createServer(async(req,res)=>{
           phone:row.phone||"",
           interest:row.interest||row.event_type||row.item_type||"",
           source:row.source||type,
+          customer_key:customerKey(row),
           status,
           owner:row.crm_owner||"",
           next_action:row.crm_next_action||"",
@@ -599,6 +608,15 @@ const server=http.createServer(async(req,res)=>{
       const unowned=open.filter(v=>!v.owner);
       const withoutNextAction=open.filter(v=>!v.next_action);
       const overdue=open.filter(v=>v.overdue);
+      const relatedByCustomer=items.reduce((acc,item)=>{
+        (acc[item.customer_key]??=[]).push({entity_type:item.entity_type,id:item.id,status:item.status,interest:item.interest,created_at:item.created_at});
+        return acc;
+      },{});
+      const queue=open.slice().sort((a,b)=>{
+        if(a.overdue!==b.overdue)return a.overdue?-1:1;
+        if(!!a.next_action_at!==!!b.next_action_at)return a.next_action_at?-1:1;
+        return String(a.next_action_at||a.created_at).localeCompare(String(b.next_action_at||b.created_at));
+      });
       return json(res,200,{
         source:"MCQ production",
         counts:{
@@ -615,14 +633,43 @@ const server=http.createServer(async(req,res)=>{
           payments:db.payments.length
         },
         alerts:{overdue,unowned,without_next_action:withoutNextAction},
+        queue,
+        related_by_customer:relatedByCustomer,
         open,
         items,
         recent_events:db.crm_events.slice(-100).reverse()
       });
     }
 
+    if(req.method==="GET"&&u.pathname==="/api/admin/crm/queue"){
+      requireCrmAccess(req);
+      const openStatuses=new Set(["NEW","CONTACT","QUALIFIED","QUOTE","FOLLOW_UP","WAITING_CUSTOMER"]);
+      const now=Date.now();
+      const rows=[
+        ...db.leads.map(v=>({entity_type:"lead",...v})),
+        ...db.enquiries.map(v=>({entity_type:"enquiry",...v})),
+        ...db.swap_offers.map(v=>({entity_type:"swap_offer",...v}))
+      ].map(row=>{
+        const status=String(row.status||"NEW").toUpperCase();
+        const nextAt=row.crm_next_action_at||"";
+        const nextMs=nextAt?Date.parse(nextAt):NaN;
+        return {
+          entity_type:row.entity_type,id:row.id,name:row.name||row.customer_name||"",contact:row.contact||"",
+          status,owner:row.crm_owner||"",next_action:row.crm_next_action||"",next_action_at:nextAt,
+          overdue:Number.isFinite(nextMs)&&nextMs<now&&!["WON","LOST","CLOSED"].includes(status),
+          customer_key:customerKey(row),created_at:row.created_at||""
+        };
+      }).filter(v=>openStatuses.has(v.status))
+      .sort((a,b)=>{
+        if(a.overdue!==b.overdue)return a.overdue?-1:1;
+        if(!!a.next_action_at!==!!b.next_action_at)return a.next_action_at?-1:1;
+        return String(a.next_action_at||a.created_at).localeCompare(String(b.next_action_at||b.created_at));
+      });
+      return json(res,200,{source:"MCQ production",generated_at:new Date().toISOString(),items:rows});
+    }
+
     if(req.method==="GET"&&u.pathname==="/api/admin/crm/detail"){
-      requireCrmAgent(req);
+      requireCrmAccess(req);
       const entityType=String(u.searchParams.get("entity_type")||"");
       const entityId=String(u.searchParams.get("entity_id")||"");
       const maps={lead:db.leads,enquiry:db.enquiries,swap_offer:db.swap_offers};
@@ -635,11 +682,18 @@ const server=http.createServer(async(req,res)=>{
       const payments=db.payments.filter(v=>quoteIds.has(v.quote_id));
       const bookings=db.bookings.filter(v=>v.enquiry_id===entityId||quoteIds.has(v.quote_id));
       const timeline=db.crm_events.filter(v=>v.entity_type===entityType&&v.entity_id===entityId).slice().reverse();
-      return json(res,200,{entity_type:entityType,item:row,timeline,quotes,payments,bookings});
+      const key=customerKey(row);
+      const related=[
+        ...db.leads.map(v=>({entity_type:"lead",row:v})),
+        ...db.enquiries.map(v=>({entity_type:"enquiry",row:v})),
+        ...db.swap_offers.map(v=>({entity_type:"swap_offer",row:v}))
+      ].filter(v=>customerKey(v.row)===key&&!(v.entity_type===entityType&&v.row.id===entityId))
+       .map(v=>({entity_type:v.entity_type,id:v.row.id,status:String(v.row.status||"NEW").toUpperCase(),interest:v.row.interest||v.row.event_type||v.row.item_type||"",created_at:v.row.created_at||""}));
+      return json(res,200,{entity_type:entityType,item:row,customer_key:key,related,timeline,quotes,payments,bookings});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/admin/crm/quote"){
-      requireCrmAgent(req);
+      requireCrmAccess(req);
       const x=await body(req);
       const enq=db.enquiries.find(v=>v.id===x.enquiry_id);
       if(!enq)throw new Error("enquiry not found");
@@ -658,7 +712,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="POST"&&u.pathname==="/api/admin/crm/update"){
-      requireCrmAgent(req);
+      requireCrmAccess(req);
       const x=await body(req);
       const maps={lead:db.leads,enquiry:db.enquiries,swap_offer:db.swap_offers};
       const rows=maps[String(x.entity_type||"")];
@@ -698,7 +752,7 @@ const server=http.createServer(async(req,res)=>{
     }
     return json(res,404,{error:"not found"});
   }catch(e){
-    const status=e.message==="unauthorized"?401:e.message==="admin access is not configured"?503:/not found/.test(e.message)?404:/unavailable/.test(e.message)?409:/Farnell API returned/.test(e.message)?502:400;
+    const status=e.message==="unauthorized"?401:/access is not configured/.test(e.message)?503:/not found/.test(e.message)?404:/unavailable/.test(e.message)?409:/Farnell API returned/.test(e.message)?502:400;
     return json(res,status,{error:e.message});
   }
 });
