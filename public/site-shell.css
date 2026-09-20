@@ -44,7 +44,7 @@ header.top,header.mast,header.g-top,header.cinema-nav,.mobile-dock,.dock{display
 /* MCQ supplied-artwork splash — exact client visual, no decorative redesign. */
 .mcq-splash{position:fixed;inset:0;z-index:20000;overflow:auto;background:#050708;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;transition:opacity .2s ease,visibility .2s ease}
 .mcq-splash-stage{position:relative;min-height:100dvh;display:grid;place-items:center;background:#050708}
-.mcq-splash-artboard{position:relative;width:min(100vw,calc(100dvh * .8));aspect-ratio:4/5;background:#050708;overflow:hidden}
+.mcq-splash-artboard{position:relative;width:min(100vw,calc(100dvh * .8));aspect-ratio:1122/1402;background:#050708;overflow:hidden}
 .mcq-splash-artboard>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#050708}
 .mcq-hotspot{position:absolute;z-index:3;display:block;border:0;background:transparent;border-radius:3px}
 .mcq-hotspot:focus-visible{outline:3px solid #f0b83a;outline-offset:2px;background:#f0b83a20}
@@ -56,5 +56,5 @@ header.top,header.mast,header.g-top,header.cinema-nav,.mobile-dock,.dock{display
 .mcq-splash-enter{position:absolute;z-index:5;left:53.25%;top:42.05%;width:25.9%;height:4.35%;display:flex;align-items:center;justify-content:center;gap:.7em;background:#e3ad32;color:#080a0b;text-decoration:none;font-weight:950;font-size:clamp(8px,1.1vw,16px);letter-spacing:.025em;border-radius:3px;box-shadow:0 4px 18px #0007}
 .mcq-splash-enter:hover,.mcq-splash-enter:focus-visible{background:#f2c45b;outline:2px solid #fff;outline-offset:2px}
 .mcq-splash.closing{opacity:0;visibility:hidden}.mcq-splash-open{overflow:hidden}
-@media(max-width:720px){.mcq-splash-stage{display:block;min-height:0}.mcq-splash-artboard{width:100vw;height:auto;aspect-ratio:4/5}.mcq-splash-enter{font-size:clamp(8px,2.35vw,12px)}}
+@media(max-width:720px){.mcq-splash-stage{display:block;min-height:0}.mcq-splash-artboard{width:100vw;height:auto;aspect-ratio:1122/1402}.mcq-splash-enter{font-size:clamp(8px,2.35vw,12px)}}
 @media(prefers-reduced-motion:reduce){.mcq-splash{transition:none}}
