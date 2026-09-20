@@ -44,7 +44,43 @@ const SUPPLIERS = [
     search_url: "https://www.gear4music.com/search?str_search_phrase={query}",
     api_status: "LINK_ONLY",
     notes: "UK music and professional audio supplier."
-  }
+  },
+  {
+    id: "leisuretec",
+    name: "Leisuretec",
+    kind: "trade-only AV distributor",
+    homepage: "https://leisuretec.co.uk/",
+    search_url: "https://leisuretec.co.uk/search?q={query}",
+    api_status: "TRADE_LOGIN_REQUIRED",
+    notes: "UK trade-only distributor for professional/commercial audio, lighting and video. Approved trade accounts get live inventory and trade pricing; same-day despatch up to 16:00 is advertised."
+  },
+  {
+    id: "bax",
+    name: "Bax Music UK",
+    kind: "retail sourcing + market benchmark",
+    homepage: "https://www.bax-shop.co.uk/",
+    search_url: "https://www.bax-shop.co.uk/search?q={query}",
+    api_status: "LINK_ONLY",
+    notes: "Large UK-facing music, DJ and pro-audio retailer used for availability, product-launch and pricing comparison."
+  },
+  {
+    id: "westenddj",
+    name: "WestendDJ",
+    kind: "London DJ retail sourcing + market benchmark",
+    homepage: "https://westenddj.co.uk/",
+    search_url: "https://westenddj.co.uk/search?q={query}",
+    api_status: "LINK_ONLY",
+    notes: "London DJ specialist used for local DJ price, bundle and availability comparison."
+  },
+  {
+    id: "djkit",
+    name: "DJKIT",
+    kind: "UK DJ retail sourcing + market benchmark",
+    homepage: "https://www.djkit.com/",
+    search_url: "https://www.djkit.com/search?query={query}",
+    api_status: "LINK_ONLY",
+    notes: "UK DJ specialist used for price, finance, bundle and availability comparison."
+  },
 ];
 
 export function listSuppliers(){ return SUPPLIERS.map(s => ({...s})); }
