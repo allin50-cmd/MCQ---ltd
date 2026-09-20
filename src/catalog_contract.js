@@ -14,8 +14,8 @@ export const IMAGE_PERMISSION_STATES=Object.freeze({
 });
 
 const nonEmpty=v=>typeof v==="string"&&v.trim().length>0;
-const finiteNonNegative=v=>Number.isFinite(Number(v))&&Number(v)>=0;
-const finitePositive=v=>Number.isFinite(Number(v))&&Number(v)>0;
+const finiteNonNegative=v=>v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))&&Number(v)>=0;
+const finitePositive=v=>v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))&&Number(v)>0;
 
 function dateLike(v){
   if(!nonEmpty(v))return false;
