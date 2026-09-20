@@ -73,7 +73,7 @@ A sale, hire, sourcing or editorial product card may be rendered publicly only w
 2. the image exists and loads successfully;
 3. the image is high enough resolution for the intended surface;
 4. the image depicts the exact stated product/model;
-5. the image source and commercial-use basis are known where required;
+5. the image source is recorded;
 6. stock, price and availability wording match the evidence state;
 7. the card has a truthful customer action.
 
@@ -85,15 +85,27 @@ Never ship:
 - generated branded-product lookalikes,
 - a sibling/different model used as a substitute,
 - generic lifestyle imagery presented as the product,
-- competitor photography copied without a valid right to use it.
+- competitor photography used as a substitute for exact product media.
 
 If the image gate fails, remove the entire commercial card from public rendering and keep the item hidden/DRAFT until corrected.
 
 Preferred image order:
 1. MCQ-owned product photography;
-2. manufacturer/reseller media supplied or licensed for resale;
-3. authorised supplier feed/media;
+2. manufacturer product media;
+3. supplier product media;
 4. otherwise do not publish the commercial card.
+
+### Development-phase image permission rule
+
+While the catalogue and ecommerce system are still being developed, image permission/licence status is **not a publication blocker**.
+
+Development image validation requires:
+- exact product/model match;
+- high-resolution image;
+- working image URL;
+- recorded image source.
+
+Permission/licence review can be reinstated as a separate production/legal readiness gate before full ecommerce launch.
 
 
 ## Required catalogue row contract
@@ -105,7 +117,6 @@ For every product MCQ may want to sell, the catalogue record must carry the foll
 - category;
 - at least one high-resolution image;
 - image source;
-- image permission / licence status;
 - supplier;
 - supplier SKU / product code;
 - real current availability;
@@ -142,7 +153,6 @@ A row may become `AVAILABLE_TO_ORDER` only when:
 - current supplier availability is verified,
 - real cost price is confirmed,
 - delivery cost is confirmed,
-- image rights are acceptable,
 - margin is acceptable,
 - MCQ retail price is approved.
 
@@ -173,7 +183,7 @@ The 2026-09-20 market workbook contains researched public-market rows for produc
 - Pioneer DJ DDJ-FLX4;
 - AlphaTheta DDJ-GRV6.
 
-These rows are public-market evidence and planning inputs. They are not proof of MCQ stock, MCQ trade cost, supplier permission or final MCQ retail price.
+These rows are public-market evidence and planning inputs. They are not proof of MCQ stock, MCQ trade cost, final MCQ retail price.
 
 
 ## Inventory and ecommerce truth states
