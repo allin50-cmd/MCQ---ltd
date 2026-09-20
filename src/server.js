@@ -55,6 +55,7 @@ const prettyRoutes=new Map([
   ["/hire-install","/hire.html"],
   ["/trade","/trade.html"],
   ["/club","/club.html"],
+  ["/crm","/crm.html"],
   ["/about","/about.html"],
   ["/contact","/about.html"],
   ["/live","/live.html"],
@@ -537,6 +538,7 @@ const server=http.createServer(async(req,res)=>{
     }
 
     if(req.method==="POST"&&route(u,"/quotes","/api/quotes")){
+      requireCrmAgent(req);
       const x=await body(req),enq=db.enquiries.find(v=>v.id===x.enquiry_id);
       if(!enq)throw new Error("enquiry not found");
       const eq=db.equipment.find(v=>v.id===enq.equipment_id);
@@ -565,32 +567,46 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&u.pathname==="/api/admin/crm"){
       requireCrmAgent(req);
       const openStatuses=new Set(["NEW","CONTACT","QUALIFIED","QUOTE","FOLLOW_UP","WAITING_CUSTOMER"]);
-      const decorate=(type,row)=>({
-        entity_type:type,
-        id:row.id,
-        name:row.name||row.customer_name||"",
-        contact:row.contact||"",
-        phone:row.phone||"",
-        interest:row.interest||row.event_type||row.item_type||"",
-        status:String(row.status||"NEW").toUpperCase(),
-        owner:row.crm_owner||"",
-        next_action:row.crm_next_action||"",
-        next_action_at:row.crm_next_action_at||"",
-        note:row.crm_note||"",
-        created_at:row.created_at||"",
-        updated_at:row.crm_updated_at||row.created_at||""
-      });
+      const now=Date.now();
+      const decorate=(type,row)=>{
+        const status=String(row.status||"NEW").toUpperCase();
+        const nextAt=row.crm_next_action_at||"";
+        const nextMs=nextAt?Date.parse(nextAt):NaN;
+        return {
+          entity_type:type,
+          id:row.id,
+          name:row.name||row.customer_name||"",
+          contact:row.contact||"",
+          phone:row.phone||"",
+          interest:row.interest||row.event_type||row.item_type||"",
+          source:row.source||type,
+          status,
+          owner:row.crm_owner||"",
+          next_action:row.crm_next_action||"",
+          next_action_at:nextAt,
+          overdue:Number.isFinite(nextMs)&&nextMs<now&&!["WON","LOST","CLOSED"].includes(status),
+          note:row.crm_note||"",
+          created_at:row.created_at||"",
+          updated_at:row.crm_updated_at||row.created_at||""
+        };
+      };
       const items=[
         ...db.leads.map(v=>decorate("lead",v)),
         ...db.enquiries.map(v=>decorate("enquiry",v)),
         ...db.swap_offers.map(v=>decorate("swap_offer",v))
       ].sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
       const open=items.filter(v=>openStatuses.has(v.status));
+      const unowned=open.filter(v=>!v.owner);
+      const withoutNextAction=open.filter(v=>!v.next_action);
+      const overdue=open.filter(v=>v.overdue);
       return json(res,200,{
         source:"MCQ production",
         counts:{
           customers:items.length,
           open:open.length,
+          overdue:overdue.length,
+          unowned:unowned.length,
+          without_next_action:withoutNextAction.length,
           leads:db.leads.length,
           hire_enquiries:db.enquiries.length,
           swap_offers:db.swap_offers.length,
@@ -598,10 +614,47 @@ const server=http.createServer(async(req,res)=>{
           bookings:db.bookings.length,
           payments:db.payments.length
         },
+        alerts:{overdue,unowned,without_next_action:withoutNextAction},
         open,
         items,
         recent_events:db.crm_events.slice(-100).reverse()
       });
+    }
+
+    if(req.method==="GET"&&u.pathname==="/api/admin/crm/detail"){
+      requireCrmAgent(req);
+      const entityType=String(u.searchParams.get("entity_type")||"");
+      const entityId=String(u.searchParams.get("entity_id")||"");
+      const maps={lead:db.leads,enquiry:db.enquiries,swap_offer:db.swap_offers};
+      const rows=maps[entityType];
+      if(!rows)throw new Error("entity_type must be lead, enquiry or swap_offer");
+      const row=rows.find(v=>v.id===entityId);
+      if(!row)throw new Error("CRM entity not found");
+      const quotes=entityType==="enquiry"?db.quotes.filter(v=>v.enquiry_id===entityId):[];
+      const quoteIds=new Set(quotes.map(v=>v.id));
+      const payments=db.payments.filter(v=>quoteIds.has(v.quote_id));
+      const bookings=db.bookings.filter(v=>v.enquiry_id===entityId||quoteIds.has(v.quote_id));
+      const timeline=db.crm_events.filter(v=>v.entity_type===entityType&&v.entity_id===entityId).slice().reverse();
+      return json(res,200,{entity_type:entityType,item:row,timeline,quotes,payments,bookings});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/admin/crm/quote"){
+      requireCrmAgent(req);
+      const x=await body(req);
+      const enq=db.enquiries.find(v=>v.id===x.enquiry_id);
+      if(!enq)throw new Error("enquiry not found");
+      const existing=db.quotes.find(v=>v.enquiry_id===enq.id);
+      if(existing)return json(res,200,{ok:true,created:false,quote:existing});
+      const eq=db.equipment.find(v=>v.id===enq.equipment_id);
+      if(!eq)throw new Error("equipment not found");
+      const row={id:id("quo"),...createQuote(enq,eq)};
+      db.quotes.push(row);
+      enq.status="QUOTE";
+      enq.crm_updated_at=new Date().toISOString();
+      const event={id:id("crm"),entity_type:"enquiry",entity_id:enq.id,status:"QUOTE",owner:enq.crm_owner||"",next_action:enq.crm_next_action||"",next_action_at:enq.crm_next_action_at||"",note:"Quote created from CRM",created_at:enq.crm_updated_at};
+      db.crm_events.push(event);
+      save(db);
+      return json(res,201,{ok:true,created:true,quote:row,event});
     }
 
     if(req.method==="POST"&&u.pathname==="/api/admin/crm/update"){
