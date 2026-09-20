@@ -272,3 +272,15 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   const generalPayload=await general.json();
   assert.equal(generalPayload.quote,null);
 });
+test("market evidence APIs expose public benchmarks separately from MCQ stock", async ()=>{
+  const {default:server}=await import("../src/server.js?marketapi="+Date.now());
+  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
+  try{
+    const base="http://127.0.0.1:"+server.address().port;
+    const market=await (await fetch(base+"/api/market/catalog")).json();
+    assert.ok(market.items.length>=7);
+    assert.equal(market.items[0].mcq_sellable,false);
+    const competitors=await (await fetch(base+"/api/market/competitors")).json();
+    assert.ok(competitors.items.length>=8);
+  } finally {await new Promise(resolve=>server.close(resolve))}
+});
