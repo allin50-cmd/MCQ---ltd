@@ -33,10 +33,10 @@ await retry(async()=>{
   assert(shellJs.text.includes('href="/urban"')&&shellJs.text.includes('href="/about"'),"splash supporting hotspots missing");
   assert(shellJs.text.includes("ENTER MCQ AUDIO"),"splash missing explicit entry action");
   assert(!/rabbit/i.test(shellJs.text),"irrelevant rabbit artwork found in production splash");
-  assert(!shellCss.text.includes("unsplash.com"),"production splash still depends on substitute stock imagery");
   assert(!shellJs.text.includes("setTimeout(closeSplash"),"production splash still auto-dismisses");
 
   const shellCss=await get("/site-shell.css");
+  assert(!shellCss.text.includes("unsplash.com"),"production splash still depends on substitute stock imagery");
   assert(shellCss.r.status===200,`/site-shell.css status ${shellCss.r.status}`);
   assert(shellCss.text.includes(".mcq-splash-artboard"),"splash artwork styling missing");
   assert(shellCss.text.includes(".mcq-hotspot"),"splash hotspot styling missing");
