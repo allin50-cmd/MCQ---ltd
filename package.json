@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test",
+    "test": "node scripts/validate-catalog.mjs && node --test",
     "start": "node src/server.js",
-    "postinstall": "node scripts/cache-site-images.mjs"
+    "postinstall": "node scripts/cache-site-images.mjs",
+    "validate:catalog": "node scripts/validate-catalog.mjs"
   },
   "engines": {
     "node": ">=20"
