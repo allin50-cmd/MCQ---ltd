@@ -102,7 +102,7 @@ const server=http.createServer(async(req,res)=>{
     const u=new URL(req.url,"http://localhost");
     const db=await load();
 
-    if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{ok:true,service:"mcq-hire"});
+    if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{ok:true,service:"mcq-hire",commit:String(process.env.RENDER_GIT_COMMIT||"")});
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
     if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers().map(({id,name,kind,api_status})=>({id,name,kind,api_status})));
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());

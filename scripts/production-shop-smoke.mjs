@@ -1,4 +1,5 @@
 const BASE=(process.env.MCQ_BASE_URL||"https://mcq-audio.onrender.com").replace(/\/$/,"");
+const EXPECTED_COMMIT=String(process.env.MCQ_EXPECTED_COMMIT||"").trim();
 
 function assert(cond,msg){if(!cond)throw new Error(msg)}
 async function get(path,opts={}){
@@ -18,6 +19,7 @@ await retry(async()=>{
   const h=await get("/health");
   assert(h.r.status===200,`/health status ${h.r.status}`);
   const j=JSON.parse(h.text); assert(j.ok===true,"health ok!=true");
+  if(EXPECTED_COMMIT) assert(j.commit===EXPECTED_COMMIT,`production commit ${j.commit||"missing"} != expected ${EXPECTED_COMMIT}`);
 
 
   const home=await get("/");
