@@ -84,9 +84,12 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
     if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers().map(({id,name,kind,api_status})=>({id,name,kind,api_status})));
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
+    if(req.method==="GET"&&u.pathname==="/api/market/catalog") return json(res,200,{items:listMarketCatalog()});
+    if(req.method==="GET"&&u.pathname==="/api/market/competitors") return json(res,200,{items:listCompetitors()});
     if(req.method==="GET"&&u.pathname==="/api/catalog/search"){
       const q=u.searchParams.get("q")||"";
       const internal=searchInternalCatalog(q);
+      const market=searchMarketCatalog(q);
       let live=[];
       try{
         const result=await searchFarnell(q);
@@ -107,7 +110,7 @@ const server=http.createServer(async(req,res)=>{
           }));
         }
       }catch{}
-      return json(res,200,{query:q,results:[...internal,...live].slice(0,24)});
+      return json(res,200,{query:q,results:[...market,...internal,...live].slice(0,24)});
     }
 
     if(req.method==="GET"&&u.pathname==="/api/urban/live"){
