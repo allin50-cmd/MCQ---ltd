@@ -32,6 +32,18 @@ button,input,select,textarea{font:inherit}.btn{border:1px solid var(--gold);back
     <div><small>Manager · Agents · Customers · Hire · Trade · Swap</small> <button id="logout" class="btn secondary">LOCK</button></div>
   </header>
 
+  <section class="panel" style="margin:14px 0">
+    <h2>ASK / INSTRUCT MCQ AGENTS</h2>
+    <div style="padding:14px">
+      <div class="toolbar" style="margin:0">
+        <select id="agentTarget"><option value="all">All Agents</option></select>
+        <input id="agentInput" style="flex:1;min-width:240px" placeholder="Ask a question or give an instruction…">
+        <button id="runAgents" class="btn">RUN AGENTS</button>
+      </div>
+      <div class="sub">Current MCQ production data only. Restricted commercial actions stop at Approval Required.</div>
+      <div id="agentAnswer" style="margin-top:12px"></div>
+    </div>
+  </section>
   <section id="metrics" class="grid"></section>
   <section id="alerts" class="alertbar"></section>
   <section class="panel" style="margin:14px 0">
@@ -92,6 +104,9 @@ function renderAgents(){
   const defs=[["Open customer work",t.open_customer_work],["Catalogue public",t.catalogue_public],["Catalogue blocked",t.catalogue_blocked],["Image blocked",t.image_blocked],["Swap offers",t.swap_offers],["Received payments",t.received_payments]];
   qs("#agentToday").innerHTML=defs.map(([k,v])=>'<div class="metric"><b>'+esc(v??0)+'</b><span>'+esc(k)+'</span></div>').join("");
   qs("#agentDecisions").innerHTML=(a.decisions||[]).length?(a.decisions||[]).map(d=>'<div class="alert '+(d.priority==="NOW"?'warn':'')+'"><b>'+esc(d.agent.toUpperCase())+'</b> · '+esc(d.reason)+'</div>').join(""):'<div class="alert">No agent decisions waiting.</div>';
+  const target=qs("#agentTarget"),selected=target.value;
+  target.innerHTML='<option value="all">All Agents</option>'+(a.agents||[]).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join("");
+  target.value=selected||"all";
   const target=qs("#agentTarget"),selected=target.value;
   target.innerHTML='<option value="all">All Agents</option>'+(a.agents||[]).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join("");
   target.value=selected||"all";
