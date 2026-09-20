@@ -7,8 +7,9 @@ function jpegSize(buf){
 }
 const items=listMarketCatalog();
 assert(items.length===100,`expected 100 items, got ${items.length}`);
-const unique=[...new Set(items.map(x=>x.image).filter(Boolean))];
-assert(unique.length>=50,`expected at least 50 image-verified catalogue rows, got ${unique.length}`);
+for(const item of items){assert(item.image&&item.image.startsWith("https://"),`missing/invalid image for ${item.id}`)}
+const unique=[...new Set(items.map(x=>x.image))];
+assert(unique.length>=50,`expected at least 50 distinct high-quality image URLs, got ${unique.length}`);
 const failures=[];
 for(const url of unique){
  try{
