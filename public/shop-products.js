@@ -26,7 +26,7 @@ async function load(){
     const r=await fetch("/api/market/catalog",{headers:{"accept":"application/json"}});
     if(!r.ok)throw new Error("catalogue unavailable");
     const d=await r.json();
-    allCatalogueItems=(d.items||[]).filter(x=>x.id&&x.brand&&x.name&&Number.isFinite(Number(x.observed_public_price_inc_vat_gbp??x.observed_price_gbp)));
+    allCatalogueItems=(d.items||[]).filter(x=>x.public_display===true&&x.id&&x.brand&&x.name&&Number.isFinite(Number(x.observed_public_price_inc_vat_gbp??x.observed_price_gbp)));
     renderCatalogueTable(allCatalogueItems);
     const items=allCatalogueItems.filter(x=>x.image&&/^https:\/\//i.test(x.image));
     grid.innerHTML=items.map((p,i)=>`<article class="product-card" data-image-required-card>
@@ -36,8 +36,8 @@ async function load(){
         <h3>${esc(p.brand)} ${esc(p.name)}</h3>
         <p><strong>Current online reference: ${money(p.observed_public_price_inc_vat_gbp??p.observed_price_gbp)}</strong></p>
         <p>${esc(p.summary||"Current public-market product reference.")}</p>
-        <p><small>Checked ${esc(p.checked_at||p.last_checked||"")}. Not represented as MCQ-held stock until MCQ confirms it.</small></p>
-        <button class="btn dark regular-product-buy" data-index="${i}" type="button">Buy / source through MCQ</button>
+        <p><small>Source through MCQ • checked ${esc(p.checked_at||p.last_checked||"")}. This is not represented as MCQ-held stock or an approved MCQ selling price.</small></p>
+        <button class="btn dark regular-product-buy" data-index="${i}" type="button">Ask MCQ to source</button>
       </div>
     </article>`).join("");
     grid.querySelectorAll(".regular-product-buy").forEach(b=>b.addEventListener("click",()=>openEnquiry(items[Number(b.dataset.index)])));
