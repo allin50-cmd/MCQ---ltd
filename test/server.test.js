@@ -99,9 +99,9 @@ test("website backend protects admin writes and accepts public hire enquiries", 
   assert.equal(validation.status,200);
   const validationBody=await validation.json();
   assert.ok(validationBody.summary.total>0);
-  assert.equal(validationBody.summary.public_display,0);
+  assert.equal(validationBody.summary.public_display,100);
   assert.equal(validationBody.summary.sellable,0);
-  assert.equal(validationBody.summary.draft,validationBody.summary.total);
+  assert.equal(validationBody.summary.draft,validationBody.summary.total-100);
 
   const urbanSubmit1=await fetch(base+"/api/urban/submissions",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
     artist_name:"Bedroom Producer",

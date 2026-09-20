@@ -6,8 +6,10 @@ function jpegSize(buf){
  let i=2; while(i+9<buf.length){if(buf[i]!==0xff){i++;continue}const marker=buf[i+1];i+=2;if(marker===0xd8||marker===0xd9)continue;if(i+2>buf.length)break;const len=buf.readUInt16BE(i);if(len<2||i+len>buf.length)break;if([0xc0,0xc1,0xc2,0xc3,0xc5,0xc6,0xc7,0xc9,0xca,0xcb,0xcd,0xce,0xcf].includes(marker))return {height:buf.readUInt16BE(i+3),width:buf.readUInt16BE(i+5)};i+=len}return null;
 }
 const items=listMarketCatalog();
-assert(items.length===50,`expected 50 items, got ${items.length}`);
+assert(items.length===100,`expected 100 items, got ${items.length}`);
+for(const item of items){assert(item.image&&item.image.startsWith("https://"),`missing/invalid image for ${item.id}`)}
 const unique=[...new Set(items.map(x=>x.image))];
+assert(unique.length>=50,`expected at least 50 distinct high-quality image URLs, got ${unique.length}`);
 const failures=[];
 for(const url of unique){
  try{

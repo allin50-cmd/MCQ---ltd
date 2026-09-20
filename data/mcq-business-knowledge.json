@@ -1,0 +1,276 @@
+{
+  "updated_at": "2026-09-20",
+  "principles": [
+    "Use one operational truth source; do not duplicate supplier, outreach or membership data across parallel systems.",
+    "No product becomes direct-sale stock without verified MCQ supply, actual MCQ selling price, fulfilment path and image rights.",
+    "Community outreach must follow each forum/group's promotion and trade-posting rules; contribute useful knowledge before selling.",
+    "Prefer direct manufacturer partner/dealer routes; use authorised UK trade distributors when direct purchasing is unavailable."
+  ],
+  "communities": [
+    {
+      "name": "What Hi-Fi? Forum",
+      "type": "UK forum",
+      "url": "https://forums.whathifi.com/",
+      "approach": "Join as a genuine participant. Use New Member Intro and topic forums; check community rules before commercial posts.",
+      "fit": "Hi-fi, turntables, headphones, home cinema"
+    },
+    {
+      "name": "The Art of Sound",
+      "type": "UK hi-fi forum",
+      "url": "https://theartofsound.net/forum/",
+      "approach": "Good fit because it explicitly has Trade Impressions for dealer/manufacturer offers plus vintage/analogue sections.",
+      "fit": "Hi-fi, vintage, analogue, trade offers"
+    },
+    {
+      "name": "AVForums",
+      "type": "UK AV community",
+      "url": "https://www.avforums.com/forums/",
+      "approach": "High-volume UK tech/AV community; participate around hi-fi, home cinema and installation expertise; follow forum advertising rules.",
+      "fit": "AV, hi-fi, home cinema, installations"
+    },
+    {
+      "name": "Head-Fi",
+      "type": "International headphone/audiophile forum",
+      "url": "https://www.head-fi.org/forums/",
+      "approach": "Strong headphones/IEM audience; sponsor/deals areas exist. Use only permitted commercial channels.",
+      "fit": "Headphones, portable audio, DAC/amps"
+    },
+    {
+      "name": "Audiophiles UK. Hi-Fi and Music.",
+      "type": "Facebook group (community reference)",
+      "url": "https://forums.whathifi.com/threads/hifi-groups.129693/",
+      "approach": "Referenced by What Hi-Fi forum members. Search Facebook for the exact group name and request membership; check admin promotion rules.",
+      "fit": "UK hi-fi enthusiasts"
+    },
+    {
+      "name": "The Audiophile Man: Hifi and Music",
+      "type": "Facebook group (community reference)",
+      "url": "https://forums.whathifi.com/threads/hifi-groups.129693/",
+      "approach": "Referenced by What Hi-Fi forum members. Join only after checking current group/admin rules.",
+      "fit": "Hi-fi and music"
+    },
+    {
+      "name": "Brand owner groups",
+      "type": "Facebook / forums",
+      "url": "https://forums.whathifi.com/threads/hifi-groups.129693/",
+      "approach": "Linn, LS3/5A, Nakamichi and similar owner groups can be useful for specialist/legacy knowledge. Do not spam; answer problems and source hard-to-find parts.",
+      "fit": "Legacy, specialist and enthusiast stock"
+    }
+  ],
+  "supplier_routes": [
+    {
+      "brand": "AlphaTheta / Pioneer DJ",
+      "route": "Leisuretec",
+      "route_type": "Exclusive UK trade distributor",
+      "url": "https://leisuretec.co.uk/collections/alphatheta",
+      "next_action": "Apply/open trade account; confirm dealer/reseller eligibility, pricing, credit, drop-ship and image-use terms."
+    },
+    {
+      "brand": "Sennheiser Pro",
+      "route": "Leisuretec",
+      "route_type": "Authorised UK trade distribution partner",
+      "url": "https://www.leisuretec.co.uk/page/sennheiser",
+      "next_action": "Open trade account and confirm MCQ reseller permissions/terms."
+    },
+    {
+      "brand": "Shure",
+      "route": "Shure UK Limited",
+      "route_type": "Official UK distributor / channel partner network",
+      "url": "https://www.shure.com/en-EU/about-us/contact-us/united-kingdom",
+      "next_action": "Contact Shure UK about authorised dealer/channel partner route; use distributor/partner locator."
+    },
+    {
+      "brand": "RCF",
+      "route": "AC Entertainment Technologies / Adlib",
+      "route_type": "Official RCF-listed UK distributors",
+      "url": "https://www.rcf.it/en/where-to-buy/-/dealers/country/192",
+      "next_action": "Apply for trade/reseller account; compare portable/touring stock and terms."
+    },
+    {
+      "brand": "QSC",
+      "route": "QSC UK & Ireland / AudioLogic",
+      "route_type": "UK sales office + listed distributor",
+      "url": "https://www.qscaudio.com/contact-us/",
+      "next_action": "Ask for reseller/dealer onboarding or authorised UK distributor route."
+    },
+    {
+      "brand": "Yamaha Pro Audio",
+      "route": "Yamaha UK / authorised dealer network",
+      "route_type": "Direct sales enquiry + dealer network",
+      "url": "https://uk.yamaha.com/en/business/audio/contents/where-to-buy/",
+      "next_action": "Submit sales enquiry and ask for dealer/trade route suitable for MCQ."
+    },
+    {
+      "brand": "Roland / BOSS",
+      "route": "Roland/BOSS UK",
+      "route_type": "Dealer network",
+      "url": "https://www.boss.info/uK/dealer_locator/",
+      "next_action": "Contact UK sales and request dealer-account criteria; confirm which product categories MCQ can retail."
+    },
+    {
+      "brand": "Sony Pro / Home Cinema",
+      "route": "Sony Partner Portal",
+      "route_type": "Direct B2B accredited partner portal",
+      "url": "https://pro.sony/en_GB/channel-partner-area",
+      "next_action": "Register MCQ; confirm accreditation scope, pricing tier and whether relevant audio/home-cinema lines are eligible."
+    },
+    {
+      "brand": "Sony consumer audio",
+      "route": "Sony UK authorised channel",
+      "route_type": "Route requires confirmation",
+      "url": "https://partners.pro.sony/login_register",
+      "next_action": "Ask Sony UK which authorised consumer-audio distributor/dealer programme covers MCQ retail. Do not assume Pro portal covers all consumer audio."
+    },
+    {
+      "brand": "Technics / Panasonic",
+      "route": "Panasonic UK B2B / Partner Programme",
+      "route_type": "Direct B2B partner route; Technics category requires confirmation",
+      "url": "https://eu.connect.panasonic.com/gb/en/partner-programme",
+      "next_action": "Register MCQ and explicitly ask whether Technics hi-fi is available through the same programme or which UK distributor handles it."
+    },
+    {
+      "brand": "Apple",
+      "route": "Apple Partner Network",
+      "route_type": "Authorised business partner network",
+      "url": "https://partnernetwork.apple.com/uk/partnertypes",
+      "next_action": "Apply/enquire about Business Partner/reseller eligibility. Direct Apple Business purchasing alone is not evidence of resale permission."
+    },
+    {
+      "brand": "Multiple consumer / IT / AV brands",
+      "route": "Exertis UK",
+      "route_type": "Large UK distributor for resellers/retailers",
+      "url": "https://www.exertis.co.uk/Our_Customers.html",
+      "next_action": "Open reseller/retailer account; request exact brand line card relevant to MCQ and drop-ship/white-label fulfilment options."
+    },
+    {
+      "brand": "ADJ / Audio-Technica / lighting & install brands",
+      "route": "Prolight Concepts",
+      "route_type": "UK trade distributor",
+      "url": "https://www.prolight.co.uk/Content/Prolight-Brands-Distribution-Partners",
+      "next_action": "Register as trade dealer/installer; confirm line-by-line brand eligibility."
+    },
+    {
+      "brand": "RME / Dynaudio PRO / specialist studio",
+      "route": "Synthax Audio UK network",
+      "route_type": "UK authorised distribution/dealer network",
+      "url": "https://www.synthax.co.uk/latest/dealers/",
+      "next_action": "Contact Synthax about becoming an authorised dealer for relevant brands."
+    }
+  ],
+  "outreach_segments": [
+    {
+      "segment": "Independent hi-fi enthusiasts / collectors",
+      "offer": "MCQ Audio Club: member nights, system clinics, rare/legacy stock alerts, launch listening sessions",
+      "contact_role": "Owner / enthusiast"
+    },
+    {
+      "segment": "DJs / producers / bedroom DJs",
+      "offer": "DJ sourcing, controller/turntable demos, headphones, vinyl/white labels, creator events",
+      "contact_role": "DJ / producer"
+    },
+    {
+      "segment": "Pubs, bars and sports bars",
+      "offer": "PA refresh, microphones, cabling, emergency spares, install and service",
+      "contact_role": "Owner / GM / operations"
+    },
+    {
+      "segment": "Nightclubs and music venues",
+      "offer": "DJ booth, monitoring, microphones, replacement stock, hire backup, installation",
+      "contact_role": "Technical manager / venue manager"
+    },
+    {
+      "segment": "Restaurants and hospitality groups",
+      "offer": "Background audio, zone systems, wireless mics, maintenance and replacements",
+      "contact_role": "Operations / facilities"
+    },
+    {
+      "segment": "Hotels / conference venues",
+      "offer": "Meeting-room audio, portable PA, wireless mics, event support",
+      "contact_role": "Events / AV / facilities"
+    },
+    {
+      "segment": "Wedding venues and event planners",
+      "offer": "PA hire, wireless microphones, DJ systems and emergency backup",
+      "contact_role": "Events manager / planner"
+    },
+    {
+      "segment": "Schools, colleges and universities",
+      "offer": "Simple PA, assemblies, performance audio, replacement parts and training",
+      "contact_role": "Business manager / IT / performing arts"
+    },
+    {
+      "segment": "Churches and faith venues",
+      "offer": "Speech intelligibility, wireless microphones, mixers, installation and support",
+      "contact_role": "Facilities / technical lead"
+    },
+    {
+      "segment": "Community centres and councils",
+      "offer": "Multi-use room audio, events PA, microphones and simple handover",
+      "contact_role": "Centre manager"
+    },
+    {
+      "segment": "Gyms, studios and dance schools",
+      "offer": "Reliable playback, instructor microphones, zone speakers, Bluetooth/wireless systems",
+      "contact_role": "Owner / studio manager"
+    },
+    {
+      "segment": "Recording / rehearsal studios",
+      "offer": "Headphones, microphones, monitors, interfaces, cabling and hard-to-find spares",
+      "contact_role": "Studio manager / engineer"
+    },
+    {
+      "segment": "AV installers / electricians",
+      "offer": "Trade supply of cables, connectors, pro audio, legacy adapters and difficult stock",
+      "contact_role": "Owner / buyer"
+    },
+    {
+      "segment": "Event production / rental companies",
+      "offer": "Trade sourcing, backup units, microphones, cables, DJ/PA stock and last-minute parts",
+      "contact_role": "Operations / warehouse"
+    },
+    {
+      "segment": "Property developers / interior designers",
+      "offer": "Residential and commercial audio design, hidden/clean installs and handover",
+      "contact_role": "Project manager / designer"
+    },
+    {
+      "segment": "Record shops / labels / promoters",
+      "offer": "Cross-promotion, vinyl/white-label catalogue, listening events, DJ gear",
+      "contact_role": "Owner / label manager / promoter"
+    }
+  ],
+  "membership_offer": {
+    "consumer": {
+      "name": "MCQ Audio Club",
+      "price": "FREE",
+      "benefits": [
+        "member news",
+        "rare/legacy stock alerts",
+        "listening/demo invitations",
+        "system clinics",
+        "new product and event notices"
+      ]
+    },
+    "trade": {
+      "name": "MCQ Trade",
+      "price": "FREE APPLICATION",
+      "benefits": [
+        "repeat sourcing",
+        "quote requests",
+        "hard-to-find parts",
+        "hire/install support",
+        "business purchasing contact"
+      ]
+    },
+    "creator": {
+      "name": "MCQ DJ & Creator",
+      "price": "FREE",
+      "benefits": [
+        "DJ/creator gear notices",
+        "vinyl/white-label news",
+        "creator events",
+        "live/publish opportunities"
+      ]
+    }
+  }
+}
