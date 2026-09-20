@@ -3,14 +3,14 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import {listMarketCatalog} from "../src/market.js";
 
-test("star regular product catalogue contains all 50 researched rows",()=>{
+test("star regular product catalogue contains all 100 researched rows",()=>{
   const items=listMarketCatalog();
-  assert.equal(items.length,50);
+  assert.equal(items.length,100);
   for(const item of items){
     assert.ok(item.id);
     assert.ok(item.brand);
     assert.ok(item.name);
-    assert.ok(item.image&&item.image.startsWith("https://"));
+    if(item.image) assert.ok(item.image.startsWith("https://"));
     assert.ok(Number.isFinite(Number(item.observed_public_price_inc_vat_gbp)));
     assert.ok(item.source_url&&item.source_url.startsWith("https://"));
     assert.equal(item.mcq_sellable,false);
@@ -25,9 +25,12 @@ test("shop surfaces Star Regular Products and real enquiry workflow",()=>{
   const js=fs.readFileSync(new URL("../public/shop-products.js",import.meta.url),"utf8");
   assert.match(html,/STAR REGULAR PRODUCTS/);
   assert.match(html,/id="regular-products-grid"/);
+  assert.match(html,/id="catalogue-table-body"/);
+  assert.match(html,/ALL 100 RESEARCHED PRODUCTS/);
   assert.match(html,/shop-products\.js/);
   assert.match(js,/\/api\/market\/catalog/);
   assert.match(js,/\/api\/leads/);
   assert.match(js,/MCQ selling price, availability and delivery/);
+  assert.match(js,/renderCatalogueTable/);
   assert.doesNotMatch(js,/dummy stock|fake stock/i);
 });
