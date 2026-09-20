@@ -359,3 +359,50 @@ test("CRM exposes alerts, detail timeline and governed quote handoff", async (t)
   r=await fetch(base+"/api/quotes",{method:"POST",headers,body:JSON.stringify({enquiry_id:"missing"})});
   assert.notEqual(r.status,401);
 });
+
+
+test("CRM operator and agent access share one real queue without exposing operator auth", async (t)=>{
+  process.env.MCQ_ADMIN_TOKEN="admin_test_value";
+  process.env.MCQ_OPERATOR_TOKEN="operator_test_value";
+  process.env.MCQ_AGENT_TOKEN="agent_test_value";
+  const {default:server}=await import(`../src/server.js?crmproper=${Date.now()}`);
+  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
+  t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const base=`http://127.0.0.1:${server.address().port}`;
+
+  let r=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:"Same Customer",contact:"SAME@EXAMPLE.COM",interest:"Trade"})});
+  assert.equal(r.status,201);
+  const lead=await r.json();
+
+  r=await fetch(base+"/api/swap/offer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:"Same Customer",contact:"same@example.com",item_type:"Technics",description:"1210 deck"})});
+  assert.equal(r.status,201);
+  const swap=await r.json();
+
+  const operatorHeaders={authorization:"Bearer operator_test_value","content-type":"application/json"};
+  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers:operatorHeaders,body:JSON.stringify({entity_type:"lead",entity_id:lead.id,status:"FOLLOW_UP",owner:"Lola",next_action:"Call customer",next_action_at:"2020-01-01T09:00:00Z"})});
+  assert.equal(r.status,200);
+
+  r=await fetch(base+"/api/admin/crm",{headers:operatorHeaders});
+  assert.equal(r.status,200);
+  let payload=await r.json();
+  const l=payload.items.find(v=>v.id===lead.id);
+  const s=payload.items.find(v=>v.id===swap.id);
+  assert(l&&s);
+  assert.equal(l.customer_key,s.customer_key);
+  assert(payload.related_by_customer[l.customer_key].length>=2);
+  assert.equal(payload.queue[0].id,lead.id);
+  assert.equal(payload.queue[0].overdue,true);
+
+  r=await fetch(base+`/api/admin/crm/detail?entity_type=lead&entity_id=${encodeURIComponent(lead.id)}`,{headers:operatorHeaders});
+  assert.equal(r.status,200);
+  payload=await r.json();
+  assert(payload.related.some(v=>v.id===swap.id));
+
+  r=await fetch(base+"/api/admin/crm/queue",{headers:{authorization:"Bearer agent_test_value"}});
+  assert.equal(r.status,200);
+  payload=await r.json();
+  assert(payload.items.some(v=>v.id===lead.id));
+
+  r=await fetch(base+"/api/admin/crm",{headers:{authorization:"Bearer invalid_test_value"}});
+  assert.equal(r.status,401);
+});
