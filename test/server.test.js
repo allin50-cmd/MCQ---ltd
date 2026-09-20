@@ -293,34 +293,37 @@ test("market evidence APIs expose public benchmarks separately from MCQ stock", 
 });
 
 
-test("admin CRM aggregates real customer records and supports governed updates", async () => {
+
+test("admin CRM aggregates real customer records and supports governed updates", async (t)=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),"mcq-crm-"));
-  const data=path.join(dir,"mcq.json");
-  fs.writeFileSync(data,JSON.stringify({
+  process.env.NODE_ENV="test";
+  process.env.MCQ_DATA_FILE=path.join(dir,"mcq.json");
+  process.env.MCQ_ADMIN_TOKEN="crm-admin";
+  fs.writeFileSync(process.env.MCQ_DATA_FILE,JSON.stringify({
     equipment:[],enquiries:[{id:"enq_1",customer_name:"Hire Customer",contact:"hire@example.com",status:"NEW",created_at:"2026-09-20T10:00:00Z"}],
     quotes:[],payments:[],bookings:[],leads:[{id:"lead_1",name:"Shop Customer",contact:"shop@example.com",status:"NEW",created_at:"2026-09-20T11:00:00Z"}],
     events:[],crm_events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[],urban_art_submissions:[],urban_art_votes:[],urban_art_reports:[],live_stream_events:[],stream_reminders:[],stream_track_submissions:[]
   }));
-  const env={...process.env,MCQ_DATA_FILE:data,MCQ_ADMIN_TOKEN:"secret"};
-  const child=spawn(process.execPath,["src/server.js"],{cwd:process.cwd(),env,stdio:["ignore","pipe","pipe"]});
-  try{
-    await waitForServer();
-    const headers={authorization:"Bearer secret"};
-    let r=await fetch("http://127.0.0.1:3000/api/admin/crm",{headers});
-    assert.equal(r.status,200);
-    let body=await r.json();
-    assert.equal(body.counts.customers,2);
-    assert.equal(body.counts.open,2);
-    assert.equal(body.items[0].id,"lead_1");
+  const {default:server}=await import(`../src/server.js?crmtest=${Date.now()}`);
+  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
+  t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const base=`http://127.0.0.1:${server.address().port}`;
+  const headers={authorization:"Bearer crm-admin"};
 
-    r=await fetch("http://127.0.0.1:3000/api/admin/crm/update",{method:"POST",headers:{...headers,"content-type":"application/json"},body:JSON.stringify({entity_type:"lead",entity_id:"lead_1",status:"FOLLOW_UP",owner:"Lola",next_action:"Reply to customer",note:"Customer service review"})});
-    assert.equal(r.status,200);
-    body=await r.json();
-    assert.equal(body.item.status,"FOLLOW_UP");
-    assert.equal(body.item.crm_owner,"Lola");
+  let r=await fetch(base+"/api/admin/crm",{headers});
+  assert.equal(r.status,200);
+  let payload=await r.json();
+  assert.equal(payload.counts.customers,2);
+  assert.equal(payload.counts.open,2);
+  assert.equal(payload.items[0].id,"lead_1");
 
-    r=await fetch("http://127.0.0.1:3000/api/admin/crm",{headers});
-    body=await r.json();
-    assert.equal(body.recent_events[0].entity_id,"lead_1");
-  }finally{child.kill("SIGTERM")}
+  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers:{...headers,"content-type":"application/json"},body:JSON.stringify({entity_type:"lead",entity_id:"lead_1",status:"FOLLOW_UP",owner:"Lola",next_action:"Reply to customer",note:"Customer service review"})});
+  assert.equal(r.status,200);
+  payload=await r.json();
+  assert.equal(payload.item.status,"FOLLOW_UP");
+  assert.equal(payload.item.crm_owner,"Lola");
+
+  r=await fetch(base+"/api/admin/crm",{headers});
+  payload=await r.json();
+  assert.equal(payload.recent_events[0].entity_id,"lead_1");
 });
