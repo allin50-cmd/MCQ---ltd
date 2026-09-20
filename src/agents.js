@@ -57,3 +57,49 @@ export function buildAgentControl(db,catalogue=[]){
     decisions
   };
 }
+
+
+const restrictedTerms=["purchase","buy stock","refund","change price","approve price","publish product","publish incomplete","contract","commit company","promise availability"];
+function findingFor(agent,control){
+  const t=control.today;
+  const data={
+    manager:["Business control",t.open_customer_work+" open customer work and "+control.decisions.length+" decisions require review.","Work the NOW decisions first."],
+    product:["Catalogue",t.catalogue_public+" public, "+t.catalogue_blocked+" blocked, "+t.catalogue_sellable+" sellable.","Resolve evidence blockers before changing commercial state."],
+    image:["Catalogue image validation",t.image_blocked+" records have image validation blockers.","Keep image-blocked products non-public until exact-model evidence passes."],
+    research:["Catalogue research",t.catalogue_total+" catalogue records are available for evidence review.","Prioritise stale or incomplete evidence."],
+    stock:["Verified catalogue state",t.catalogue_sellable+" catalogue records currently pass the sellable gate.","Treat all other availability as unverified."],
+    swap:["Swap Shop",t.swap_offers+" offers are recorded.","Review condition and evidence; valuation or purchase needs human approval."],
+    sales:["CRM leads",t.leads+" leads are recorded.","Prioritise open leads with no owner or next action."],
+    hire:["Hire CRM",t.hire_enquiries+" hire enquiries and "+t.confirmed_bookings+" confirmed bookings.","Follow up open hire enquiries and protect confirmed bookings."],
+    trade:["CRM leads",t.leads+" leads are available for qualification.","Identify genuine B2B opportunities from current records."],
+    content:["Verified MCQ evidence","Content can be prepared from verified business evidence.","Do not publish unsupported commercial claims."],
+    customer:["Shared customer queue",t.open_customer_work+" open customer opportunities.","Give each open record an owner and next action."],
+    finance:["Quotes, payments and bookings",t.quotes+" quotes, "+t.received_payments+" received payments, "+t.confirmed_bookings+" confirmed bookings.","Review exceptions; money movement remains approval-controlled."],
+    purchasing:["Verified catalogue evidence",t.catalogue_total+" catalogue records can be researched.","Prepare purchasing candidates only; do not commit spend."],
+    installation:["CRM leads and hire enquiries",t.leads+" leads and "+t.hire_enquiries+" hire enquiries can be screened.","Qualify installation opportunities before preparing a scope."]
+  };
+  const row=data[agent.id]||["MCQ production","No relevant production finding.","No recommendation."];
+  return {agent:agent.id,name:agent.name,finding:row[1],evidence:row[0],recommendation:row[2],status:"READY",approval_required:false};
+}
+export function runAgentCommand(db,catalogue=[],input={}){
+  const instruction=String(input.instruction||"").trim().slice(0,2000);
+  if(!instruction) throw new Error("instruction is required");
+  const requested=String(input.agent||"manager").trim().toLowerCase();
+  const selected=requested==="all"?MCQ_AGENTS:MCQ_AGENTS.filter(x=>x.id===requested);
+  if(!selected.length) throw new Error("unknown agent");
+  const control=buildAgentControl(db,catalogue);
+  const restricted=restrictedTerms.some(term=>instruction.toLowerCase().includes(term));
+  const responses=selected.map(agent=>findingFor(agent,control));
+  if(restricted) responses.forEach(r=>{r.status="APPROVAL REQUIRED";r.approval_required=true});
+  const manager={
+    TODAY:responses.find(x=>x.agent==="manager")?.finding||control.today.open_customer_work+" open customer work",
+    URGENT:control.decisions.map(x=>x.reason),
+    CUSTOMERS:control.today.open_customer_work,
+    SALES:control.today.leads,HIRE:control.today.hire_enquiries,STOCK:control.today.catalogue_sellable,
+    PRODUCTS:control.today.catalogue_blocked,IMAGES:control.today.image_blocked,"SWAP SHOP":control.today.swap_offers,
+    TRADE:control.today.leads,FINANCE:{quotes:control.today.quotes,payments:control.today.received_payments},
+    CONTENT:"Verified evidence only",INSTALLATIONS:"Qualify from current CRM records",
+    "DECISIONS REQUIRED":control.decisions.map(x=>x.reason)
+  };
+  return {source:"MCQ production",reasoning:"DETERMINISTIC",instruction,requested_agent:requested,responses,manager_summary:requested==="all"?manager:null,status:restricted?"APPROVAL REQUIRED":"COMPLETED",approval_required:restricted,executed_restricted_action:false,generated_at:new Date().toISOString()};
+}
