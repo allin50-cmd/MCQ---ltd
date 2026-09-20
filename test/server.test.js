@@ -406,3 +406,47 @@ test("CRM operator and agent access share one real queue without exposing operat
   r=await fetch(base+"/api/admin/crm",{headers:{authorization:"Bearer invalid_test_value"}});
   assert.equal(r.status,401);
 });
+
+
+test("CRM update idempotency prevents duplicate durable effects", async (t)=>{
+  process.env.MCQ_ADMIN_TOKEN="idem-admin";
+  process.env.MCQ_AGENT_TOKEN="idem-agent";
+  const {default:server}=await import(`../src/server.js?crmidem=${Date.now()}`);
+  await new Promise(resolve=>server.listen(0,"127.0.0.1",resolve));
+  t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const base=`http://127.0.0.1:${server.address().port}`;
+
+  let r=await fetch(base+"/api/leads",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+    name:"Idempotency Test Customer",contact:"idem-test@example.com",interest:"Trade",source:"test-suite"
+  })});
+  assert.equal(r.status,201);
+  const lead=await r.json();
+
+  const headers={
+    authorization:"Bearer idem-agent",
+    "content-type":"application/json",
+    "idempotency-key":"agentx-test-action-1"
+  };
+  const update={entity_type:"lead",entity_id:lead.id,status:"FOLLOW_UP",owner:"Lola",next_action:"Call customer"};
+
+  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers,body:JSON.stringify(update)});
+  assert.equal(r.status,200);
+  const first=await r.json();
+  assert.equal(first.idempotent_replay,false);
+
+  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers,body:JSON.stringify(update)});
+  assert.equal(r.status,200);
+  const replay=await r.json();
+  assert.equal(replay.idempotent_replay,true);
+  assert.equal(replay.event.id,first.event.id);
+
+  r=await fetch(base+`/api/admin/crm/detail?entity_type=lead&entity_id=${encodeURIComponent(lead.id)}`,{headers:{authorization:"Bearer idem-agent"}});
+  assert.equal(r.status,200);
+  const detail=await r.json();
+  assert.equal(detail.timeline.filter(v=>v.id===first.event.id).length,1);
+
+  r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers,body:JSON.stringify({...update,next_action:"Different action"})});
+  assert.equal(r.status,400);
+  const conflict=await r.json();
+  assert.match(conflict.error,/idempotency key reused/);
+});

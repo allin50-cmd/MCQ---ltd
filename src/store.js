@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const file=process.env.MCQ_DATA_FILE||path.join(process.cwd(),"data","mcq.json");
-const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],crm_events:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[],urban_art_submissions:[],urban_art_votes:[],urban_art_reports:[],live_stream_events:[],stream_reminders:[],stream_track_submissions:[]};
+const empty={equipment:[],enquiries:[],quotes:[],payments:[],bookings:[],leads:[],events:[],crm_events:[],idempotency_receipts:[],music_catalog:[],music_orders:[],swap_offers:[],drop_signups:[],urban_submissions:[],urban_votes:[],urban_reports:[],urban_art_submissions:[],urban_art_votes:[],urban_art_reports:[],live_stream_events:[],stream_reminders:[],stream_track_submissions:[]};
 let durableVersion=null;
 
 function normalize(parsed={}){

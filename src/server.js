@@ -756,6 +756,24 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="POST"&&u.pathname==="/api/admin/crm/update"){
       requireCrmAccess(req);
       const x=await body(req);
+      const idempotencyKey=String(req.headers["idempotency-key"]||"").trim().slice(0,200);
+      const requestShape={
+        entity_type:String(x.entity_type||""),
+        entity_id:String(x.entity_id||""),
+        status:x.status===undefined?null:String(x.status),
+        owner:x.owner===undefined?null:String(x.owner),
+        next_action:x.next_action===undefined?null:String(x.next_action),
+        next_action_at:x.next_action_at===undefined?null:String(x.next_action_at),
+        note:x.note===undefined?null:String(x.note)
+      };
+      const requestHash=crypto.createHash("sha256").update(JSON.stringify(requestShape)).digest("hex");
+      if(idempotencyKey){
+        const prior=db.idempotency_receipts.find(v=>v.scope==="crm_update"&&v.key===idempotencyKey);
+        if(prior){
+          if(prior.request_hash!==requestHash)throw new Error("idempotency key reused with different request");
+          return json(res,200,{...prior.result,idempotent_replay:true});
+        }
+      }
       const maps={lead:db.leads,enquiry:db.enquiries,swap_offer:db.swap_offers};
       const rows=maps[String(x.entity_type||"")];
       if(!rows)throw new Error("entity_type must be lead, enquiry or swap_offer");
@@ -774,8 +792,12 @@ const server=http.createServer(async(req,res)=>{
       row.crm_updated_at=new Date().toISOString();
       const event={id:id("crm"),entity_type:String(x.entity_type),entity_id:row.id,status:row.status||"NEW",owner:row.crm_owner||"",next_action:row.crm_next_action||"",next_action_at:row.crm_next_action_at||"",note:row.crm_note||"",created_at:row.crm_updated_at};
       db.crm_events.push(event);
+      const result={ok:true,item:structuredClone(row),event:structuredClone(event),idempotent_replay:false};
+      if(idempotencyKey)db.idempotency_receipts.push({
+        scope:"crm_update",key:idempotencyKey,request_hash:requestHash,result:structuredClone(result),created_at:row.crm_updated_at
+      });
       await save(db);
-      return json(res,200,{ok:true,item:row,event});
+      return json(res,200,result);
     }
 
     if(req.method==="GET"&&u.pathname==="/api/admin/summary"){
