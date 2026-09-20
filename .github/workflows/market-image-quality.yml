@@ -1,8 +1,11 @@
 name: market-image-quality
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - "src/market.js"
+      - "data/market-research-100.csv"
+      - "data/product-image-audit-100.csv"
       - "scripts/validate-market-images.mjs"
       - ".github/workflows/market-image-quality.yml"
   push:
