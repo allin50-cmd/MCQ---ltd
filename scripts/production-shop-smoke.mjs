@@ -27,7 +27,7 @@ await retry(async()=>{
 
   const shellJs=await get("/site-shell.js");
   assert(shellJs.r.status===200,`/site-shell.js status ${shellJs.r.status}`);
-  assert(shellJs.text.includes("/mcq-splash-production.jpg"),"splash missing supplied production artwork");
+  assert(shellJs.text.includes("/mcq-splash-production.webp"),"splash missing supplied production artwork");
   assert(shellJs.text.includes("ENTER MCQ AUDIO"),"splash missing corrected MCQ entry CTA");
   assert(shellJs.text.includes("hs-turntables")&&shellJs.text.includes("hs-djgear")&&shellJs.text.includes("hs-studio")&&shellJs.text.includes("hs-live")&&shellJs.text.includes("hs-vinyl")&&shellJs.text.includes("hs-accessories"),"splash category hotspots missing");
   assert(shellJs.text.includes('href="/urban"')&&shellJs.text.includes('href="/about"'),"splash supporting hotspots missing");
@@ -35,11 +35,19 @@ await retry(async()=>{
   assert(!/rabbit/i.test(shellJs.text),"irrelevant rabbit artwork found in production splash");
   assert(!shellJs.text.includes("setTimeout(closeSplash"),"production splash still auto-dismisses");
 
+  const splashAsset=await get("/mcq-splash-production.webp");
+  assert(splashAsset.r.status===200,`/mcq-splash-production.webp status ${splashAsset.r.status}`);
+  assert((splashAsset.r.headers.get("content-type")||"").includes("image/webp"),"splash asset is not WebP");
+  assert(splashAsset.buf.length>200000,`splash asset unexpectedly small (${splashAsset.buf.length})`);
+  const splashHash=(await import("node:crypto")).createHash("sha256").update(splashAsset.buf).digest("hex");
+  assert(splashHash==="681556b219630066d1a2694dfd2c297cf934e4e70f9638cefaa30281568a50d3",`splash asset drifted: ${splashHash}`);
+
   const shellCss=await get("/site-shell.css");
   assert(!shellCss.text.includes("unsplash.com"),"production splash still depends on substitute stock imagery");
   assert(shellCss.r.status===200,`/site-shell.css status ${shellCss.r.status}`);
   assert(shellCss.text.includes(".mcq-splash-artboard"),"splash artwork styling missing");
   assert(shellCss.text.includes(".mcq-hotspot"),"splash hotspot styling missing");
+  assert(shellCss.text.includes("aspect-ratio:1122/1402"),"splash artwork aspect ratio drifted");
 
   const swap=await get("/swap");
   assert(swap.r.status===200,`/swap status ${swap.r.status}`);
