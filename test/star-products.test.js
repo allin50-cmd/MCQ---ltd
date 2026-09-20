@@ -14,7 +14,10 @@ test("star regular product catalogue contains all 100 researched rows",()=>{
     assert.ok(Number.isFinite(Number(item.observed_public_price_inc_vat_gbp)));
     assert.ok(item.source_url&&item.source_url.startsWith("https://"));
     assert.equal(item.mcq_sellable,false);
-    assert.equal(item.requested_state,"DRAFT");
+    assert.equal(item.requested_state,"SOURCE_THROUGH_MCQ");
+    assert.equal(item.state,"SOURCE_THROUGH_MCQ");
+    assert.equal(item.public_display,true);
+    assert.equal(item.sellable,false);
     assert.equal(item.real_cost_price_ex_vat_gbp,null);
     assert.equal(item.mcq_retail_price_inc_vat_gbp,null);
   }
@@ -31,6 +34,8 @@ test("shop surfaces Star Regular Products and real enquiry workflow",()=>{
   assert.match(js,/\/api\/market\/catalog/);
   assert.match(js,/\/api\/leads/);
   assert.match(js,/MCQ selling price, availability and delivery/);
+  assert.match(js,/public_display/);
+  assert.match(js,/Ask MCQ to source/);
   assert.match(js,/renderCatalogueTable/);
   assert.doesNotMatch(js,/dummy stock|fake stock/i);
 });
