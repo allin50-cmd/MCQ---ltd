@@ -40,12 +40,11 @@ const reviews=[
 function renderProducts(){
  $("#featured-products").innerHTML=products.map((p,i)=>`<article class="product-card" data-product-card>
   <div class="product-media"><img data-product-image="required" loading="${i<2?"eager":"lazy"}" src="${esc(p.image)}" alt="${esc(p.brand+" "+p.name)}"></div>
-  <div class="product-body"><div class="product-brand">${esc(p.brand)} / ${esc(p.category)}</div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p>
+  <div class="product-body"><div class="product-brand">${esc(p.brand)} / ${esc(p.category)} / EDITORIAL REFERENCE</div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p>
   <div class="spec-line">${p.specs.map(x=>`<span>${esc(x)}</span>`).join("")}</div>
-  <div class="product-actions"><button class="mini-btn product-detail" data-index="${i}">View details</button><button class="mini-btn secondary source-product" data-query="${esc(p.query)}" data-product="${esc(p.brand+" "+p.name)}">Buy / source from MCQ</button></div></div>
+  <div class="product-actions"><button class="mini-btn product-detail" data-index="${i}">Open technical brief</button></div></div>
  </article>`).join("");
  $$(".product-detail").forEach(b=>b.addEventListener("click",()=>openProduct(Number(b.dataset.index))));
- $$(".source-product").forEach(b=>b.addEventListener("click",()=>prepareLead(b.dataset.product,b.dataset.query)));
 }
 function renderBrands(){
  $("#brand-grid").innerHTML=brands.map(([name,url,desc])=>`<button class="brand-tile brand-button" type="button" data-brand="${esc(name)}"><strong>${esc(name)}</strong><span>${esc(desc)}</span></button>`).join("");
@@ -79,9 +78,8 @@ async function runSupplierSearch(forcedQuery=""){
 }
 function openProduct(i){
  const p=products[i];if(!p)return;
- $("#review-body").innerHTML=`<article class="dialog-body"><img data-product-image="required" class="hero-img" src="${esc(p.image)}" alt="${esc(p.brand+" "+p.name)}"><p class="eyebrow dark">${esc(p.brand)} / ${esc(p.category)}</p><h1>${esc(p.name)}</h1><p>${esc(p.desc)}</p><div class="spec-grid">${p.specs.map((v,n)=>`<div><b>Specification ${n+1}</b><span>${esc(v)}</span></div>`).join("")}</div><p>MCQ can advise, source and supply this product or the closest suitable alternative.</p><button class="mini-btn" id="dialog-source">Buy / source from MCQ</button></article>`;
+ $("#review-body").innerHTML=`<article class="dialog-body"><img data-product-image="required" class="hero-img" src="${esc(p.image)}" alt="${esc(p.brand+" "+p.name)}"><p class="eyebrow dark">${esc(p.brand)} / ${esc(p.category)} / EDITORIAL REFERENCE</p><h1>${esc(p.name)}</h1><p>${esc(p.desc)}</p><div class="spec-grid">${p.specs.map((v,n)=>`<div><b>Specification ${n+1}</b><span>${esc(v)}</span></div>`).join("")}</div><p>This is editorial product information, not a claim of MCQ stock, live price or availability.</p></article>`;
  $("#review-dialog").showModal();
- $("#dialog-source").addEventListener("click",()=>{ $("#review-dialog").close(); prepareLead(p.brand+" "+p.name,p.query); });
  track("product_view",p.brand+" "+p.name);
 }
 function prepareLead(product,query){
@@ -103,7 +101,7 @@ $("#system-form").addEventListener("submit",e=>{e.preventDefault();const x=Objec
 $("#lead-form").addEventListener("submit",async e=>{e.preventDefault();const status=$("#lead-status"),data=Object.fromEntries(new FormData(e.currentTarget));status.textContent="Sending…";try{const r=await api("/api/leads",{method:"POST",body:JSON.stringify({...data,source:"mcq-audio"})});status.textContent=`Received — reference ${r.id}.`;e.currentTarget.reset();track("lead","submitted")}catch(err){status.textContent=err.message}});
 
 $("#search-open").addEventListener("click",()=>{$("#search-drawer").classList.add("open");$("#search-drawer").setAttribute("aria-hidden","false");setTimeout(()=>$("#global-search").focus(),150)});$("#search-close").addEventListener("click",()=>{$("#search-drawer").classList.remove("open");$("#search-drawer").setAttribute("aria-hidden","true")});
-$("#global-search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();if(!q){$("#global-results").innerHTML="";return}const ps=products.filter(p=>(p.brand+" "+p.name+" "+p.category+" "+p.desc).toLowerCase().includes(q));const bs=brands.filter(b=>(b[0]+" "+b[2]).toLowerCase().includes(q));$("#global-results").innerHTML=ps.map((p,i)=>`<button class="global-result global-action" data-product="${esc(p.brand+" "+p.name)}" data-query="${esc(p.query)}"><img data-product-image="required" src="${esc(p.image)}" alt=""><div><b>${esc(p.brand)} ${esc(p.name)}</b><p>${esc(p.category)} — source through MCQ</p></div></button>`).join("")+bs.map(([n,u,d])=>`<button class="global-result global-action" data-product="${esc(n)}" data-query="${esc(n)}"><div></div><div><b>${esc(n)}</b><p>${esc(d)} — ask MCQ</p></div></button>`).join("");$$(".global-action",$("#global-results")).forEach(b=>b.addEventListener("click",()=>{$("#search-drawer").classList.remove("open");prepareLead(b.dataset.product,b.dataset.query)}))});
+$("#global-search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();if(!q){$("#global-results").innerHTML="";return}const ps=products.map((p,i)=>({...p,_i:i})).filter(p=>(p.brand+" "+p.name+" "+p.category+" "+p.desc).toLowerCase().includes(q));const bs=brands.filter(b=>(b[0]+" "+b[2]).toLowerCase().includes(q));$("#global-results").innerHTML=ps.map(p=>`<button class="global-result global-product-reference" data-index="${p._i}"><img data-product-image="required" src="${esc(p.image)}" alt=""><div><b>${esc(p.brand)} ${esc(p.name)}</b><p>${esc(p.category)} — editorial reference</p></div></button>`).join("")+bs.map(([n,u,d])=>`<button class="global-result global-action" data-product="${esc(n)}" data-query="${esc(n)}"><div></div><div><b>${esc(n)}</b><p>${esc(d)} — ask MCQ</p></div></button>`).join("");$$(".global-product-reference",$("#global-results")).forEach(b=>b.addEventListener("click",()=>{$("#search-drawer").classList.remove("open");openProduct(Number(b.dataset.index))}));$$(".global-action",$("#global-results")).forEach(b=>b.addEventListener("click",()=>{$("#search-drawer").classList.remove("open");prepareLead(b.dataset.product,b.dataset.query)}))});
 
 renderProducts();renderBrands();renderReviews();loadSuppliers();
 $$('[data-query].cta').forEach(b=>b.addEventListener('click',()=>prepareLead(b.dataset.query,b.dataset.query)));
