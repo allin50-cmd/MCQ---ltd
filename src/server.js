@@ -107,7 +107,11 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
     if(req.method==="GET"&&u.pathname==="/api/market/catalog") return json(res,200,{items:listMarketCatalog()});
     if(req.method==="GET"&&u.pathname==="/api/market/competitors") return json(res,200,{items:listCompetitors()});
-    if(req.method==="GET"&&u.pathname==="/api/admin/agents"){\n      requireCrmAccess(req);\n      return json(res,200,buildAgentControl(db,[...listInternalCatalog(),...listMarketCatalog()]));\n    }\n    if(req.method==="GET"&&u.pathname==="/api/admin/catalog/validation"){
+    if(req.method==="GET"&&u.pathname==="/api/admin/agents"){
+      requireCrmAccess(req);
+      return json(res,200,buildAgentControl(db,[...listInternalCatalog(),...listMarketCatalog()]));
+    }
+    if(req.method==="GET"&&u.pathname==="/api/admin/catalog/validation"){
       requireAdmin(req);
       const internal=listInternalCatalog();
       const market=listMarketCatalog();
