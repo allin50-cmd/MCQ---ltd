@@ -438,8 +438,8 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-e945", brand:"Sennheiser", name:"e945", model:"e945", category:"microphones",
-    image:"https://www.woodbrass.com/images/woodbrass/4SENNHEISER%2BE945.JPG",
-    images:[{url:"https://www.woodbrass.com/images/woodbrass/4SENNHEISER%2BE945.JPG",source:"public product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
+    image:"https://cs-a.ecimg.tw/items/QBAW1NA9009441H/000007_1773137520.jpg",
+    images:[{url:"https://cs-a.ecimg.tw/items/QBAW1NA9009441H/000007_1773137520.jpg",source:"public product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
     image_source:"public product media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
