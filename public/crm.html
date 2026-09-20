@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>MCQ CRM Control</title>
+<style>
+:root{--bg:#07090b;--panel:#101418;--line:#27313a;--text:#f5f7f8;--muted:#9aa6af;--gold:#e3ad32;--danger:#ff7a66;--ok:#8fd39b}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+body{min-height:100vh}.wrap{max-width:1500px;margin:auto;padding:18px}.top{display:flex;gap:16px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:16px}.brand{display:flex;align-items:end;gap:12px}.brand b{font:900 34px/1 Arial Black,Arial,sans-serif;letter-spacing:-.06em}.brand span{color:var(--gold);font-size:11px;letter-spacing:.35em;font-weight:900}.top small{color:var(--muted)}
+button,input,select,textarea{font:inherit}.btn{border:1px solid var(--gold);background:var(--gold);color:#090b0c;padding:10px 13px;font-weight:900;cursor:pointer}.btn.secondary{background:#12171b;color:#fff;border-color:#3c4852}.grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;margin:16px 0}.metric{background:var(--panel);border:1px solid var(--line);padding:13px}.metric b{display:block;font-size:24px}.metric span{color:var(--muted);font-size:11px}.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.toolbar input,.toolbar select{background:#0e1215;color:#fff;border:1px solid var(--line);padding:10px;min-width:150px}.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,.75fr);gap:14px}.panel{background:var(--panel);border:1px solid var(--line)}.panel h2{font-size:13px;letter-spacing:.12em;margin:0;padding:14px;border-bottom:1px solid var(--line)}.list{max-height:68vh;overflow:auto}.row{padding:13px;border-bottom:1px solid #1e252b;cursor:pointer}.row:hover,.row.active{background:#151b20}.rowtop{display:flex;gap:10px;justify-content:space-between}.name{font-weight:850}.pill{font-size:9px;padding:5px 7px;border:1px solid #46535e;color:#dfe5e8}.pill.overdue{border-color:var(--danger);color:var(--danger)}.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:7px}.detail{padding:14px}.empty{color:var(--muted);padding:24px}.field{margin:0 0 12px}.field label{display:block;color:var(--muted);font-size:10px;letter-spacing:.08em;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;background:#090d10;color:#fff;border:1px solid var(--line);padding:10px}.field textarea{min-height:90px;resize:vertical}.detailHead{display:flex;justify-content:space-between;gap:10px;margin-bottom:14px}.detailHead h3{margin:0}.sub{color:var(--muted);font-size:12px}.timeline{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}.event{padding:9px 0;border-bottom:1px solid #1d2429;font-size:12px}.event small{color:var(--muted)}.alertbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.alert{padding:8px 10px;border:1px solid var(--line);font-size:11px}.alert.warn{border-color:var(--danger);color:var(--danger)}.login{position:fixed;inset:0;z-index:50;background:#050708f7;display:grid;place-items:center;padding:20px}.loginbox{width:min(460px,100%);background:#0d1114;border:1px solid #34414a;padding:24px}.loginbox h1{margin:0 0 8px}.loginbox p{color:var(--muted);font-size:13px}.loginbox input{width:100%;background:#06090b;color:#fff;border:1px solid #3a4650;padding:12px;margin:10px 0}.hidden{display:none!important}.status{font-size:11px;color:var(--muted);margin-top:8px}.status.bad{color:var(--danger)}.status.good{color:var(--ok)}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(4,1fr)}.layout{grid-template-columns:1fr}.list{max-height:42vh}}
+@media(max-width:560px){.wrap{padding:10px}.grid{grid-template-columns:repeat(2,1fr)}.brand b{font-size:28px}.toolbar>*{flex:1 1 46%}.top small{display:none}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="loginbox">
+    <div class="brand"><b>MCQ</b><span>CRM</span></div>
+    <h1>Operator access</h1>
+    <p>Use the MCQ operator token. It is held only for this browser session and is not embedded in this page.</p>
+    <input id="token" type="password" autocomplete="current-password" placeholder="Operator token">
+    <button id="connect" class="btn">OPEN CRM</button>
+    <div id="loginStatus" class="status"></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <header class="top">
+    <div class="brand"><b>MCQ</b><span>CUSTOMER CONTROL</span></div>
+    <div><small>Customer service · Hire · Trade · Swap</small> <button id="logout" class="btn secondary">LOCK</button></div>
+  </header>
+
+  <section id="metrics" class="grid"></section>
+  <section id="alerts" class="alertbar"></section>
+
+  <div class="toolbar">
+    <input id="search" placeholder="Search customer / contact / interest">
+    <select id="statusFilter"><option value="">All statuses</option></select>
+    <select id="ownerFilter"><option value="">All owners</option></select>
+    <select id="typeFilter"><option value="">All types</option><option value="lead">Lead</option><option value="enquiry">Hire enquiry</option><option value="swap_offer">Swap offer</option></select>
+    <select id="attentionFilter"><option value="">All records</option><option value="overdue">Overdue</option><option value="unowned">Unowned</option><option value="no-next">No next action</option></select>
+    <button id="refresh" class="btn secondary">REFRESH</button>
+  </div>
+
+  <section class="layout">
+    <div class="panel"><h2>PIPELINE</h2><div id="list" class="list"></div></div>
+    <div class="panel"><h2>CUSTOMER RECORD</h2><div id="detail" class="detail"><div class="empty">Select a customer record.</div></div></div>
+  </section>
+</main>
+
+<script>
+const qs=s=>document.querySelector(s);
+const state={token:sessionStorage.getItem("mcq-crm-token")||"",data:null,current:null,detail:null};
+const statuses=["NEW","CONTACT","QUALIFIED","QUOTE","FOLLOW_UP","WAITING_CUSTOMER","WON","LOST","CLOSED"];
+
+function authHeaders(json=false){const h={authorization:"Bearer "+state.token};if(json)h["content-type"]="application/json";return h}
+async function api(path,opts={}){const r=await fetch(path,{...opts,headers:{...authHeaders(!!opts.body),...(opts.headers||{})}});let b={};try{b=await r.json()}catch{}if(!r.ok)throw new Error(b.error||("HTTP "+r.status));return b}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function fmt(v){if(!v)return "—";const d=new Date(v);return Number.isNaN(d.getTime())?esc(v):d.toLocaleString()}
+function typeLabel(v){return v==="enquiry"?"Hire enquiry":v==="swap_offer"?"Swap offer":"Lead"}
+
+async function connect(){
+  const token=qs("#token").value.trim(); if(token)state.token=token;
+  try{await load();sessionStorage.setItem("mcq-crm-token",state.token);qs("#login").classList.add("hidden");qs("#loginStatus").textContent=""}
+  catch(e){qs("#loginStatus").textContent=e.message;qs("#loginStatus").className="status bad"}
+}
+async function load(){
+  state.data=await api("/api/admin/crm");
+  renderMetrics();buildFilters();renderList();
+  if(state.current)await openRecord(state.current.entity_type,state.current.id);
+}
+function renderMetrics(){
+  const c=state.data.counts||{};
+  const defs=[["Open",c.open],["Overdue",c.overdue],["Unowned",c.unowned],["No next action",c.without_next_action],["Leads",c.leads],["Hire",c.hire_enquiries],["Quotes",c.quotes],["Bookings",c.bookings]];
+  qs("#metrics").innerHTML=defs.map(([k,v])=>'<div class="metric"><b>'+esc(v??0)+'</b><span>'+esc(k)+'</span></div>').join("");
+  const alerts=[];
+  if(c.overdue)alerts.push('<div class="alert warn">'+c.overdue+' overdue follow-up'+(c.overdue===1?'':'s')+'</div>');
+  if(c.unowned)alerts.push('<div class="alert">'+c.unowned+' open record'+(c.unowned===1?'':'s')+' without owner</div>');
+  if(c.without_next_action)alerts.push('<div class="alert">'+c.without_next_action+' open record'+(c.without_next_action===1?'':'s')+' without next action</div>');
+  qs("#alerts").innerHTML=alerts.join("");
+}
+function buildFilters(){
+  const sf=qs("#statusFilter"),of=qs("#ownerFilter");
+  const sv=sf.value,ov=of.value;
+  sf.innerHTML='<option value="">All statuses</option>'+statuses.map(x=>'<option>'+x+'</option>').join("");
+  const owners=[...new Set(state.data.items.map(x=>x.owner).filter(Boolean))].sort();
+  of.innerHTML='<option value="">All owners</option>'+owners.map(x=>'<option>'+esc(x)+'</option>').join("");
+  sf.value=sv;of.value=ov;
+}
+function filtered(){
+  const q=qs("#search").value.trim().toLowerCase(),st=qs("#statusFilter").value,ow=qs("#ownerFilter").value,ty=qs("#typeFilter").value,at=qs("#attentionFilter").value;
+  return state.data.items.filter(x=>{
+    const hay=[x.name,x.contact,x.phone,x.interest,x.source].join(" ").toLowerCase();
+    if(q&&!hay.includes(q))return false;if(st&&x.status!==st)return false;if(ow&&x.owner!==ow)return false;if(ty&&x.entity_type!==ty)return false;
+    if(at==="overdue"&&!x.overdue)return false;if(at==="unowned"&&x.owner)return false;if(at==="no-next"&&x.next_action)return false;return true;
+  });
+}
+function renderList(){
+  const rows=filtered();
+  qs("#list").innerHTML=rows.length?rows.map(x=>'<div class="row '+(state.current&&state.current.id===x.id?'active':'')+'" data-type="'+esc(x.entity_type)+'" data-id="'+esc(x.id)+'"><div class="rowtop"><span class="name">'+esc(x.name||x.contact||x.id)+'</span><span class="pill '+(x.overdue?'overdue':'')+'">'+esc(x.status)+'</span></div><div class="meta"><span>'+esc(typeLabel(x.entity_type))+'</span><span>'+esc(x.interest||"General")+'</span><span>Owner: '+esc(x.owner||"Unassigned")+'</span></div><div class="meta"><span>'+esc(x.contact||"")+'</span><span>Next: '+esc(x.next_action||"Not set")+'</span></div></div>').join(""):'<div class="empty">No matching records.</div>';
+  document.querySelectorAll(".row").forEach(el=>el.onclick=()=>openRecord(el.dataset.type,el.dataset.id));
+}
+async function openRecord(type,id){
+  state.current={entity_type:type,id}; renderList();
+  state.detail=await api("/api/admin/crm/detail?entity_type="+encodeURIComponent(type)+"&entity_id="+encodeURIComponent(id));
+  const item=state.data.items.find(x=>x.id===id&&x.entity_type===type)||{};
+  const d=state.detail;
+  const canQuote=type==="enquiry"&&d.item&&d.item.equipment_id&&!d.quotes.length;
+  qs("#detail").innerHTML='<div class="detailHead"><div><h3>'+esc(item.name||item.contact||id)+'</h3><div class="sub">'+esc(typeLabel(type))+' · '+esc(item.contact||"")+(item.phone?' · '+esc(item.phone):'')+'</div></div><span class="pill '+(item.overdue?'overdue':'')+'">'+esc(item.status||"NEW")+'</span></div>'+
+    '<div class="field"><label>STATUS</label><select id="editStatus">'+statuses.map(x=>'<option '+(x===item.status?'selected':'')+'>'+x+'</option>').join("")+'</select></div>'+
+    '<div class="field"><label>OWNER</label><input id="editOwner" value="'+esc(item.owner||"")+'" placeholder="Lola / Devin / person"></div>'+
+    '<div class="field"><label>NEXT ACTION</label><input id="editNext" value="'+esc(item.next_action||"")+'" placeholder="Call customer, send quote, confirm date..."></div>'+
+    '<div class="field"><label>NEXT ACTION DATE / TIME</label><input id="editNextAt" value="'+esc(item.next_action_at||"")+'" placeholder="2026-09-21T10:00:00+01:00"></div>'+
+    '<div class="field"><label>INTERNAL NOTE</label><textarea id="editNote">'+esc(item.note||"")+'</textarea></div>'+
+    '<button id="saveRecord" class="btn">SAVE CUSTOMER RECORD</button> '+(canQuote?'<button id="createQuote" class="btn secondary">CREATE REAL HIRE QUOTE</button>':'')+
+    '<div class="timeline"><h3>Activity</h3>'+
+    (d.quotes.length?'<div class="event"><b>Quotes</b><br>'+d.quotes.map(q=>esc(q.id)+' · '+esc(q.status||"CREATED")).join("<br>")+'</div>':'')+
+    (d.bookings.length?'<div class="event"><b>Bookings</b><br>'+d.bookings.map(b=>esc(b.id)).join("<br>")+'</div>':'')+
+    (d.payments.length?'<div class="event"><b>Payments</b><br>'+d.payments.map(p=>esc(p.reference||p.id)+' · '+esc(p.status)).join("<br>")+'</div>':'')+
+    (d.timeline.length?d.timeline.map(e=>'<div class="event"><b>'+esc(e.status)+'</b> · '+esc(e.owner||"Unassigned")+'<br>'+esc(e.next_action||e.note||"Updated")+'<br><small>'+fmt(e.created_at)+'</small></div>').join(""):'<div class="empty">No CRM activity yet.</div>')+
+    '</div><div id="detailStatus" class="status"></div>';
+  qs("#saveRecord").onclick=saveRecord;
+  if(qs("#createQuote"))qs("#createQuote").onclick=createQuote;
+}
+async function saveRecord(){
+  const b={entity_type:state.current.entity_type,entity_id:state.current.id,status:qs("#editStatus").value,owner:qs("#editOwner").value.trim(),next_action:qs("#editNext").value.trim(),next_action_at:qs("#editNextAt").value.trim(),note:qs("#editNote").value.trim()};
+  const st=qs("#detailStatus");st.textContent="Saving…";st.className="status";
+  try{await api("/api/admin/crm/update",{method:"POST",body:JSON.stringify(b)});st.textContent="Saved";st.className="status good";await load()}
+  catch(e){st.textContent=e.message;st.className="status bad"}
+}
+async function createQuote(){
+  const st=qs("#detailStatus");st.textContent="Creating quote…";st.className="status";
+  try{const r=await api("/api/admin/crm/quote",{method:"POST",body:JSON.stringify({enquiry_id:state.current.id})});st.textContent=r.created?"Quote created":"Existing quote opened";st.className="status good";await load()}
+  catch(e){st.textContent=e.message;st.className="status bad"}
+}
+["#search","#statusFilter","#ownerFilter","#typeFilter","#attentionFilter"].forEach(s=>qs(s).addEventListener(s==="#search"?"input":"change",renderList));
+qs("#refresh").onclick=load;qs("#connect").onclick=connect;qs("#token").addEventListener("keydown",e=>{if(e.key==="Enter")connect()});
+qs("#logout").onclick=()=>{sessionStorage.removeItem("mcq-crm-token");state.token="";location.reload()};
+if(state.token){qs("#token").value=state.token;connect()}
+</script>
+</body>
+</html>
