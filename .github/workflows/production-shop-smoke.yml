@@ -10,6 +10,7 @@ on:
       - "public/index.html"
       - "public/site-shell.js"
       - "public/site-shell.css"
+      - "public/mcq-splash-production.webp"
       - "public/swap.html"
       - "test/splash-screen.test.js"
       - "src/market.js"
