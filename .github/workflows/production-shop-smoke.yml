@@ -5,6 +5,9 @@ on:
     paths:
       - "public/shop.html"
       - "public/shop-products.js"
+      - "public/djs-ditching-laptops.html"
+      - "public/magazine.html"
+      - "public/index.html"
       - "src/market.js"
       - "src/server.js"
       - "scripts/production-shop-smoke.mjs"
