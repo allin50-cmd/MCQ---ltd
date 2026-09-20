@@ -28,7 +28,7 @@ test("CRM surfaces the governed agent control panel",()=>{
 
 
 test("CRM surfaces agent command centre",()=>{
-  const html=fs.readFileSync(path.join(process.cwd(),"public","crm.html"),"utf8");
+  const html=fs.readFileSync(new URL("../public/crm.html",import.meta.url),"utf8");
   assert.match(html,/ASK \/ INSTRUCT MCQ AGENTS/);
   assert.match(html,/All Agents/);
   assert.match(html,/RUN AGENTS/);
