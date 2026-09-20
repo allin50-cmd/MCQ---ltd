@@ -753,9 +753,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-g4m-hercules-starlight", brand:"Hercules", name:"DJControl Starlight", model:"DJControl Starlight", category:"dj",
-    image:"https://m.media-amazon.com/images/I/71M6lsXe6TL._AC_SL1500_.jpg",
-    images:[{url:"https://m.media-amazon.com/images/I/71M6lsXe6TL._AC_SL1500_.jpg",source:"public exact-model product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
-    image_source:"public exact-model product media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"",
+    images:[],
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:60.2, delivery_cost_inc_vat_gbp:null,
@@ -783,9 +783,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-g4m-mixtrack-go", brand:"Numark", name:"MixTrack Go", model:"MixTrack Go", category:"dj",
-    image:"https://www.scan.co.uk/images/products/xlarge/3813479-xl-b.jpg",
-    images:[{url:"https://www.scan.co.uk/images/products/xlarge/3813479-xl-b.jpg",source:"public exact-model product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
-    image_source:"public exact-model product media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"",
+    images:[],
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:79, delivery_cost_inc_vat_gbp:null,
@@ -888,9 +888,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-g4m-xone-k3", brand:"Allen & Heath", name:"XONE:K3", model:"XONE:K3", category:"dj",
-    image:"https://www.session.de/media/0c/1e/ee/1759906040/allen-heath-xone-k3.webp?ts=1759906040",
-    images:[{url:"https://www.session.de/media/0c/1e/ee/1759906040/allen-heath-xone-k3.webp?ts=1759906040",source:"public exact-model product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
-    image_source:"public exact-model product media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"",
+    images:[],
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:185, delivery_cost_inc_vat_gbp:null,
@@ -1068,9 +1068,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-g4m-prime-go-plus", brand:"Denon DJ", name:"Prime GO+", model:"Prime GO+", category:"dj",
-    image:"https://thedjhookup.com/media/catalog/product/cache/1/image/1000x/b38cf51ec77170b109c5e310157197eb/s/c/screenshot_2025-04-09_at_10.20.15_pm.png",
-    images:[{url:"https://thedjhookup.com/media/catalog/product/cache/1/image/1000x/b38cf51ec77170b109c5e310157197eb/s/c/screenshot_2025-04-09_at_10.20.15_pm.png",source:"public exact-model product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
-    image_source:"public exact-model product media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"",
+    images:[],
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:890, delivery_cost_inc_vat_gbp:null,
@@ -1173,9 +1173,9 @@ export const MARKET_CATALOG = [
   },
   {
     id:"mkt-g4m-yamaha-dbr12", brand:"Yamaha", name:"DBR12", model:"DBR12", category:"pa",
-    image:"https://lumixpro.com.br/media/catalog/product/cache/4bc799a6b155c7d4f33628256cf6e81c/arquivos/ids/155399/DBR12_Ampliada1.jpg",
-    images:[{url:"https://lumixpro.com.br/media/catalog/product/cache/4bc799a6b155c7d4f33628256cf6e81c/arquivos/ids/155399/DBR12_Ampliada1.jpg",source:"public exact-model product media reference",permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,verified:false,width:null,height:null}],
-    image_source:"public exact-model product media reference", image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+    image:"",
+    images:[],
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:399, delivery_cost_inc_vat_gbp:null,
