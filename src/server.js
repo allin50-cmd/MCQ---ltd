@@ -10,6 +10,7 @@ import { searchInternalCatalog, listInternalCatalog } from "./catalog.js";
 import { listMarketCatalog, searchMarketCatalog, listCompetitors } from "./market.js";
 import { evaluateCatalogRow, CATALOG_STATES, IMAGE_PERMISSION_STATES } from "./catalog_contract.js";
 import { buildAgentControl, runAgentCommand } from "./agents.js";
+import { enrichAgentCommand } from "./intelligence.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
@@ -114,7 +115,8 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="POST"&&u.pathname==="/api/admin/agents/command"){
       requireCrmAccess(req);
       const command=await body(req);
-      const result=runAgentCommand(db,[...listInternalCatalog(),...listMarketCatalog()],command);
+      const deterministic=runAgentCommand(db,[...listInternalCatalog(),...listMarketCatalog()],command);
+      const result=await enrichAgentCommand(deterministic);
       db.crm_events.push({id:id("agent"),entity_type:"agent_command",entity_id:result.requested_agent,status:result.status,owner:"operator",next_action:result.approval_required?"Approve or reject proposed restricted action":"Review agent recommendations",note:JSON.stringify({instruction:result.instruction,agents_invoked:result.responses.map(x=>x.agent),evidence:result.responses.map(x=>x.evidence),approval_required:result.approval_required,executed_restricted_action:false}),created_at:result.generated_at});
       save(db);
       return json(res,200,result);
