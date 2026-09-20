@@ -1,0 +1,38 @@
+name: fortnightly-market-watch
+on:
+  schedule:
+    - cron: "15 7 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Run only every second ISO week
+        id: parity
+        shell: bash
+        run: |
+          WEEK=$(date -u +%V)
+          if [ $((10#$WEEK % 2)) -ne 0 ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Scan suppliers and competitors
+        if: steps.parity.outputs.run == 'true' || github.event_name == 'workflow_dispatch'
+        run: node scripts/fortnightly-market-watch.mjs > market-watch.md
+      - name: Create dated market-watch issue
+        if: steps.parity.outputs.run == 'true' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="MCQ fortnightly market watch $(date -u +%Y-%m-%d)"
+          gh issue create --title "$TITLE" --body-file market-watch.md
