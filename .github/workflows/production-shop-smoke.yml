@@ -37,4 +37,5 @@ jobs:
           MCQ_BASE_URL: https://mcq-audio.onrender.com
           MCQ_SMOKE_ATTEMPTS: "8"
           MCQ_SMOKE_DELAY_MS: "5000"
+          MCQ_EXPECTED_COMMIT: ${{ github.sha }}
         run: node scripts/production-shop-smoke.mjs
