@@ -32,6 +32,18 @@ button,input,select,textarea{font:inherit}.btn{border:1px solid var(--gold);back
     <div><small>Manager · Agents · Customers · Hire · Trade · Swap</small> <button id="logout" class="btn secondary">LOCK</button></div>
   </header>
 
+  <section class="panel" style="margin:14px 0">
+    <h2>ASK / INSTRUCT MCQ AGENTS</h2>
+    <div style="padding:14px">
+      <div class="toolbar" style="margin:0">
+        <select id="agentTarget"><option value="all">All Agents</option></select>
+        <input id="agentInput" style="flex:1;min-width:240px" placeholder="Ask a question or give an instruction…">
+        <button id="runAgents" class="btn">RUN AGENTS</button>
+      </div>
+      <div class="sub">Current MCQ production data only. Restricted commercial actions stop at Approval Required.</div>
+      <div id="agentAnswer" style="margin-top:12px"></div>
+    </div>
+  </section>
   <section id="metrics" class="grid"></section>
   <section id="alerts" class="alertbar"></section>
   <section class="panel" style="margin:14px 0">
@@ -92,7 +104,24 @@ function renderAgents(){
   const defs=[["Open customer work",t.open_customer_work],["Catalogue public",t.catalogue_public],["Catalogue blocked",t.catalogue_blocked],["Image blocked",t.image_blocked],["Swap offers",t.swap_offers],["Received payments",t.received_payments]];
   qs("#agentToday").innerHTML=defs.map(([k,v])=>'<div class="metric"><b>'+esc(v??0)+'</b><span>'+esc(k)+'</span></div>').join("");
   qs("#agentDecisions").innerHTML=(a.decisions||[]).length?(a.decisions||[]).map(d=>'<div class="alert '+(d.priority==="NOW"?'warn':'')+'"><b>'+esc(d.agent.toUpperCase())+'</b> · '+esc(d.reason)+'</div>').join(""):'<div class="alert">No agent decisions waiting.</div>';
+  const target=qs("#agentTarget"),selected=target.value;
+  target.innerHTML='<option value="all">All Agents</option>'+(a.agents||[]).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join("");
+  target.value=selected||"all";
+  const target=qs("#agentTarget"),selected=target.value;
+  target.innerHTML='<option value="all">All Agents</option>'+(a.agents||[]).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join("");
+  target.value=selected||"all";
   qs("#agentRoster").innerHTML=(a.agents||[]).map(x=>'<div class="metric"><b style="font-size:15px">'+esc(x.name)+'</b><span>'+esc(x.role)+'</span><div class="sub" style="margin-top:7px">'+esc(x.mode)+'</div></div>').join("");
+}
+
+async function runAgents(){
+  const instruction=qs("#agentInput").value.trim();if(!instruction)return;
+  const out=qs("#agentAnswer");out.innerHTML='<div class="status">Running against current MCQ data…</div>';
+  try{
+    const r=await api("/api/admin/agents/command",{method:"POST",body:JSON.stringify({agent:qs("#agentTarget").value,instruction})});
+    const cards=(r.responses||[]).map(x=>'<div class="metric" style="margin-bottom:8px"><b style="font-size:16px">'+esc(x.name)+'</b><span>'+esc(x.status)+'</span><p><strong>Finding:</strong> '+esc(x.finding)+'</p><p><strong>Evidence:</strong> '+esc(x.evidence)+'</p><p><strong>Recommendation:</strong> '+esc(x.recommendation)+'</p>'+(x.approval_required?'<div class="alert warn"><b>APPROVAL REQUIRED</b> · No restricted action executed.</div>':'')+'</div>').join("");
+    const summary=r.manager_summary?'<div class="metric"><b style="font-size:16px">MCQ Manager · Consolidated Summary</b><pre style="white-space:pre-wrap;font:inherit">'+esc(Object.entries(r.manager_summary).map(([k,v])=>k+": "+(typeof v==="object"?JSON.stringify(v):v)).join("\n"))+'</pre></div>':"";
+    out.innerHTML=cards+summary;
+  }catch(e){out.innerHTML='<div class="status bad">'+esc(e.message)+'</div>'}
 }
 function buildFilters(){
   const sf=qs("#statusFilter"),of=qs("#ownerFilter");
@@ -149,7 +178,7 @@ async function createQuote(){
   catch(e){st.textContent=e.message;st.className="status bad"}
 }
 ["#search","#statusFilter","#ownerFilter","#typeFilter","#attentionFilter"].forEach(s=>qs(s).addEventListener(s==="#search"?"input":"change",renderList));
-qs("#refresh").onclick=load;qs("#connect").onclick=connect;qs("#token").addEventListener("keydown",e=>{if(e.key==="Enter")connect()});
+qs("#runAgents").onclick=runAgents;qs("#agentInput").addEventListener("keydown",e=>{if(e.key==="Enter")runAgents()});\nqs("#refresh").onclick=load;qs("#connect").onclick=connect;qs("#token").addEventListener("keydown",e=>{if(e.key==="Enter")connect()});
 qs("#logout").onclick=()=>{sessionStorage.removeItem("mcq-crm-token");state.token="";location.reload()};
 if(state.token){qs("#token").value=state.token;connect()}
 </script>
