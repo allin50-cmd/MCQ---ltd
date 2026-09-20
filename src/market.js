@@ -755,7 +755,7 @@ export const MARKET_CATALOG = [
     id:"mkt-g4m-hercules-starlight", brand:"Hercules", name:"DJControl Starlight", model:"DJControl Starlight", category:"dj",
     image:"",
     images:[],
-    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:60.2, delivery_cost_inc_vat_gbp:null,
@@ -785,7 +785,7 @@ export const MARKET_CATALOG = [
     id:"mkt-g4m-mixtrack-go", brand:"Numark", name:"MixTrack Go", model:"MixTrack Go", category:"dj",
     image:"",
     images:[],
-    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:79, delivery_cost_inc_vat_gbp:null,
@@ -890,7 +890,7 @@ export const MARKET_CATALOG = [
     id:"mkt-g4m-xone-k3", brand:"Allen & Heath", name:"XONE:K3", model:"XONE:K3", category:"dj",
     image:"",
     images:[],
-    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:185, delivery_cost_inc_vat_gbp:null,
@@ -1070,7 +1070,7 @@ export const MARKET_CATALOG = [
     id:"mkt-g4m-prime-go-plus", brand:"Denon DJ", name:"Prime GO+", model:"Prime GO+", category:"dj",
     image:"",
     images:[],
-    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:890, delivery_cost_inc_vat_gbp:null,
@@ -1175,7 +1175,7 @@ export const MARKET_CATALOG = [
     id:"mkt-g4m-yamaha-dbr12", brand:"Yamaha", name:"DBR12", model:"DBR12", category:"pa",
     image:"",
     images:[],
-    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED
+    image_source:null, image_permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
     supplier_sku:null, real_cost_price_ex_vat_gbp:null, delivery_cost_ex_vat_gbp:null, mcq_retail_price_inc_vat_gbp:null, cost_evidence_url:null,
     requested_state:CATALOG_STATES.DRAFT,
     observed_public_price_inc_vat_gbp:399, delivery_cost_inc_vat_gbp:null,
