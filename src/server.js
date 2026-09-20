@@ -8,6 +8,7 @@ import { assertPence, isAvailable, createQuote, confirmBooking } from "./core.js
 import { listSuppliers, searchFarnell } from "./suppliers.js";
 import { searchInternalCatalog, listInternalCatalog } from "./catalog.js";
 import { listMarketCatalog, searchMarketCatalog, listCompetitors } from "./market.js";
+import { evaluateCatalogRow, CATALOG_STATES, IMAGE_PERMISSION_STATES } from "./catalog_contract.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
@@ -87,6 +88,31 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
     if(req.method==="GET"&&u.pathname==="/api/market/catalog") return json(res,200,{items:listMarketCatalog()});
     if(req.method==="GET"&&u.pathname==="/api/market/competitors") return json(res,200,{items:listCompetitors()});
+    if(req.method==="GET"&&u.pathname==="/api/admin/catalog/validation"){
+      requireAdmin(req);
+      const internal=listInternalCatalog();
+      const market=listMarketCatalog();
+      const all=[...internal,...market];
+      return json(res,200,{
+        summary:{
+          total:all.length,
+          public_display:all.filter(x=>x.public_display).length,
+          sellable:all.filter(x=>x.sellable).length,
+          draft:all.filter(x=>x.state==="DRAFT").length
+        },
+        items:all.map(x=>({
+          id:x.id,
+          brand:x.brand,
+          model:x.model||x.name,
+          state:x.state,
+          public_display:x.public_display,
+          sellable:x.sellable,
+          common_errors:x.validation?.common_errors||[],
+          sellable_errors:x.validation?.sellable_errors||[],
+          decision:x.commercial?.decision||"INSUFFICIENT_REAL_DATA"
+        }))
+      });
+    }
     if(req.method==="GET"&&u.pathname==="/api/catalog/search"){
       const q=u.searchParams.get("q")||"";
       const internal=searchInternalCatalog(q);
@@ -95,20 +121,39 @@ const server=http.createServer(async(req,res)=>{
       try{
         const result=await searchFarnell(q);
         if(result.configured&&Array.isArray(result.products)){
-          live=result.products.map(p=>({
+          live=result.products.map(p=>evaluateCatalogRow({
             id:`farnell-${p.sku||Math.random().toString(36).slice(2)}`,
             brand:p.brand||"Farnell",
             name:p.name||p.sku||q,
+            model:p.name||p.sku||q,
             category:"supplier",
-            price_band:"live",
             image:p.image_url||"",
-            summary:"Live supplier result available through MCQ.",
+            images:p.image_url?[{
+              url:p.image_url,
+              source:"Farnell/element14 API",
+              permission_status:IMAGE_PERMISSION_STATES.UNVERIFIED,
+              verified:false,
+              width:null,
+              height:null
+            }]:[],
+            requested_state:CATALOG_STATES.DRAFT,
+            supplier:"Farnell UK",
+            supplier_sku:p.sku||null,
+            real_availability:String(p.stock||"LIVE_FEED"),
+            availability_checked_at:new Date().toISOString(),
+            availability_evidence_url:"https://uk.farnell.com/",
+            real_cost_price_ex_vat_gbp:null,
+            delivery_cost_ex_vat_gbp:null,
+            mcq_retail_price_inc_vat_gbp:null,
+            cost_evidence_url:null,
+            source_url:"https://uk.farnell.com/",
+            source_note:"Live supplier API observation only. MCQ trade cost, image-use permission, delivery and retail price are not yet confirmed.",
+            last_checked:new Date().toISOString(),
+            summary:"Live supplier result available for internal sourcing review.",
             specs:[],
             source:"Farnell live feed",
-            availability:p.stock||"LIVE_FEED",
-            sku:p.sku||null,
             prices:p.prices||[]
-          }));
+          })).filter(p=>p.public_display);
         }
       }catch{}
       return json(res,200,{query:q,results:[...market,...internal,...live].slice(0,24)});
