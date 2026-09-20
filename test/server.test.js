@@ -356,6 +356,6 @@ test("CRM exposes alerts, detail timeline and governed quote handoff", async (t)
   assert.equal(payload.item.crm_owner,"Lola");
   assert(payload.timeline.some(v=>v.entity_id===lead.id));
 
-  r=await fetch(base+"/api/quotes",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({enquiry_id:"missing"})});
+  r=await fetch(base+"/api/quotes",{method:"POST",headers,body:JSON.stringify({enquiry_id:"missing"})});
   assert.notEqual(r.status,401);
 });
