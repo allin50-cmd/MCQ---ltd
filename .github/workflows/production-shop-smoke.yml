@@ -10,6 +10,8 @@ on:
       - "public/index.html"
       - "public/site-shell.js"
       - "public/site-shell.css"
+      - "public/crm.html"
+      - "test/crm-ui.test.js"
       - "public/mcq-splash-production.webp"
       - "public/swap.html"
       - "test/splash-screen.test.js"
