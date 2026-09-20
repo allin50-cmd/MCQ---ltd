@@ -7,6 +7,7 @@ import { load, save, id } from "./store.js";
 import { assertPence, isAvailable, createQuote, confirmBooking } from "./core.js";
 import { listSuppliers, searchFarnell } from "./suppliers.js";
 import { searchInternalCatalog, listInternalCatalog } from "./catalog.js";
+import { listMarketCatalog, searchMarketCatalog, listCompetitors } from "./market.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
