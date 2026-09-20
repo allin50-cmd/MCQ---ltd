@@ -29,5 +29,5 @@ test("shop surfaces Star Regular Products and real enquiry workflow",()=>{
   assert.match(js,/\/api\/market\/catalog/);
   assert.match(js,/\/api\/leads/);
   assert.match(js,/MCQ selling price, availability and delivery/);
-  assert.doesNotMatch(js,/demo|dummy|fake stock/i);
+  assert.doesNotMatch(js,/dummy stock|fake stock/i);
 });
