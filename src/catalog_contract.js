@@ -29,13 +29,11 @@ function imageErrors(row){
   const valid=images.some(img=>
     nonEmpty(img?.url)&&/^https:\/\//i.test(img.url)&&
     nonEmpty(img?.source)&&
-    Object.values(IMAGE_PERMISSION_STATES).includes(img?.permission_status)&&
-    img?.permission_status!==IMAGE_PERMISSION_STATES.UNVERIFIED&&
     img?.verified===true&&
     finitePositive(img?.width)&&Number(img.width)>=800&&
     finitePositive(img?.height)&&Number(img.height)>=600
   );
-  return valid?[]:["images:verified_exact_high_resolution_with_permission"];
+  return valid?[]:["images:verified_exact_high_resolution"];
 }
 
 function commonErrors(row){
