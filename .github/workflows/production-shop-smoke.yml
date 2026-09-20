@@ -21,7 +21,7 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,6 +30,6 @@ jobs:
       - name: Wait for production and verify real shop catalogue
         env:
           MCQ_BASE_URL: https://mcq-audio.onrender.com
-          MCQ_SMOKE_ATTEMPTS: "24"
+          MCQ_SMOKE_ATTEMPTS: "3"
           MCQ_SMOKE_DELAY_MS: "5000"
         run: node scripts/production-shop-smoke.mjs
