@@ -101,10 +101,12 @@ function serveStatic(u,res){
   return true;
 }
 
+let durableStateReady=false;
+let durableStateError="not checked";
+
 const server=http.createServer(async(req,res)=>{
   try{
     const u=new URL(req.url,"http://localhost");
-    const db=await load();
 
     if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{
       ok:true,
@@ -113,8 +115,37 @@ const server=http.createServer(async(req,res)=>{
       durable_state_configured:Boolean(process.env.AGENTX_SERVICE_URL&&process.env.MCQ_SERVICE_TOKEN),
       quote_delivery_configured:Boolean(process.env.SENDGRID_API_KEY&&process.env.MCQ_FROM_EMAIL),
       verified_payment_configured:Boolean(process.env.STRIPE_SECRET_KEY&&process.env.STRIPE_WEBHOOK_SECRET),
+      durable_state_ready:durableStateReady,
+      durable_state_error:durableStateReady?"":durableStateError,
       payment_rule:"RECEIVED requires signed provider evidence in production"
     });
+
+    if(req.method==="GET"&&u.pathname==="/ready"){
+      try{
+        await load();
+        durableStateReady=true;
+        durableStateError="";
+        return json(res,200,{ok:true,durable_state_ready:true});
+      }catch(error){
+        durableStateReady=false;
+        durableStateError=String(error?.message||error);
+        return json(res,503,{ok:false,durable_state_ready:false,error:"durable state unavailable"});
+      }
+    }
+
+    if(req.method==="GET"&&serveStatic(u,res)) return;
+
+    let db;
+    try{
+      db=await load();
+      durableStateReady=true;
+      durableStateError="";
+    }catch(error){
+      durableStateReady=false;
+      durableStateError=String(error?.message||error);
+      return json(res,503,{error:"MCQ operational state is temporarily unavailable"});
+    }
+
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
     if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers().map(({id,name,kind,api_status})=>({id,name,kind,api_status})));
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
@@ -896,7 +927,12 @@ const server=http.createServer(async(req,res)=>{
   }
 });
 if(process.env.NODE_ENV!=="test"){
-  await load();
-  server.listen(Number(process.env.PORT||3000),()=>console.log(`MCQ Audio listening on ${process.env.PORT||3000}`));
+  const port=Number(process.env.PORT||3000);
+  server.listen(port,()=>{
+    console.log(`MCQ Audio listening on ${port}`);
+    load()
+      .then(()=>{durableStateReady=true;durableStateError="";console.log("MCQ durable state ready")})
+      .catch(error=>{durableStateReady=false;durableStateError=String(error?.message||error);console.error("MCQ durable state unavailable at startup:",durableStateError)});
+  });
 }
 export default server;
