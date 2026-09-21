@@ -11,6 +11,8 @@ import { listMarketCatalog, searchMarketCatalog, listCompetitors } from "./marke
 import { evaluateCatalogRow, CATALOG_STATES, IMAGE_PERMISSION_STATES } from "./catalog_contract.js";
 import { buildAgentControl, runAgentCommand } from "./agents.js";
 import { enrichAgentCommand } from "./intelligence.js";
+import { createStripeCheckout, verifyStripeSignature, verifiedDepositFromStripeEvent } from "./payments.js";
+import { deliverQuote } from "./notifications.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
@@ -21,7 +23,8 @@ const securityHeaders={
   "content-security-policy":"default-src 'self'; img-src 'self' data: https:; media-src 'self' https: blob:; frame-src https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.element14.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 };
 const json=(res,status,body)=>{res.writeHead(status,{...securityHeaders,"content-type":"application/json; charset=utf-8","cache-control":"no-store"});res.end(JSON.stringify(body))};
-const body=async req=>{let s="";for await(const c of req){s+=c;if(s.length>5_500_000)throw new Error("request too large")}return s?JSON.parse(s):{}};
+const rawBody=async req=>{let s="";for await(const chunk of req){s+=chunk;if(s.length>5_500_000)throw new Error("request too large")}return s};
+const body=async req=>{const s=await rawBody(req);return s?JSON.parse(s):{}};
 const route=(u,...paths)=>paths.includes(u.pathname);
 const normalizeEmail=v=>String(v||"").trim().toLowerCase();
 const normalizePhone=v=>String(v||"").replace(/\D/g,"").slice(-11);
@@ -68,6 +71,7 @@ const prettyRoutes=new Map([
   ["/crm","/crm.html"],
   ["/about","/about.html"],
   ["/contact","/about.html"],
+  ["/pay","/pay.html"],
   ["/live","/live.html"],
   ["/publish","/publish.html"],
   ["/self-publish","/publish.html"],
@@ -102,7 +106,15 @@ const server=http.createServer(async(req,res)=>{
     const u=new URL(req.url,"http://localhost");
     const db=await load();
 
-    if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{ok:true,service:"mcq-hire",commit:String(process.env.RENDER_GIT_COMMIT||"")});
+    if(req.method==="GET"&&u.pathname==="/health") return json(res,200,{
+      ok:true,
+      service:"mcq-hire",
+      commit:String(process.env.RENDER_GIT_COMMIT||""),
+      durable_state_configured:Boolean(process.env.AGENTX_SERVICE_URL&&process.env.MCQ_SERVICE_TOKEN),
+      quote_delivery_configured:Boolean(process.env.SENDGRID_API_KEY&&process.env.MCQ_FROM_EMAIL),
+      verified_payment_configured:Boolean(process.env.STRIPE_SECRET_KEY&&process.env.STRIPE_WEBHOOK_SECRET),
+      payment_rule:"RECEIVED requires signed provider evidence in production"
+    });
     if(req.method==="GET"&&route(u,"/equipment","/api/equipment")) return json(res,200,db.equipment);
     if(req.method==="GET"&&route(u,"/suppliers","/api/suppliers")) return json(res,200,listSuppliers().map(({id,name,kind,api_status})=>({id,name,kind,api_status})));
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
@@ -569,19 +581,82 @@ const server=http.createServer(async(req,res)=>{
       const row={id:id("quo"),...createQuote(enq,eq)};db.quotes.push(row);await save(db);return json(res,201,row);
     }
 
+    if(req.method==="POST"&&u.pathname==="/api/quotes/send"){
+      requireCrmAccess(req);
+      const x=await body(req);
+      const quote=db.quotes.find(v=>v.id===x.quote_id);
+      if(!quote)throw new Error("quote not found");
+      if(quote.status==="ACCEPTED")throw new Error("accepted quote cannot be resent");
+      const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);
+      if(!enq)throw new Error("enquiry not found");
+      const origin=String(process.env.MCQ_PUBLIC_BASE_URL||((req.headers["x-forwarded-proto"]||"https")+"://"+req.headers.host)).replace(/\/$/,"");
+      const delivery=await deliverQuote({quote,enquiry:enq,origin});
+      quote.status="SENT";
+      quote.sent_at=new Date().toISOString();
+      quote.delivery_provider=delivery.provider;
+      quote.provider_message_id=delivery.message_id;
+      db.crm_events.push({
+        id:id("receipt"),entity_type:"quote",entity_id:quote.id,status:"SENT",owner:"operator",
+        next_action:"Await customer deposit",note:JSON.stringify({provider:delivery.provider,provider_message_id:delivery.message_id,recipient:delivery.recipient}),
+        created_at:new Date().toISOString()
+      });
+      await save(db);
+      return json(res,200,{sent:true,quote_id:quote.id,provider:delivery.provider,provider_message_id:delivery.message_id});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/payments/checkout"){
+      const x=await body(req);
+      const quote=db.quotes.find(v=>v.id===x.quote_id);
+      if(!quote)throw new Error("quote not found");
+      const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);
+      if(!enq)throw new Error("enquiry not found");
+      const origin=String(process.env.MCQ_PUBLIC_BASE_URL||((req.headers["x-forwarded-proto"]||"https")+"://"+req.headers.host)).replace(/\/$/,"");
+      const session=await createStripeCheckout({quote,enquiry:enq,origin});
+      return json(res,201,{checkout_url:session.url,session_id:session.id});
+    }
+
+    if(req.method==="POST"&&u.pathname==="/api/payments/webhook"){
+      const payload=await rawBody(req);
+      const signature=String(req.headers["stripe-signature"]||"");
+      const secret=String(process.env.STRIPE_WEBHOOK_SECRET||"").trim();
+      if(!secret)throw new Error("STRIPE_WEBHOOK_SECRET is not configured");
+      if(!verifyStripeSignature(payload,signature,secret))return json(res,400,{error:"invalid stripe signature"});
+      let event;try{event=JSON.parse(payload)}catch{return json(res,400,{error:"invalid webhook JSON"})}
+      if(event?.type!=="checkout.session.completed")return json(res,200,{received:true,ignored:true});
+      if(db.payments.some(v=>v.provider_event_id&&v.provider_event_id===String(event.id)))return json(res,200,{received:true,duplicate:true});
+      const quoteId=String(event?.data?.object?.metadata?.quote_id||event?.data?.object?.client_reference_id||"");
+      const quote=db.quotes.find(v=>v.id===quoteId);
+      if(!quote)return json(res,404,{error:"quote not found"});
+      const verified=verifiedDepositFromStripeEvent(event,quote);
+      if(!verified)return json(res,200,{received:true,ignored:true});
+      if(db.payments.some(v=>v.reference===verified.reference))return json(res,200,{received:true,duplicate:true});
+      const row={id:id("pay"),...verified};
+      db.payments.push(row);
+      db.crm_events.push({
+        id:id("receipt"),entity_type:"payment",entity_id:row.id,status:"RECEIVED",owner:"provider",
+        next_action:"Confirm booking",note:JSON.stringify({provider:"stripe",provider_event_id:row.provider_event_id,reference:row.reference,amount_pence:row.amount_pence,verified:true}),
+        created_at:new Date().toISOString()
+      });
+      await save(db);
+      return json(res,200,{received:true,payment_id:row.id,verified:true});
+    }
+
     if(req.method==="POST"&&route(u,"/payments/confirm","/api/payments/confirm")){
       requireAdmin(req);
+      if(process.env.NODE_ENV!=="test"&&process.env.MCQ_STATE_MODE!=="local"){
+        return json(res,410,{error:"manual payment confirmation is disabled; production RECEIVED status requires signed provider evidence"});
+      }
       const x=await body(req);assertPence(x.amount_pence);
-      if(!x.reference)throw new Error("real payment reference required");
+      if(!x.reference)throw new Error("test payment reference required");
       if(!db.quotes.some(q=>q.id===x.quote_id))throw new Error("quote not found");
-      const row={id:id("pay"),quote_id:x.quote_id,amount_pence:x.amount_pence,reference:String(x.reference).trim(),status:"RECEIVED",received_at:new Date().toISOString()};
+      const row={id:id("pay"),quote_id:x.quote_id,amount_pence:x.amount_pence,reference:String(x.reference).trim(),status:"RECEIVED",verified:false,provider:"test",received_at:new Date().toISOString()};
       db.payments.push(row);await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&route(u,"/bookings","/api/bookings")){
       requireAdmin(req);
-      const x=await body(req),quote=db.quotes.find(v=>v.id===x.quote_id),payment=db.payments.find(v=>v.quote_id===x.quote_id&&v.status==="RECEIVED");
-      if(!quote||!payment)throw new Error("quote and received deposit required");
+      const x=await body(req),quote=db.quotes.find(v=>v.id===x.quote_id),payment=db.payments.find(v=>v.quote_id===x.quote_id&&v.status==="RECEIVED"&&(v.verified===true||process.env.NODE_ENV==="test"||process.env.MCQ_STATE_MODE==="local"));
+      if(!quote||!payment)throw new Error("quote and verified deposit required");
       const enq=db.enquiries.find(v=>v.id===quote.enquiry_id);
       const row={id:id("book"),...confirmBooking({quote,payment,start_at:enq.start_at,end_at:enq.end_at,bookings:db.bookings}),enquiry_id:enq.id,quote_id:quote.id,confirmed_at:new Date().toISOString()};
       db.bookings.push(row);await save(db);return json(res,201,row);
