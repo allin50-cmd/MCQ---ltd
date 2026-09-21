@@ -38,7 +38,7 @@ test("checkout is provider-created from the sent quote deposit",async()=>{
       fetchFn
     });
     assert.equal(result.id,"cs_1");
-    assert.match(body,/unit_amount=2500/);
+    assert.match(body,/unit_amount%5D=2500/);
     assert.match(body,/quote_id%5D=quo_1/);
   }finally{
     if(previous===undefined)delete process.env.STRIPE_SECRET_KEY;else process.env.STRIPE_SECRET_KEY=previous;
