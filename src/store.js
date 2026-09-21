@@ -19,12 +19,36 @@ function config(){
   const token=String(process.env.MCQ_SERVICE_TOKEN||"");
   return base&&token?{base,token}:null;
 }
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function remote(method,payload){
   const cfg=config();if(!cfg)throw new Error("durable MCQ state is not configured");
-  const r=await fetch(cfg.base+"/api/internal/mcq/state",{method,headers:{"content-type":"application/json","x-mcq-service-token":cfg.token},body:payload?JSON.stringify(payload):undefined});
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok){const e=new Error(data.error||"durable MCQ state unavailable");e.status=r.status;throw e}
-  return data;
+  const maxAttempts=method==="GET"?5:1;
+  let lastError;
+  for(let attempt=1;attempt<=maxAttempts;attempt++){
+    try{
+      const r=await fetch(cfg.base+"/api/internal/mcq/state",{
+        method,
+        headers:{"content-type":"application/json","x-mcq-service-token":cfg.token},
+        body:payload?JSON.stringify(payload):undefined,
+        signal:AbortSignal.timeout(15000)
+      });
+      const text=await r.text();
+      let data={};try{data=text?JSON.parse(text):{}}catch{}
+      if(r.ok)return data;
+      const e=new Error(data.error||("durable MCQ state returned HTTP "+r.status));
+      e.status=r.status;
+      lastError=e;
+      const transient=method==="GET"&&[502,503,504].includes(r.status);
+      if(!transient||attempt===maxAttempts)throw e;
+    }catch(error){
+      lastError=error;
+      const status=Number(error?.status||0);
+      const transient=method==="GET"&&(status===0||[502,503,504].includes(status));
+      if(!transient||attempt===maxAttempts)throw error;
+    }
+    await sleep(Math.min(1000*attempt,4000));
+  }
+  throw lastError||new Error("durable MCQ state unavailable");
 }
 export async function load(){
   if(process.env.NODE_ENV==="test"||process.env.MCQ_STATE_MODE==="local")return localLoad();
