@@ -20,6 +20,9 @@ await retry(async()=>{
   assert(h.r.status===200,`/health status ${h.r.status}`);
   const j=JSON.parse(h.text); assert(j.ok===true,"health ok!=true");
   if(EXPECTED_COMMIT) assert(j.commit===EXPECTED_COMMIT,`production commit ${j.commit||"missing"} != expected ${EXPECTED_COMMIT}`);
+  assert(j.durable_state_configured===true,"durable MCQ state is not configured in production");
+  assert(j.quote_delivery_configured===true,"SendGrid quote delivery is not configured in production");
+  assert(j.verified_payment_configured===true,"Stripe verified payment is not configured in production");
 
 
   const home=await get("/");
