@@ -22,7 +22,8 @@ function config(){
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function remote(method,payload){
   const cfg=config();if(!cfg)throw new Error("durable MCQ state is not configured");
-  const maxAttempts=method==="GET"?5:1;
+  const maxAttempts=method==="GET"?Math.max(1,Number(process.env.MCQ_DURABLE_GET_ATTEMPTS||12)):1;
+  const retryBaseMs=Math.max(1,Number(process.env.MCQ_DURABLE_GET_RETRY_BASE_MS||2000));
   let lastError;
   for(let attempt=1;attempt<=maxAttempts;attempt++){
     try{
@@ -46,7 +47,7 @@ async function remote(method,payload){
       const transient=method==="GET"&&(status===0||[502,503,504].includes(status));
       if(!transient||attempt===maxAttempts)throw error;
     }
-    await sleep(Math.min(1000*attempt,4000));
+    await sleep(Math.min(retryBaseMs*attempt,5000));
   }
   throw lastError||new Error("durable MCQ state unavailable");
 }
