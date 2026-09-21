@@ -19,12 +19,16 @@ test("durable state retries transient GET but never blindly retries PUT", async(
     mode:process.env.MCQ_STATE_MODE,
     url:process.env.AGENTX_SERVICE_URL,
     token:process.env.MCQ_SERVICE_TOKEN,
+    retryBase:process.env.MCQ_DURABLE_GET_RETRY_BASE_MS,
+    attempts:process.env.MCQ_DURABLE_GET_ATTEMPTS,
     fetch:globalThis.fetch
   };
   process.env.NODE_ENV="production";
   delete process.env.MCQ_STATE_MODE;
   process.env.AGENTX_SERVICE_URL="https://agentx.example";
   process.env.MCQ_SERVICE_TOKEN="token";
+  process.env.MCQ_DURABLE_GET_RETRY_BASE_MS="1";
+  process.env.MCQ_DURABLE_GET_ATTEMPTS="12";
 
   let getCalls=0;
   globalThis.fetch=async(_url,init)=>{
@@ -57,4 +61,6 @@ test("durable state retries transient GET but never blindly retries PUT", async(
   if(old.mode===undefined)delete process.env.MCQ_STATE_MODE;else process.env.MCQ_STATE_MODE=old.mode;
   if(old.url===undefined)delete process.env.AGENTX_SERVICE_URL;else process.env.AGENTX_SERVICE_URL=old.url;
   if(old.token===undefined)delete process.env.MCQ_SERVICE_TOKEN;else process.env.MCQ_SERVICE_TOKEN=old.token;
+  if(old.retryBase===undefined)delete process.env.MCQ_DURABLE_GET_RETRY_BASE_MS;else process.env.MCQ_DURABLE_GET_RETRY_BASE_MS=old.retryBase;
+  if(old.attempts===undefined)delete process.env.MCQ_DURABLE_GET_ATTEMPTS;else process.env.MCQ_DURABLE_GET_ATTEMPTS=old.attempts;
 });
