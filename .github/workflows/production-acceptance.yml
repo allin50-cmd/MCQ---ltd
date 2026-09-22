@@ -19,8 +19,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - name: Install
-        run: npm ci
       - name: Test production contracts
         run: npm test
