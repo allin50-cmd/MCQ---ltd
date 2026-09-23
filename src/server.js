@@ -15,6 +15,7 @@ import { createStripeCheckout, verifyStripeSignature, verifiedDepositFromStripeE
 import { deliverQuote } from "./notifications.js";
 import { applyCrmUpdate } from "./crm.js";
 import { runExactlyOnceProductionProof } from "./production-proof.js";
+import { verifyMarketingProviders } from "./social-providers.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 const mime = {".html":"text/html; charset=utf-8",".css":"text/css; charset=utf-8",".js":"text/javascript; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".ico":"image/x-icon"};
@@ -153,6 +154,10 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
     if(req.method==="GET"&&u.pathname==="/api/market/catalog") return json(res,200,{items:listMarketCatalog()});
     if(req.method==="GET"&&u.pathname==="/api/market/competitors") return json(res,200,{items:listCompetitors()});
+    if(req.method==="GET"&&u.pathname==="/api/admin/marketing/providers"){
+      requireCrmAccess(req);
+      return json(res,200,await verifyMarketingProviders());
+    }
     if(req.method==="GET"&&u.pathname==="/api/admin/agents"){
       requireCrmAccess(req);
       return json(res,200,buildAgentControl(db,[...listInternalCatalog(),...listMarketCatalog()]));
