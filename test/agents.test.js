@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {buildAgentControl,MCQ_AGENTS} from "../src/agents.js";
+import {buildAgentControl,MCQ_AGENTS,createAgentHandoff,runMarketingSkill} from "../src/agents.js";
 
 test("agent control exposes all MCQ specialists without autonomous commercial authority",()=>{
   const db={
@@ -41,4 +41,24 @@ test("agent command supports manager, individual and all agents with approval ga
   assert.equal(publish.status,"APPROVAL REQUIRED");assert.equal(publish.executed_restricted_action,false);
   assert.throws(()=>runAgentCommand(db,catalogue,{agent:"nope",instruction:"status"}),/unknown agent/);
   assert.throws(()=>runAgentCommand(db,catalogue,{agent:"manager",instruction:""}),/instruction is required/);
+});
+
+
+test("marketing skill coordinates direct A2A handoffs on one shared plan",()=>{
+  const db={leads:[{id:"l1",status:"NEW"}],enquiries:[{id:"e1",status:"NEW"}],swap_offers:[],quotes:[],bookings:[],payments:[]};
+  const out=runMarketingSkill(db,[],{campaign:"Christmas + NYE 2026",objective:"Generate qualified corporate SME and private party hire enquiries"});
+  assert.equal(out.mode,"A2A_SHARED_PLAN");
+  assert.equal(out.approval_required,false);
+  assert(out.handoffs.some(x=>x.to==="hire"));
+  assert(out.handoffs.some(x=>x.to==="sales"));
+  assert(out.handoffs.some(x=>x.to==="content"));
+  assert(out.handoffs.every(x=>x.authority==="READ_RECOMMEND"));
+  assert(out.shared_plan.hitl.some(x=>/ad spend/i.test(x)));
+});
+
+test("A2A handoffs reject unapproved direct authority paths",()=>{
+  assert.throws(()=>createAgentHandoff({from:"finance",to:"marketing",objective:"Spend budget"}),/not allowed/i);
+  const handoff=createAgentHandoff({from:"marketing",to:"finance",objective:"Review campaign economics"});
+  assert.equal(handoff.approval_required,false);
+  assert.equal(handoff.authority,"READ_RECOMMEND");
 });
