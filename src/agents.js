@@ -105,3 +105,71 @@ export function runAgentCommand(db,catalogue=[],input={}){
   };
   return {source:"MCQ production",reasoning:"DETERMINISTIC",instruction,requested_agent:requested,responses,manager_summary:requested==="all"?manager:null,status:restricted?"APPROVAL REQUIRED":"COMPLETED",approval_required:restricted,executed_restricted_action:false,generated_at:new Date().toISOString()};
 }
+
+
+const A2A_ALLOWED=Object.freeze({
+  marketing:["manager","research","content","hire","sales","trade","customer","finance","installation","stock","image","product"],
+  manager:MCQ_AGENTS.map(x=>x.id).filter(id=>id!=="manager")
+});
+
+export function createAgentHandoff({from,to,objective,evidence=[],context={}}={}){
+  const source=String(from||"").trim().toLowerCase();
+  const target=String(to||"").trim().toLowerCase();
+  const goal=String(objective||"").trim().slice(0,2000);
+  if(!source||!target||!goal)throw new Error("from, to and objective are required");
+  if(!MCQ_AGENTS.some(x=>x.id===source)||!MCQ_AGENTS.some(x=>x.id===target))throw new Error("unknown agent");
+  const allowed=A2A_ALLOWED[source]||[];
+  if(!allowed.includes(target))throw new Error("A2A handoff not allowed");
+  return {
+    type:"A2A_HANDOFF",
+    from:source,
+    to:target,
+    objective:goal,
+    evidence:Array.isArray(evidence)?evidence.slice(0,20):[],
+    context,
+    authority:"READ_RECOMMEND",
+    approval_required:false,
+    status:"READY",
+    created_at:new Date().toISOString()
+  };
+}
+
+export function runMarketingSkill(db,catalogue=[],input={}){
+  const objective=String(input.objective||"").trim().slice(0,2000);
+  if(!objective)throw new Error("objective is required");
+  const control=buildAgentControl(db,catalogue);
+  const shared={
+    campaign:input.campaign||"MCQ seasonal marketing",
+    objective,
+    evidence_source:"MCQ production",
+    constraints:["verified evidence only","no invented pricing or availability","HITL before consequential implementation"]
+  };
+  const handoffs=[
+    createAgentHandoff({from:"marketing",to:"research",objective:"Research audience, market and campaign evidence for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"content",objective:"Prepare evidence-based creative and copy for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"hire",objective:"Check hire readiness, operational constraints and enquiry conversion requirements for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"sales",objective:"Define lead qualification and follow-up requirements for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"trade",objective:"Identify B2B/venue/SME opportunity segments from current evidence for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"customer",objective:"Prepare customer-facing enquiry handling requirements for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"finance",objective:"Review evidenced quote/payment/bookings metrics and commercial constraints for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"manager",objective:"Coordinate shared plan, blockers, decisions and HITL approvals for: "+objective,context:shared})
+  ];
+  return {
+    skill:"marketing_campaign_orchestration",
+    mode:"A2A_SHARED_PLAN",
+    source:"MCQ production",
+    objective,
+    shared_plan:{
+      campaign:shared.campaign,
+      teams:handoffs.map(x=>x.to),
+      success_condition:"Generate qualified MCQ hire enquiries and improve conversion using verified evidence only",
+      iteration:"TEST_REVIEW_IMPROVE_REPEAT",
+      hitl:["publish/schedule","ad spend","outbound contact","price/offer changes","live website changes","contractual commitments"]
+    },
+    business_state:control.today,
+    handoffs,
+    status:"READY",
+    approval_required:false,
+    generated_at:new Date().toISOString()
+  };
+}
