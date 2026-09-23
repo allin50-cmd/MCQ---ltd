@@ -14,7 +14,7 @@ test("agent control exposes all MCQ specialists without autonomous commercial au
     {id:"bad",state:"DRAFT",public_display:false,sellable:false,validation:{common_errors:["image required"]}}
   ];
   const out=buildAgentControl(db,catalogue);
-  assert.equal(MCQ_AGENTS.length,14);
+  assert.equal(MCQ_AGENTS.length,15);
   assert.equal(out.today.open_customer_work,3);
   assert.equal(out.today.image_blocked,1);
   assert.equal(out.today.catalogue_sellable,0);
@@ -32,9 +32,13 @@ test("agent command supports manager, individual and all agents with approval ga
   const image=runAgentCommand(db,catalogue,{agent:"image",instruction:"Check image problems"});
   assert.match(image.responses[0].finding,/1/);
   const all=runAgentCommand(db,catalogue,{agent:"all",instruction:"Run all agents"});
-  assert.equal(all.responses.length,14);assert(all.manager_summary);assert.equal(all.reasoning,"DETERMINISTIC");
+  assert.equal(all.responses.length,15);assert(all.manager_summary);assert.equal(all.reasoning,"DETERMINISTIC");
   const restricted=runAgentCommand(db,catalogue,{agent:"purchasing",instruction:"Purchase stock"});
   assert.equal(restricted.status,"APPROVAL REQUIRED");assert.equal(restricted.executed_restricted_action,false);
+  const marketing=runAgentCommand(db,catalogue,{agent:"marketing",instruction:"Prepare the Christmas and New Year campaign for corporate SMEs and private parties"});
+  assert.equal(marketing.approval_required,false);assert.match(marketing.responses[0].recommendation,/human approval/i);
+  const publish=runAgentCommand(db,catalogue,{agent:"marketing",instruction:"Publish post and launch campaign with ad spend"});
+  assert.equal(publish.status,"APPROVAL REQUIRED");assert.equal(publish.executed_restricted_action,false);
   assert.throws(()=>runAgentCommand(db,catalogue,{agent:"nope",instruction:"status"}),/unknown agent/);
   assert.throws(()=>runAgentCommand(db,catalogue,{agent:"manager",instruction:""}),/instruction is required/);
 });
