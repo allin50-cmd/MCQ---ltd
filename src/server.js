@@ -9,7 +9,7 @@ import { listSuppliers, searchFarnell } from "./suppliers.js";
 import { searchInternalCatalog, listInternalCatalog } from "./catalog.js";
 import { listMarketCatalog, searchMarketCatalog, listCompetitors } from "./market.js";
 import { evaluateCatalogRow, CATALOG_STATES, IMAGE_PERMISSION_STATES } from "./catalog_contract.js";
-import { buildAgentControl, runAgentCommand } from "./agents.js";
+import { buildAgentControl, runAgentCommand, runMarketingSkill } from "./agents.js";
 import { enrichAgentCommand } from "./intelligence.js";
 import { createStripeCheckout, verifyStripeSignature, verifiedDepositFromStripeEvent } from "./payments.js";
 import { deliverQuote } from "./notifications.js";
@@ -157,6 +157,14 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&u.pathname==="/api/admin/marketing/providers"){
       requireCrmAccess(req);
       return json(res,200,await verifyMarketingProviders());
+    }
+    if(req.method==="POST"&&u.pathname==="/api/admin/marketing/orchestrate"){
+      requireCrmAccess(req);
+      const input=await body(req);
+      const result=runMarketingSkill(db,[...listInternalCatalog(),...listMarketCatalog()],input);
+      db.crm_events.push({id:id("a2a"),entity_type:"agent_handoff",entity_id:"marketing",status:result.status,owner:"manager",next_action:"Review shared plan and approve consequential implementation when ready",note:JSON.stringify({objective:result.objective,teams:result.shared_plan.teams,hitl:result.shared_plan.hitl}),created_at:result.generated_at});
+      await save(db);
+      return json(res,200,result);
     }
     if(req.method==="GET"&&u.pathname==="/api/admin/agents"){
       requireCrmAccess(req);
