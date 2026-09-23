@@ -43,3 +43,34 @@ test("Meta capabilities require verified granted permissions",async()=>{
   assert.equal(out.implementation_ready.instagram_publish,true);
   assert.equal(out.implementation_ready.meta_ads,true);
 });
+
+test("LinkedIn and TikTok readiness require identity plus declared granted scopes",async()=>{
+  const env={
+    LINKEDIN_ACCESS_TOKEN:"li-token",
+    LINKEDIN_ORGANIZATION_URN:"urn:li:organization:123",
+    LINKEDIN_AD_ACCOUNT_ID:"456",
+    LINKEDIN_GRANTED_SCOPES:"w_organization_social rw_ads",
+    TIKTOK_ACCESS_TOKEN:"tt-token",
+    TIKTOK_ADVERTISER_ID:"789",
+    TIKTOK_GRANTED_SCOPES:"video.publish ads.management"
+  };
+  const fetchImpl=async (url)=>{
+    if(String(url).includes("linkedin.com"))return {ok:true,json:async()=>({sub:"member-1"})};
+    if(String(url).includes("tiktokapis.com"))return {ok:true,json:async()=>({data:{creator_username:"mcq",privacy_level_options:["PUBLIC_TO_EVERYONE"]}})};
+    throw new Error("unexpected URL");
+  };
+  const out=await verifyMarketingProviders({fetchImpl,env});
+  assert.equal(out.implementation_ready.linkedin_publish,true);
+  assert.equal(out.implementation_ready.linkedin_ads,true);
+  assert.equal(out.implementation_ready.tiktok_publish,true);
+  assert.equal(out.implementation_ready.tiktok_ads,true);
+});
+
+test("invalid credentials never become implementation ready",async()=>{
+  const fetchImpl=async()=>({ok:false,status:401,json:async()=>({error:{message:"invalid token"}})});
+  const out=await verifyMarketingProviders({fetchImpl,env:{META_ACCESS_TOKEN:"bad",LINKEDIN_ACCESS_TOKEN:"bad",TIKTOK_ACCESS_TOKEN:"bad"}});
+  assert.equal(Object.values(out.implementation_ready).some(Boolean),false);
+  assert.equal(out.providers.meta.connection,"ERROR");
+  assert.equal(out.providers.linkedin.connection,"ERROR");
+  assert.equal(out.providers.tiktok.connection,"ERROR");
+});
