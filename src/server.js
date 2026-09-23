@@ -9,7 +9,7 @@ import { listSuppliers, searchFarnell } from "./suppliers.js";
 import { searchInternalCatalog, listInternalCatalog } from "./catalog.js";
 import { listMarketCatalog, searchMarketCatalog, listCompetitors } from "./market.js";
 import { evaluateCatalogRow, CATALOG_STATES, IMAGE_PERMISSION_STATES } from "./catalog_contract.js";
-import { buildAgentControl, runAgentCommand, runMarketingSkill } from "./agents.js";
+import { buildAgentControl, runAgentCommand, runMarketingSkill, buildAgentCapabilityCards } from "./agents.js";
 import { enrichAgentCommand } from "./intelligence.js";
 import { createStripeCheckout, verifyStripeSignature, verifiedDepositFromStripeEvent } from "./payments.js";
 import { deliverQuote } from "./notifications.js";
@@ -154,6 +154,10 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="GET"&&u.pathname==="/api/catalog") return json(res,200,listInternalCatalog());
     if(req.method==="GET"&&u.pathname==="/api/market/catalog") return json(res,200,{items:listMarketCatalog()});
     if(req.method==="GET"&&u.pathname==="/api/market/competitors") return json(res,200,{items:listCompetitors()});
+    if(req.method==="GET"&&u.pathname==="/api/admin/agents/capabilities"){
+      requireCrmAccess(req);
+      return json(res,200,{schema_version:"1",agents:buildAgentCapabilityCards()});
+    }
     if(req.method==="GET"&&u.pathname==="/api/admin/marketing/providers"){
       requireCrmAccess(req);
       return json(res,200,await verifyMarketingProviders());
