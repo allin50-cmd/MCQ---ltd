@@ -112,24 +112,36 @@ const A2A_ALLOWED=Object.freeze({
   manager:MCQ_AGENTS.map(x=>x.id).filter(id=>id!=="manager")
 });
 
-export function createAgentHandoff({from,to,objective,evidence=[],context={}}={}){
+export function createAgentHandoff({from,to,objective,evidence=[],context={},task_id,parent_task_id=null,path=[],hop_count=0,max_hops=4,expected_artifacts=["recommendation"]}={}){
   const source=String(from||"").trim().toLowerCase();
   const target=String(to||"").trim().toLowerCase();
   const goal=String(objective||"").trim().slice(0,2000);
   if(!source||!target||!goal)throw new Error("from, to and objective are required");
+  const hops=Number(hop_count);const limit=Number(max_hops);
+  if(!Number.isInteger(hops)||!Number.isInteger(limit)||hops<0||limit<1)throw new Error("invalid A2A hop settings");
+  if(hops>=limit)throw new Error("A2A hop limit reached");
+  const route=Array.isArray(path)?path.map(v=>String(v).toLowerCase()):[];
+  if(route.includes(target))throw new Error("A2A loop detected");
   if(!MCQ_AGENTS.some(x=>x.id===source)||!MCQ_AGENTS.some(x=>x.id===target))throw new Error("unknown agent");
   const allowed=A2A_ALLOWED[source]||[];
   if(!allowed.includes(target))throw new Error("A2A handoff not allowed");
   return {
     type:"A2A_HANDOFF",
+    schema_version:"1",
+    task_id:String(task_id||("task_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8))),
+    parent_task_id:parent_task_id?String(parent_task_id):null,
     from:source,
     to:target,
     objective:goal,
     evidence:Array.isArray(evidence)?evidence.slice(0,20):[],
     context,
+    route:[...route,source],
+    hop_count:hops+1,
+    max_hops:limit,
+    expected_artifacts:Array.isArray(expected_artifacts)?expected_artifacts.slice(0,10):["recommendation"],
     authority:"READ_RECOMMEND",
     approval_required:false,
-    status:"READY",
+    status:"SUBMITTED",
     created_at:new Date().toISOString()
   };
 }
@@ -171,5 +183,36 @@ export function runMarketingSkill(db,catalogue=[],input={}){
     status:"READY",
     approval_required:false,
     generated_at:new Date().toISOString()
+  };
+}
+
+
+export function buildAgentCapabilityCards(){
+  return MCQ_AGENTS.map(agent=>({
+    id:agent.id,
+    name:agent.name,
+    description:agent.role,
+    authority:agent.mode,
+    input_modes:["application/json"],
+    output_modes:["application/json"],
+    skills:[{
+      id:"mcq."+agent.id,
+      name:agent.name+" skill",
+      description:agent.role,
+      examples:[agent.id==="marketing"?"Prepare an evidence-based campaign plan and delegate bounded subtasks.":"Review verified MCQ evidence and return a bounded recommendation."]
+    }],
+    consequential_actions_require_hitl:["APPROVAL_REQUIRED","CRM_ASSIST"].includes(agent.mode)
+  }));
+}
+
+export function completeAgentTask(handoff,{artifacts=[],status="COMPLETED"}={}){
+  if(!handoff||handoff.type!=="A2A_HANDOFF")throw new Error("valid A2A handoff required");
+  const terminal=new Set(["COMPLETED","FAILED","CANCELLED"]);
+  if(!terminal.has(status))throw new Error("invalid terminal task status");
+  return {
+    ...handoff,
+    status,
+    artifacts:Array.isArray(artifacts)?artifacts.slice(0,20):[],
+    completed_at:new Date().toISOString()
   };
 }
