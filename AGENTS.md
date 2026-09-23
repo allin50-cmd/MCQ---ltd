@@ -1,5 +1,7 @@
 # MCQ Production Agent Rules
 
+> Binding: read `ENTERPRISE_STANDARD.md` before any change. It adds to these rules; where rules conflict, the stricter rule applies.
+
 MCQ is an established 55-year audio business. Treat this repository as a live commercial system for a real business, never as a demo, concept page, sandbox, portfolio piece or speculative startup.
 
 ## Mission
