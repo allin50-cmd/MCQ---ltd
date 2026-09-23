@@ -9,6 +9,7 @@ export const MCQ_AGENTS=Object.freeze([
   {id:"hire",name:"Hire Agent",role:"Works real PA hire enquiries and booking readiness",mode:"CRM_ASSIST"},
   {id:"trade",name:"Trade Agent",role:"Works real B2B and venue opportunities",mode:"CRM_ASSIST"},
   {id:"content",name:"Content Agent",role:"Prepares content from verified MCQ evidence",mode:"READ_RECOMMEND"},
+  {id:"marketing",name:"Marketing Agent",role:"Runs campaign research, segmentation, creative preparation and performance review; live implementation is approval-bound",mode:"APPROVAL_REQUIRED"},
   {id:"customer",name:"Customer Agent",role:"Triage and response preparation for customer enquiries",mode:"CRM_ASSIST"},
   {id:"finance",name:"Finance Agent",role:"Reports evidenced quotes, payments and bookings",mode:"READ_RECOMMEND"},
   {id:"purchasing",name:"Purchasing Agent",role:"Researches purchasing candidates; never commits spend",mode:"APPROVAL_REQUIRED"},
@@ -37,7 +38,7 @@ export function buildAgentControl(db,catalogue=[]){
     generated_at:new Date().toISOString(),
     authority:{
       autonomous:["read verified business data","classify work","prepare recommendations","prepare CRM next actions"],
-      approval_required:["purchase stock","change or approve commercial price","refund or move money","confirm unverified availability","publish incomplete products","make contractual commitments"]
+      approval_required:["purchase stock","change or approve commercial price","refund or move money","confirm unverified availability","publish incomplete products","make contractual commitments","publish or schedule social content","launch or change paid advertising","commit advertising spend","send outbound marketing messages","change live website campaign content"]
     },
     agents:MCQ_AGENTS,
     today:{
@@ -59,7 +60,7 @@ export function buildAgentControl(db,catalogue=[]){
 }
 
 
-const restrictedTerms=["purchase","buy stock","refund","change price","approve price","publish product","publish incomplete","contract","commit company","promise availability"];
+const restrictedTerms=["purchase","buy stock","refund","change price","approve price","publish product","publish incomplete","contract","commit company","promise availability","publish post","schedule post","launch campaign","run ads","ad spend","advertising spend","send marketing","contact prospect","change website","update website","go live"];
 function findingFor(agent,control){
   const t=control.today;
   const data={
@@ -73,6 +74,7 @@ function findingFor(agent,control){
     hire:["Hire CRM",t.hire_enquiries+" hire enquiries and "+t.confirmed_bookings+" confirmed bookings.","Follow up open hire enquiries and protect confirmed bookings."],
     trade:["CRM leads",t.leads+" leads are available for qualification.","Identify genuine B2B opportunities from current records."],
     content:["Verified MCQ evidence","Content can be prepared from verified business evidence.","Do not publish unsupported commercial claims."],
+    marketing:["Verified hire, CRM and MCQ evidence",t.hire_enquiries+" hire enquiries and "+t.leads+" leads are available for campaign learning.","Autonomously prepare seasonal campaign plans, audience segments, creative variants and performance recommendations; require human approval before any live publish, schedule, outreach, ad-spend commitment or website change."],
     customer:["Shared customer queue",t.open_customer_work+" open customer opportunities.","Give each open record an owner and next action."],
     finance:["Quotes, payments and bookings",t.quotes+" quotes, "+t.received_payments+" received payments, "+t.confirmed_bookings+" confirmed bookings.","Review exceptions; money movement remains approval-controlled."],
     purchasing:["Verified catalogue evidence",t.catalogue_total+" catalogue records can be researched.","Prepare purchasing candidates only; do not commit spend."],
@@ -98,7 +100,7 @@ export function runAgentCommand(db,catalogue=[],input={}){
     SALES:control.today.leads,HIRE:control.today.hire_enquiries,STOCK:control.today.catalogue_sellable,
     PRODUCTS:control.today.catalogue_blocked,IMAGES:control.today.image_blocked,"SWAP SHOP":control.today.swap_offers,
     TRADE:control.today.leads,FINANCE:{quotes:control.today.quotes,payments:control.today.received_payments},
-    CONTENT:"Verified evidence only",INSTALLATIONS:"Qualify from current CRM records",
+    CONTENT:"Verified evidence only",MARKETING:"Autonomous campaign preparation; live implementation requires HITL approval",INSTALLATIONS:"Qualify from current CRM records",
     "DECISIONS REQUIRED":control.decisions.map(x=>x.reason)
   };
   return {source:"MCQ production",reasoning:"DETERMINISTIC",instruction,requested_agent:requested,responses,manager_summary:requested==="all"?manager:null,status:restricted?"APPROVAL REQUIRED":"COMPLETED",approval_required:restricted,executed_restricted_action:false,generated_at:new Date().toISOString()};
