@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {buildAgentControl,MCQ_AGENTS,createAgentHandoff,runMarketingSkill} from "../src/agents.js";
+import {buildAgentControl,MCQ_AGENTS,createAgentHandoff,runMarketingSkill,buildAgentCapabilityCards,completeAgentTask} from "../src/agents.js";
 
 test("agent control exposes all MCQ specialists without autonomous commercial authority",()=>{
   const db={
@@ -61,4 +61,27 @@ test("A2A handoffs reject unapproved direct authority paths",()=>{
   const handoff=createAgentHandoff({from:"marketing",to:"finance",objective:"Review campaign economics"});
   assert.equal(handoff.approval_required,false);
   assert.equal(handoff.authority,"READ_RECOMMEND");
+});
+
+
+test("A2A handoffs include bounded lifecycle metadata and prevent loops",()=>{
+  const h=createAgentHandoff({from:"marketing",to:"research",objective:"Research seasonal demand",task_id:"task_root",path:["manager"],hop_count:1,max_hops:3,expected_artifacts:["research_summary"]});
+  assert.equal(h.task_id,"task_root");
+  assert.equal(h.status,"SUBMITTED");
+  assert.equal(h.hop_count,2);
+  assert.deepEqual(h.expected_artifacts,["research_summary"]);
+  assert.throws(()=>createAgentHandoff({from:"marketing",to:"research",objective:"loop",path:["research"],hop_count:1,max_hops:3}),/loop detected/i);
+  assert.throws(()=>createAgentHandoff({from:"marketing",to:"research",objective:"too far",hop_count:3,max_hops:3}),/hop limit/i);
+  const done=completeAgentTask(h,{artifacts:[{type:"research_summary",ref:"evidence:1"}]});
+  assert.equal(done.status,"COMPLETED");
+  assert.equal(done.artifacts.length,1);
+});
+
+test("agent capability cards expose discoverable skills without expanding authority",()=>{
+  const cards=buildAgentCapabilityCards();
+  const marketing=cards.find(x=>x.id==="marketing");
+  assert(marketing);
+  assert.equal(marketing.authority,"APPROVAL_REQUIRED");
+  assert.equal(marketing.consequential_actions_require_hitl,true);
+  assert(marketing.skills[0].id.startsWith("mcq."));
 });
