@@ -490,9 +490,345 @@
       ],
       "priority": "HIGH",
       "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Fieldway Community Centre",
+      "area": "New Addington / Croydon",
+      "segment": "Community centre",
+      "phone": "07824 583309",
+      "email": "",
+      "source": "https://www.croydon.gov.uk/community-and-safety/advice-and-funding-community-groups/premises-rent-and-hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "West Thornton Community Centre",
+      "area": "Croydon",
+      "segment": "Community centre",
+      "phone": "",
+      "email": "",
+      "source": "https://www.croydon.gov.uk/community-and-safety/advice-and-funding-community-groups/premises-rent-and-hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Monks Hill Community Hall",
+      "area": "Croydon",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "bettervenues@gll.org",
+      "source": "https://www.croydon.gov.uk/community-and-safety/advice-and-funding-community-groups/premises-rent-and-hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Ashburton Hall",
+      "area": "Croydon",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "bettervenues@gll.org",
+      "source": "https://www.croydon.gov.uk/community-and-safety/advice-and-funding-community-groups/premises-rent-and-hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Coulsdon Community Centre",
+      "area": "Coulsdon",
+      "segment": "Community centre",
+      "phone": "",
+      "email": "",
+      "source": "https://www.croydon.gov.uk/community-and-safety/advice-and-funding-community-groups/premises-rent-and-hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Harlow Hall Hub",
+      "area": "Croydon",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "info@harlow-hall-hub.org.uk",
+      "source": "https://www.croydon.gov.uk/community-and-safety/advice-and-funding-community-groups/premises-rent-and-hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Croydon Irish Association",
+      "area": "Croydon",
+      "segment": "Community / cultural venue",
+      "phone": "",
+      "email": "marian.c24@outlook.com",
+      "source": "https://www.croydon.gov.uk/community-and-safety/advice-and-funding-community-groups/premises-rent-and-hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Anerley Town Hall",
+      "area": "Anerley / Bromley",
+      "segment": "Civic / community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.bromley.gov.uk/directory/41/local-organisations-and-advice-services/category/130",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Beckenham Public Hall",
+      "area": "Beckenham",
+      "segment": "Civic hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.bromley.gov.uk/venues",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Crofton Halls",
+      "area": "Orpington",
+      "segment": "Civic hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.bromley.gov.uk/venues",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Keston Parish Church Hall",
+      "area": "Keston",
+      "segment": "Church hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.bromley.gov.uk/directory/41/local-organisations-and-advice-services/category/130",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Bromley and Downham Youth and Community Centre",
+      "area": "Downham / Bromley",
+      "segment": "Youth / community centre",
+      "phone": "",
+      "email": "",
+      "source": "https://www.bromley.gov.uk/directory/41/local-organisations-and-advice-services/category/130",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Chandler Hall",
+      "area": "Lambeth SE11",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.lambeth.gov.uk/your-community/events/hire-community-facility",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Jubilee Hall",
+      "area": "Tulse Hill SW2",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.lambeth.gov.uk/your-community/events/hire-community-facility",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Longfield Hall",
+      "area": "Camberwell SE5",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.lambeth.gov.uk/your-community/events/hire-community-facility",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Wheatsheaf Hall",
+      "area": "South Lambeth SW8",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.lambeth.gov.uk/your-community/events/hire-community-facility",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Edmundsbury Community Hall",
+      "area": "Brixton SW9",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.lambeth.gov.uk/your-community/events/hire-community-facility",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Coronation Hall",
+      "area": "Lambeth SW8",
+      "segment": "Community hall",
+      "phone": "07947 258932",
+      "email": "XDHSSpringfield@lambeth.gov.uk",
+      "source": "https://www.lambeth.gov.uk/your-community/events/hire-community-facility",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Upper Norwood Library Hub",
+      "area": "Crystal Palace SE19",
+      "segment": "Library / community event venue",
+      "phone": "",
+      "email": "",
+      "source": "https://www.lambeth.gov.uk/your-community/events/hire-community-facility",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Sidcup Sports Club",
+      "area": "Sidcup",
+      "segment": "Sports club / function hall",
+      "phone": "07538 076109",
+      "email": "ssc.hall_enquiry@yahoo.com",
+      "source": "https://www.sidcupsportsclub.com/Sidcup-Sports-Club-Hall-Hire",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Highfield Hall",
+      "area": "Sutton / Carshalton",
+      "segment": "Church / community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://riverchurchsutton.org/venue-hire/",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Sutton Tennis & Squash Club",
+      "area": "Sutton SM2",
+      "segment": "Sports / social club",
+      "phone": "020 8643 2940",
+      "email": "",
+      "source": "https://www.stscsport.co.uk/venue-hire/",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "The Change Foundation Centre",
+      "area": "Wallington / Sutton",
+      "segment": "Sports / community venue",
+      "phone": "",
+      "email": "",
+      "source": "https://www.thechangefoundation.org.uk/the-centre/",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "The Diamond Centre",
+      "area": "Carshalton SM5",
+      "segment": "Sports / community venue",
+      "phone": "020 8643 7764",
+      "email": "admin@diamondcentre.org.uk",
+      "source": "https://www.diamondcentre.org.uk/venue-hire/",
+      "routes": [
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
     }
   ],
-  "total": 36,
+  "total": 60,
   "agent_instructions": {
     "research": "Verify public business contact route and evidence; reject stale/unsuitable records.",
     "sales": "Segment Hire / Installation / Trade / Christmas, score fit and prepare contact options. Do not send.",
@@ -501,7 +837,8 @@
   },
   "venue_universe": {
     "scope": "Hireable venues: faith halls, community centres, sports/social clubs, schools, pubs/function rooms, hotels, civic/arts/event spaces",
-    "wave": "South London core",
-    "outbound": "APPROVAL_REQUIRED"
+    "wave": "South London core + Lambeth/Sutton/Bexley expansion",
+    "outbound": "APPROVAL_REQUIRED",
+    "last_collection": "2026-09-25"
   }
 }
