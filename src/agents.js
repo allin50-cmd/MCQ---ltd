@@ -9,6 +9,7 @@ export const MCQ_AGENTS=Object.freeze([
   {id:"hire",name:"Hire Agent",role:"Works real PA hire enquiries and booking readiness",mode:"CRM_ASSIST"},
   {id:"trade",name:"Trade Agent",role:"Works real B2B and venue opportunities",mode:"CRM_ASSIST"},
   {id:"content",name:"Content Agent",role:"Prepares content from verified MCQ evidence",mode:"READ_RECOMMEND"},
+  {id:"marketing",name:"Marketing Agent",role:"Runs campaign research, segmentation, creative preparation and performance review; live implementation is approval-bound",mode:"APPROVAL_REQUIRED"},
   {id:"customer",name:"Customer Agent",role:"Triage and response preparation for customer enquiries",mode:"CRM_ASSIST"},
   {id:"finance",name:"Finance Agent",role:"Reports evidenced quotes, payments and bookings",mode:"READ_RECOMMEND"},
   {id:"purchasing",name:"Purchasing Agent",role:"Researches purchasing candidates; never commits spend",mode:"APPROVAL_REQUIRED"},
@@ -37,7 +38,7 @@ export function buildAgentControl(db,catalogue=[]){
     generated_at:new Date().toISOString(),
     authority:{
       autonomous:["read verified business data","classify work","prepare recommendations","prepare CRM next actions"],
-      approval_required:["purchase stock","change or approve commercial price","refund or move money","confirm unverified availability","publish incomplete products","make contractual commitments"]
+      approval_required:["purchase stock","change or approve commercial price","refund or move money","confirm unverified availability","publish incomplete products","make contractual commitments","publish or schedule social content","launch or change paid advertising","commit advertising spend","send outbound marketing messages","change live website campaign content"]
     },
     agents:MCQ_AGENTS,
     today:{
@@ -59,7 +60,7 @@ export function buildAgentControl(db,catalogue=[]){
 }
 
 
-const restrictedTerms=["purchase","buy stock","refund","change price","approve price","publish product","publish incomplete","contract","commit company","promise availability"];
+const restrictedTerms=["purchase","buy stock","refund","change price","approve price","publish product","publish incomplete","contract","commit company","promise availability","publish post","schedule post","launch campaign","run ads","ad spend","advertising spend","send marketing","contact prospect","change website","update website","go live"];
 function findingFor(agent,control){
   const t=control.today;
   const data={
@@ -73,6 +74,7 @@ function findingFor(agent,control){
     hire:["Hire CRM",t.hire_enquiries+" hire enquiries and "+t.confirmed_bookings+" confirmed bookings.","Follow up open hire enquiries and protect confirmed bookings."],
     trade:["CRM leads",t.leads+" leads are available for qualification.","Identify genuine B2B opportunities from current records."],
     content:["Verified MCQ evidence","Content can be prepared from verified business evidence.","Do not publish unsupported commercial claims."],
+    marketing:["Verified hire, CRM and MCQ evidence",t.hire_enquiries+" hire enquiries and "+t.leads+" leads are available for campaign learning.","Autonomously prepare seasonal campaign plans, audience segments, creative variants and performance recommendations; require human approval before any live publish, schedule, outreach, ad-spend commitment or website change."],
     customer:["Shared customer queue",t.open_customer_work+" open customer opportunities.","Give each open record an owner and next action."],
     finance:["Quotes, payments and bookings",t.quotes+" quotes, "+t.received_payments+" received payments, "+t.confirmed_bookings+" confirmed bookings.","Review exceptions; money movement remains approval-controlled."],
     purchasing:["Verified catalogue evidence",t.catalogue_total+" catalogue records can be researched.","Prepare purchasing candidates only; do not commit spend."],
@@ -98,8 +100,119 @@ export function runAgentCommand(db,catalogue=[],input={}){
     SALES:control.today.leads,HIRE:control.today.hire_enquiries,STOCK:control.today.catalogue_sellable,
     PRODUCTS:control.today.catalogue_blocked,IMAGES:control.today.image_blocked,"SWAP SHOP":control.today.swap_offers,
     TRADE:control.today.leads,FINANCE:{quotes:control.today.quotes,payments:control.today.received_payments},
-    CONTENT:"Verified evidence only",INSTALLATIONS:"Qualify from current CRM records",
+    CONTENT:"Verified evidence only",MARKETING:"Autonomous campaign preparation; live implementation requires HITL approval",INSTALLATIONS:"Qualify from current CRM records",
     "DECISIONS REQUIRED":control.decisions.map(x=>x.reason)
   };
   return {source:"MCQ production",reasoning:"DETERMINISTIC",instruction,requested_agent:requested,responses,manager_summary:requested==="all"?manager:null,status:restricted?"APPROVAL REQUIRED":"COMPLETED",approval_required:restricted,executed_restricted_action:false,generated_at:new Date().toISOString()};
+}
+
+
+const A2A_ALLOWED=Object.freeze({
+  marketing:["manager","research","content","hire","sales","trade","customer","finance","installation","stock","image","product"],
+  manager:MCQ_AGENTS.map(x=>x.id).filter(id=>id!=="manager")
+});
+
+export function createAgentHandoff({from,to,objective,evidence=[],context={},task_id,parent_task_id=null,path=[],hop_count=0,max_hops=4,expected_artifacts=["recommendation"]}={}){
+  const source=String(from||"").trim().toLowerCase();
+  const target=String(to||"").trim().toLowerCase();
+  const goal=String(objective||"").trim().slice(0,2000);
+  if(!source||!target||!goal)throw new Error("from, to and objective are required");
+  const hops=Number(hop_count);const limit=Number(max_hops);
+  if(!Number.isInteger(hops)||!Number.isInteger(limit)||hops<0||limit<1)throw new Error("invalid A2A hop settings");
+  if(hops>=limit)throw new Error("A2A hop limit reached");
+  const route=Array.isArray(path)?path.map(v=>String(v).toLowerCase()):[];
+  if(route.includes(target))throw new Error("A2A loop detected");
+  if(!MCQ_AGENTS.some(x=>x.id===source)||!MCQ_AGENTS.some(x=>x.id===target))throw new Error("unknown agent");
+  const allowed=A2A_ALLOWED[source]||[];
+  if(!allowed.includes(target))throw new Error("A2A handoff not allowed");
+  return {
+    type:"A2A_HANDOFF",
+    schema_version:"1",
+    task_id:String(task_id||("task_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8))),
+    parent_task_id:parent_task_id?String(parent_task_id):null,
+    from:source,
+    to:target,
+    objective:goal,
+    evidence:Array.isArray(evidence)?evidence.slice(0,20):[],
+    context,
+    route:[...route,source],
+    hop_count:hops+1,
+    max_hops:limit,
+    expected_artifacts:Array.isArray(expected_artifacts)?expected_artifacts.slice(0,10):["recommendation"],
+    authority:"READ_RECOMMEND",
+    approval_required:false,
+    status:"SUBMITTED",
+    created_at:new Date().toISOString()
+  };
+}
+
+export function runMarketingSkill(db,catalogue=[],input={}){
+  const objective=String(input.objective||"").trim().slice(0,2000);
+  if(!objective)throw new Error("objective is required");
+  const control=buildAgentControl(db,catalogue);
+  const shared={
+    campaign:input.campaign||"MCQ seasonal marketing",
+    objective,
+    evidence_source:"MCQ production",
+    constraints:["verified evidence only","no invented pricing or availability","HITL before consequential implementation"]
+  };
+  const handoffs=[
+    createAgentHandoff({from:"marketing",to:"research",objective:"Research audience, market and campaign evidence for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"content",objective:"Prepare evidence-based creative and copy for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"hire",objective:"Check hire readiness, operational constraints and enquiry conversion requirements for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"sales",objective:"Define lead qualification and follow-up requirements for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"trade",objective:"Identify B2B/venue/SME opportunity segments from current evidence for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"customer",objective:"Prepare customer-facing enquiry handling requirements for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"finance",objective:"Review evidenced quote/payment/bookings metrics and commercial constraints for: "+objective,context:shared}),
+    createAgentHandoff({from:"marketing",to:"manager",objective:"Coordinate shared plan, blockers, decisions and HITL approvals for: "+objective,context:shared})
+  ];
+  return {
+    skill:"marketing_campaign_orchestration",
+    mode:"A2A_SHARED_PLAN",
+    source:"MCQ production",
+    objective,
+    shared_plan:{
+      campaign:shared.campaign,
+      teams:handoffs.map(x=>x.to),
+      success_condition:"Generate qualified MCQ hire enquiries and improve conversion using verified evidence only",
+      iteration:"TEST_REVIEW_IMPROVE_REPEAT",
+      hitl:["publish/schedule","ad spend","outbound contact","price/offer changes","live website changes","contractual commitments"]
+    },
+    business_state:control.today,
+    handoffs,
+    status:"READY",
+    approval_required:false,
+    generated_at:new Date().toISOString()
+  };
+}
+
+
+export function buildAgentCapabilityCards(){
+  return MCQ_AGENTS.map(agent=>({
+    id:agent.id,
+    name:agent.name,
+    description:agent.role,
+    authority:agent.mode,
+    input_modes:["application/json"],
+    output_modes:["application/json"],
+    skills:[{
+      id:"mcq."+agent.id,
+      name:agent.name+" skill",
+      description:agent.role,
+      examples:[agent.id==="marketing"?"Prepare an evidence-based campaign plan and delegate bounded subtasks.":"Review verified MCQ evidence and return a bounded recommendation."]
+    }],
+    consequential_actions_require_hitl:["APPROVAL_REQUIRED","CRM_ASSIST"].includes(agent.mode)
+  }));
+}
+
+export function completeAgentTask(handoff,{artifacts=[],status="COMPLETED"}={}){
+  if(!handoff||handoff.type!=="A2A_HANDOFF")throw new Error("valid A2A handoff required");
+  const terminal=new Set(["COMPLETED","FAILED","CANCELLED"]);
+  if(!terminal.has(status))throw new Error("invalid terminal task status");
+  return {
+    ...handoff,
+    status,
+    artifacts:Array.isArray(artifacts)?artifacts.slice(0,20):[],
+    completed_at:new Date().toISOString()
+  };
 }
