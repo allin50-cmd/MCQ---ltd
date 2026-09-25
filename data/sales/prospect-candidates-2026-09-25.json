@@ -1,0 +1,93 @@
+{
+  "generated_at": "2026-09-25",
+  "status": "RESEARCH_ONLY_NO_OUTREACH",
+  "segments": [
+    "Christmas venue",
+    "Corporate event",
+    "Live music venue",
+    "DJ/event supplier"
+  ],
+  "records": [
+    {
+      "name": "Arcade London",
+      "segment": "Christmas venue",
+      "email": "events@arcade-london.com",
+      "phone": "020 3989 9340",
+      "source": "https://www.arcade-london.com/christmas2026",
+      "fit": "Christmas parties up to 800 depending venue; potential supplementary audio/DJ/party-kit conversation",
+      "next_action": "Sales Agent qualify; do not contact without approval"
+    },
+    {
+      "name": "RAF Museum London Events",
+      "segment": "Corporate event",
+      "email": "raflondonevents@restaurantassociates.co.uk",
+      "phone": "0208 843 7745",
+      "source": "https://www.rafmuseum.org.uk/london/venue-hire/christmas-2026/",
+      "fit": "Actively selling 2026 Christmas events; package includes DJ entertainment",
+      "next_action": "Trade Agent assess external AV/audio opportunity; no outreach"
+    },
+    {
+      "name": "The Londoner Events",
+      "segment": "Corporate event",
+      "email": "events@thelondoner.com",
+      "phone": "+44 (0)20 7451 0188",
+      "source": "https://www.thelondoner.com/plan-event/christmas-events",
+      "fit": "Large Christmas events and concert-level AV",
+      "next_action": "Research Agent assess whether in-house AV makes MCQ unsuitable before any outreach"
+    },
+    {
+      "name": "The Refinery Regent's Place",
+      "segment": "Christmas venue",
+      "email": "regentsplace@therefinerybar.co.uk",
+      "phone": "0207 391 7060",
+      "source": "https://www.drakeandmorgan.co.uk/the-refinery-regents-place/private-hire/",
+      "fit": "Corporate/private Christmas events",
+      "next_action": "Sales Agent qualify audio/hire gap; no outreach"
+    },
+    {
+      "name": "Balls Brothers Austin Friars",
+      "segment": "Christmas venue",
+      "email": "austinevents@ballsbrothers.co.uk",
+      "phone": "020 7496 9900",
+      "source": "https://ballsbrothersaustinfriars.co.uk/christmas/",
+      "fit": "2026 corporate Christmas bookings open",
+      "next_action": "Sales Agent qualify event audio/DJ support need; no outreach"
+    },
+    {
+      "name": "St. Ermin's Hotel Events",
+      "segment": "Corporate event",
+      "email": "events@sterminshotel.co.uk",
+      "phone": "+44 (0)20 7227 7771",
+      "source": "https://www.sterminshotel.co.uk/meetings-events/christmas-parties",
+      "fit": "Christmas packages up to 150 guests",
+      "next_action": "Trade Agent qualify; no outreach"
+    },
+    {
+      "name": "Town Hall Kings Cross",
+      "segment": "Corporate event",
+      "email": "events@townhall.co.uk",
+      "phone": "+44 20 4619 7681",
+      "source": "https://spaces.townhall.co.uk/events/christmas-party-venue-london/",
+      "fit": "2026 Christmas dates limited; existing in-house production partner noted",
+      "next_action": "Research Agent mark likely low priority/partner conflict before contact"
+    },
+    {
+      "name": "Inner Temple Venue Hire",
+      "segment": "Corporate event",
+      "email": "venuehire@innertemple.org.uk",
+      "phone": "020 7797 8230",
+      "source": "https://innertemplevenuehire.co.uk/events/christmas-parties/",
+      "fit": "Private/corporate Christmas parties with multiple spaces",
+      "next_action": "Sales Agent qualify audio/DJ supplier model; no outreach"
+    },
+    {
+      "name": "The Counting House",
+      "segment": "Christmas venue",
+      "email": "countinghouse.cornhill-events@fullers.co.uk",
+      "phone": "020 7283 7123",
+      "source": "https://www.the-counting-house.com/whats-on/christmas-2026",
+      "fit": "Office Christmas parties actively booking for 2026",
+      "next_action": "Sales Agent qualify party audio/DJ requirements; no outreach"
+    }
+  ]
+}
