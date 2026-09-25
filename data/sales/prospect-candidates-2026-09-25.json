@@ -350,9 +350,149 @@
       ],
       "priority": "HIGH",
       "next_action": "Research Agent verify current hire terms and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Bromley Sports Club",
+      "area": "Bromley BR1",
+      "segment": "Sports club / function hall",
+      "email": "admin@bromleysportsclub.co.uk",
+      "phone": "020 8460 0281",
+      "capacity": "100 standing / 60 seated",
+      "source": "https://bromleysportsclub.co.uk/venue-hire/",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Parties"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "South Croydon Sports Club",
+      "area": "South Croydon",
+      "segment": "Sports club / function room",
+      "capacity": "70",
+      "source": "https://www.southcroydonsportsclub.com/venue-hire/",
+      "routes": [
+        "Hire",
+        "DJ",
+        "Installation",
+        "Parties"
+      ],
+      "priority": "HIGH",
+      "note": "Own food and DJ permitted; Saturday evening private hire.",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Park House RFC Clubhouse",
+      "area": "Bromley / Hayes",
+      "segment": "Rugby club / clubhouse",
+      "capacity": "80 standing / 70 seated",
+      "source": "https://www.parkhouserugby.co.uk/venue-hire",
+      "routes": [
+        "Hire",
+        "DJ",
+        "Installation",
+        "Parties"
+      ],
+      "priority": "HIGH",
+      "note": "Licensed bar, kitchen and existing AV; venue recommends external discos/live bands.",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Bishop Justus CofE School",
+      "area": "Bromley",
+      "segment": "School / event facilities",
+      "email": "lettings@bishopjustus.bromley.sch.uk",
+      "capacity": "650 theatre-style",
+      "source": "https://www.bishopjustus.bromley.sch.uk/Lettings/",
+      "routes": [
+        "Events",
+        "Specialist Hire",
+        "Backup AV"
+      ],
+      "priority": "MEDIUM",
+      "note": "State-of-the-art integrated AV already present; qualify specialist/backup opportunity only.",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Colfe's Leisure",
+      "area": "Lee SE12",
+      "segment": "School / leisure / theatre",
+      "email": "hires@colfes.com",
+      "phone": "020 8297 9110",
+      "capacity": "130-seat theatre plus halls/pavilions",
+      "source": "https://www.colfes.com/colfes-leisure/venue-hire/",
+      "routes": [
+        "Events",
+        "Hire",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Sydenham School",
+      "area": "Sydenham SE26",
+      "segment": "School / hall / sports facilities",
+      "email": "Lettings@sydenham.lewisham.sch.uk",
+      "phone": "020 8699 6731",
+      "source": "https://www.sydenham.lewisham.sch.uk/information/facilities-lettings",
+      "routes": [
+        "Hire",
+        "Events",
+        "Installation"
+      ],
+      "priority": "HIGH",
+      "note": "Main hall, dining hall, sports hall, studios and weddings available.",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Sydenham High School",
+      "area": "Sydenham",
+      "segment": "School / event facilities",
+      "capacity": "152 theatre; 110-120 function halls",
+      "source": "https://www.sydenhamhighschool.gdst.net/hire-our-facilities/",
+      "routes": [
+        "Events",
+        "Hire",
+        "Specialist AV"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "St George's CE Primary School",
+      "area": "Bromley BR1",
+      "segment": "School / hall",
+      "email": "admin@st-georgesbickley.bromley.sch.uk",
+      "phone": "020 8460 4266",
+      "source": "https://www.stgeorgescebromley.school/Hire-our-Facilities/",
+      "routes": [
+        "Installation",
+        "Hire"
+      ],
+      "priority": "MEDIUM",
+      "note": "Existing sound system, screen and lighting; qualify upgrade/backup needs.",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Stanley Arts",
+      "area": "South Norwood / Croydon",
+      "segment": "Arts / event venue",
+      "email": "bookings@stanleyarts.org",
+      "capacity": "410 max Stanley Hall",
+      "source": "https://stanleyarts.org/venue-hire/",
+      "routes": [
+        "Specialist Hire",
+        "Events",
+        "Trade"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
     }
   ],
-  "total": 27,
+  "total": 36,
   "agent_instructions": {
     "research": "Verify public business contact route and evidence; reject stale/unsuitable records.",
     "sales": "Segment Hire / Installation / Trade / Christmas, score fit and prepare contact options. Do not send.",
