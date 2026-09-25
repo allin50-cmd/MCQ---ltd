@@ -88,6 +88,106 @@
       "source": "https://www.the-counting-house.com/whats-on/christmas-2026",
       "fit": "Office Christmas parties actively booking for 2026",
       "next_action": "Sales Agent qualify party audio/DJ requirements; no outreach"
+    },
+    {
+      "name": "Roehampton Club",
+      "segment": "Corporate / private events",
+      "email": "events@roehamptonclub.co.uk",
+      "phone": "020 8480 4233",
+      "source": "https://www.roehamptonclub.co.uk/venue-hire",
+      "fit": "South London venue with corporate events, parties, weddings and flexible function spaces",
+      "priority": "HIGH",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Trade"
+      ],
+      "next_action": "Sales Agent qualify existing AV/audio provision and event-support gap; prepare contact option only"
+    },
+    {
+      "name": "And Then Tooting",
+      "segment": "Bar / private hire",
+      "email": "bookings@andthentooting.com",
+      "phone": "07425 163318",
+      "source": "https://www.andthentooting.com/clubhouse",
+      "fit": "South London private-hire venue up to 350; rooftop has DJs; launches, corporate parties and celebrations",
+      "priority": "HIGH",
+      "routes": [
+        "Hire",
+        "DJ",
+        "Installation",
+        "Trade"
+      ],
+      "next_action": "Sales Agent qualify PA/DJ/lighting and install opportunities; prepare contact option only"
+    },
+    {
+      "name": "Charlton Events at The Valley",
+      "segment": "Corporate / event venue",
+      "email": "",
+      "phone": "020 8333 4040",
+      "source": "https://www.charltonevents.com/",
+      "fit": "South East London venue for parties, conferences, exhibitions and Christmas events",
+      "priority": "HIGH",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Trade",
+        "Christmas"
+      ],
+      "next_action": "Research Agent resolve published email text accurately, then Sales Agent qualify"
+    },
+    {
+      "name": "Neverland London",
+      "segment": "Christmas / corporate venue",
+      "email": "corporate@neverlandlondon.com",
+      "phone": "",
+      "source": "https://www.neverlandlondon.com/christmas-party-venue",
+      "fit": "Christmas party venue with DJ entertainment and exclusive/shared events",
+      "priority": "MEDIUM",
+      "routes": [
+        "Hire",
+        "DJ",
+        "Trade",
+        "Christmas"
+      ],
+      "next_action": "Research Agent check in-house DJ/audio supplier position before any contact"
+    },
+    {
+      "name": "Kachette",
+      "segment": "Corporate / private event venue",
+      "email": "",
+      "phone": "+44 20 7033 9006",
+      "source": "https://www.kachette.co.uk/",
+      "fit": "Shoreditch corporate/private event space used for Christmas parties, launches and receptions",
+      "priority": "MEDIUM",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Trade"
+      ],
+      "next_action": "Research Agent identify official events email and current AV model; no outreach"
+    },
+    {
+      "name": "Lotus Events",
+      "segment": "Event organiser / partner",
+      "email": "jaimin@lotus-events.co.uk",
+      "phone": "020 4568 7495",
+      "source": "https://lotus-events.co.uk/christmas-parties/",
+      "fit": "Corporate Christmas event organiser explicitly referencing AV infrastructure; potential supply/partner route rather than end-customer",
+      "priority": "HIGH",
+      "routes": [
+        "Trade",
+        "Hire",
+        "Partner"
+      ],
+      "next_action": "Trade Agent qualify supplier/partner opportunity and prepare partner proposition; no outreach"
     }
-  ]
+  ],
+  "total": 15,
+  "agent_instructions": {
+    "research": "Verify public business contact route and evidence; reject stale/unsuitable records.",
+    "sales": "Segment Hire / Installation / Trade / Christmas, score fit and prepare contact options. Do not send.",
+    "trade": "Identify venues, organisers and businesses suited to repeat supply or installation; prepare proposition only.",
+    "manager": "Deduplicate, prioritise HIGH before MEDIUM, keep source URL, and require approval before outbound."
+  }
 }
