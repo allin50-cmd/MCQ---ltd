@@ -490,9 +490,294 @@
       ],
       "priority": "HIGH",
       "next_action": "Research Agent verify current terms/contact and AV provision; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Belvedere Community Centre",
+      "area": "Belvedere DA17",
+      "segment": "Community centre",
+      "phone": "020 8311 5550",
+      "email": "bccoffice3@gmail.com",
+      "source": "https://www.bexley.gov.uk/bexley-business-employment/business-support/rooms-hire",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Falconwood Community Centre",
+      "area": "Welling DA16",
+      "segment": "Community centre",
+      "phone": "020 8303 9793",
+      "email": "falconwoodcc1@gmail.com",
+      "source": "https://www.bexley.gov.uk/bexley-business-employment/business-support/rooms-hire",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Hurst Community Centre",
+      "area": "Bexley DA5",
+      "segment": "Community centre",
+      "phone": "020 8302 0011",
+      "email": "HurstCC@bexley.gov.uk",
+      "source": "https://www.bexley.gov.uk/bexley-business-employment/business-support/rooms-hire",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "North Cray Neighbourhood Centre",
+      "area": "Sidcup DA14",
+      "segment": "Community centre",
+      "phone": "020 8308 3860",
+      "email": "yadt@sky.com",
+      "source": "https://www.bexley.gov.uk/bexley-business-employment/business-support/rooms-hire",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Slade Green and Howbury Community Centre",
+      "area": "Erith DA8",
+      "segment": "Community centre",
+      "phone": "07359 419434",
+      "email": "sghbookings@ecocom.org.uk",
+      "source": "https://www.bexley.gov.uk/bexley-business-employment/business-support/rooms-hire",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "St Michael's Community Centre",
+      "area": "Welling DA16",
+      "segment": "Community centre",
+      "phone": "020 8304 4424",
+      "email": "",
+      "source": "https://www.bexley.gov.uk/bexley-business-employment/business-support/rooms-hire",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Forum @ Greenwich",
+      "area": "Greenwich SE10",
+      "segment": "Community/event centre",
+      "phone": "020 8853 5212",
+      "email": "office@forumatgreenwich.org",
+      "source": "https://www.royalgreenwich.gov.uk/download/downloads/id/6056/information_on_community_centres_and_other_venues.pdf",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Glyndon Community Recreation Centre",
+      "area": "Plumstead SE18",
+      "segment": "Community centre",
+      "phone": "020 8855 9981",
+      "email": "glyndoncommunity1@mail.com",
+      "source": "https://www.royalgreenwich.gov.uk/download/downloads/id/6056/information_on_community_centres_and_other_venues.pdf",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Greenwich West Community and Arts Centre",
+      "area": "Greenwich SE10",
+      "segment": "Community / arts centre",
+      "phone": "020 8333 0086",
+      "email": "info@greenwichwest.org.uk",
+      "source": "https://www.royalgreenwich.gov.uk/download/downloads/id/6056/information_on_community_centres_and_other_venues.pdf",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Horn Park Community Centre",
+      "area": "Eltham SE12",
+      "segment": "Community centre",
+      "phone": "020 8851 6131",
+      "email": "hornpark2002@yahoo.co.uk",
+      "source": "https://www.royalgreenwich.gov.uk/download/downloads/id/6056/information_on_community_centres_and_other_venues.pdf",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Invicta Hall",
+      "area": "Woolwich SE18",
+      "segment": "Community hall",
+      "phone": "",
+      "email": "",
+      "source": "https://www.royalgreenwich.gov.uk/download/downloads/id/6056/information_on_community_centres_and_other_venues.pdf",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Francis Peek Centre",
+      "area": "Dulwich",
+      "segment": "Community/event hall",
+      "phone": "",
+      "email": "",
+      "source": "https://services.southwark.gov.uk/leisure-facility-hire-and-bookings/16/francis-peak-center?c=303",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Brandon Youth Centre",
+      "area": "Southwark",
+      "segment": "Youth/community venue",
+      "phone": "",
+      "email": "youthserviceinfo@southwark.gov.uk",
+      "source": "https://services.southwark.gov.uk/leisure-facility-hire-and-bookings",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Canada Water Library",
+      "area": "Canada Water SE16",
+      "segment": "Library event/meeting venue",
+      "phone": "",
+      "email": "",
+      "source": "https://www.southwark.gov.uk/culture-and-sport/libraries/library-services/hire-library-hall-or-meeting-room",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Camberwell Library",
+      "area": "Camberwell SE5",
+      "segment": "Library event/meeting venue",
+      "phone": "",
+      "email": "",
+      "source": "https://www.southwark.gov.uk/culture-and-sport/libraries/library-services/hire-library-hall-or-meeting-room",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Dulwich Library",
+      "area": "Dulwich SE22",
+      "segment": "Library event/meeting venue",
+      "phone": "",
+      "email": "",
+      "source": "https://www.southwark.gov.uk/culture-and-sport/libraries/library-services/hire-library-hall-or-meeting-room",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Peckham Library",
+      "area": "Peckham SE15",
+      "segment": "Library event/meeting venue",
+      "phone": "",
+      "email": "",
+      "source": "https://www.southwark.gov.uk/culture-and-sport/libraries/library-services/hire-library-hall-or-meeting-room",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Southwark Heritage Centre and Walworth Library",
+      "area": "Walworth SE17",
+      "segment": "Library event/meeting venue",
+      "phone": "",
+      "email": "",
+      "source": "https://www.southwark.gov.uk/culture-and-sport/libraries/library-services/hire-library-hall-or-meeting-room",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
+    },
+    {
+      "name": "Southwark Cathedral Venue Hire",
+      "area": "Southwark SE1",
+      "segment": "Church / conference / event venue",
+      "phone": "020 7367 6722",
+      "email": "",
+      "source": "https://cathedral.southwark.anglican.org/visit/venue-hire/",
+      "routes": [
+        "Hire",
+        "Installation",
+        "Events"
+      ],
+      "priority": "HIGH",
+      "next_action": "Research Agent verify capacity, current hire terms and AV; Sales Agent qualify; no outreach without approval"
     }
   ],
-  "total": 36,
+  "total": 55,
   "agent_instructions": {
     "research": "Verify public business contact route and evidence; reject stale/unsuitable records.",
     "sales": "Segment Hire / Installation / Trade / Christmas, score fit and prepare contact options. Do not send.",
@@ -501,7 +786,8 @@
   },
   "venue_universe": {
     "scope": "Hireable venues: faith halls, community centres, sports/social clubs, schools, pubs/function rooms, hotels, civic/arts/event spaces",
-    "wave": "South London core",
-    "outbound": "APPROVAL_REQUIRED"
+    "wave": "Greenwich + Bexley + Southwark expansion",
+    "outbound": "APPROVAL_REQUIRED",
+    "last_collection": "2026-09-25"
   }
 }
