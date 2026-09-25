@@ -13,7 +13,7 @@ function walk(dir){
     if(st.isDirectory()){
       if(p===outDir)continue;
       walk(p);
-    }else if(/\.(?:html|js)$/i.test(name)) files.push(p);
+    }else if(/\.(?:html|js|css)$/i.test(name)) files.push(p);
   }
 }
 walk(root);
