@@ -147,6 +147,7 @@ async function openRecord(type,id){
   const item=state.data.items.find(x=>x.id===id&&x.entity_type===type)||{};
   const d=state.detail;
   const canQuote=type==="enquiry"&&d.item&&d.item.equipment_id&&!d.quotes.length;
+  const sendableQuote=type==="enquiry"&&d.quotes.find(q=>String(q.status||"").toUpperCase()!=="SENT"&&String(q.status||"").toUpperCase()!=="ACCEPTED");
   const raw=d.item||{};
   const canPromote=type==="lead"&&/hire|install/i.test(String(raw.interest||""));
   let equipment=[];
@@ -174,6 +175,7 @@ async function openRecord(type,id){
     '<div class="field"><label>NEXT ACTION DATE / TIME</label><input id="editNextAt" value="'+esc(item.next_action_at||"")+'" placeholder="2026-09-21T10:00:00+01:00"></div>'+
     '<div class="field"><label>INTERNAL NOTE</label><textarea id="editNote">'+esc(item.note||"")+'</textarea></div>'+
     '<button id="saveRecord" class="btn">SAVE CUSTOMER RECORD</button> '+(canQuote?'<button id="createQuote" class="btn secondary">CREATE REAL HIRE QUOTE</button>':'')+
+    (sendableQuote?'<button id="sendQuote" class="btn secondary">REVIEW + SEND QUOTE</button>':'')+
     (canPromote?'<div class="timeline"><h3>QUALIFY INTO HIRE WORKFLOW</h3><div class="field"><label>CONFIRMED START</label><input id="promoteStart" type="datetime-local"></div><div class="field"><label>CONFIRMED END</label><input id="promoteEnd" type="datetime-local"></div><div class="field"><label>REAL EQUIPMENT</label><select id="promoteEquipment"><option value="">Select confirmed equipment</option>'+equipment.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join("")+'</select></div><button id="promoteHire" class="btn secondary">PROMOTE TO HIRE ENQUIRY</button><p class="sub">Creates the governed enquiry only after date/time and real equipment are confirmed. It does not send a quote, charge the customer or promise availability.</p></div>':'')+
     commercialContext+
     '<div class="timeline"><h3>Activity</h3>'+
@@ -184,6 +186,7 @@ async function openRecord(type,id){
     '</div><div id="detailStatus" class="status"></div>';
   qs("#saveRecord").onclick=saveRecord;
   if(qs("#createQuote"))qs("#createQuote").onclick=createQuote;
+  if(qs("#sendQuote"))qs("#sendQuote").onclick=sendQuote;
   if(qs("#promoteHire"))qs("#promoteHire").onclick=promoteHire;
 }
 async function promoteHire(){
@@ -212,8 +215,23 @@ async function saveRecord(){
 }
 async function createQuote(){
   const st=qs("#detailStatus");st.textContent="Creating quote…";st.className="status";
-  try{const r=await api("/api/admin/crm/quote",{method:"POST",body:JSON.stringify({enquiry_id:state.current.id})});st.textContent=r.created?"Quote created":"Existing quote opened";st.className="status good";await load()}
+  try{const r=await api("/api/admin/crm/quote",{method:"POST",body:JSON.stringify({enquiry_id:state.current.id})});st.textContent=r.created?"Quote created — review before sending":"Existing quote opened";st.className="status good";await load()}
   catch(e){st.textContent=e.message;st.className="status bad"}
+}
+async function sendQuote(){
+  const d=state.detail||{};
+  const quote=(d.quotes||[]).find(q=>String(q.status||"").toUpperCase()!=="SENT"&&String(q.status||"").toUpperCase()!=="ACCEPTED");
+  if(!quote)return;
+  const total=(Number(quote.total_pence||0)/100).toLocaleString("en-GB",{style:"currency",currency:"GBP"});
+  const deposit=(Number(quote.deposit_pence||0)/100).toLocaleString("en-GB",{style:"currency",currency:"GBP"});
+  if(!window.confirm("Send this quote to "+(d.item?.contact||"customer")+"?\n\nTotal: "+total+"\nDeposit: "+deposit+"\n\nThis is a real customer email."))return;
+  const st=qs("#detailStatus");st.textContent="Sending quote…";st.className="status";
+  try{
+    const r=await api("/api/quotes/send",{method:"POST",body:JSON.stringify({quote_id:quote.id})});
+    st.textContent="Quote sent — provider receipt "+r.provider_message_id;
+    st.className="status good";
+    await load();
+  }catch(e){st.textContent=e.message;st.className="status bad"}
 }
 ["#search","#statusFilter","#ownerFilter","#typeFilter","#attentionFilter"].forEach(s=>qs(s).addEventListener(s==="#search"?"input":"change",renderList));
 qs("#runAgents").onclick=runAgents;qs("#agentInput").addEventListener("keydown",e=>{if(e.key==="Enter")runAgents()});
