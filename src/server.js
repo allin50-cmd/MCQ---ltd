@@ -555,20 +555,50 @@ const server=http.createServer(async(req,res)=>{
     if(req.method==="POST"&&u.pathname==="/api/leads"){
       const x=await body(req);
       if(!x.name||!x.contact)throw new Error("name and contact required");
+      const interest=String(x.interest||"general").trim();
+      const hireLead=/hire|install/i.test(interest);
+      const createdAt=new Date().toISOString();
       const row={
         id:id("lead"),
         name:String(x.name).trim(),
         contact:String(x.contact).trim(),
         phone:String(x.phone||"").trim(),
-        interest:String(x.interest||"general").trim(),
+        interest,
         product:String(x.product||"").trim(),
         budget:String(x.budget||"").trim(),
         message:String(x.message||"").trim(),
         source:String(x.source||"website").trim(),
+        event_date:String(x.event_date||"").trim(),
+        venue_postcode:String(x.venue_postcode||"").trim(),
+        guest_count:String(x.guest_count||"").trim(),
+        event_type:String(x.event_type||"").trim(),
+        playback:String(x.playback||"").trim(),
+        utm_source:String(x.utm_source||"").trim(),
+        utm_medium:String(x.utm_medium||"").trim(),
+        utm_campaign:String(x.utm_campaign||"").trim(),
+        utm_content:String(x.utm_content||"").trim(),
+        utm_term:String(x.utm_term||"").trim(),
+        campaign_context:String(x.campaign_context||"").trim(),
+        landing_url:String(x.landing_url||"").trim().slice(0,500),
         status:"NEW",
-        created_at:new Date().toISOString()
+        crm_owner:hireLead?"Lola":"",
+        crm_next_action:hireLead?"Qualify hire/install enquiry":"",
+        crm_updated_at:hireLead?createdAt:"",
+        created_at:createdAt
       };
-      db.leads.push(row);await save(db);return json(res,201,row);
+      db.leads.push(row);
+      if(hireLead)db.crm_events.push({
+        id:id("crm"),
+        entity_type:"lead",
+        entity_id:row.id,
+        status:"NEW",
+        owner:"Lola",
+        next_action:"Qualify hire/install enquiry",
+        next_action_at:"",
+        note:"Auto-routed from public hire/install enquiry",
+        created_at:createdAt
+      });
+      await save(db);return json(res,201,row);
     }
 
     if(req.method==="POST"&&u.pathname==="/api/events"){
