@@ -54,3 +54,13 @@ test("CRM lets operators promote qualified hire leads into the existing hire wor
   assert.match(html,/Select confirmed equipment/);
   assert.match(html,/does not send a quote, charge the customer or promise availability/i);
 });
+
+
+test("CRM exposes quote delivery only as explicit human action",()=>{
+  const html=fs.readFileSync(new URL("../public/crm.html",import.meta.url),"utf8");
+  assert.match(html,/REVIEW \+ SEND QUOTE/);
+  assert.match(html,/\/api\/quotes\/send/);
+  assert.match(html,/This is a real customer email/);
+  assert.match(html,/window\.confirm/);
+  assert.match(html,/provider receipt/);
+});
