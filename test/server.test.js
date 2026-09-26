@@ -343,9 +343,10 @@ test("CRM exposes alerts, detail timeline and governed quote handoff", async (t)
   let payload=await r.json();
   const item=payload.items.find(v=>v.id===lead.id);
   assert(item);
-  assert.equal(item.owner,"");
-  assert(payload.counts.unowned>=1);
-  assert(payload.counts.without_next_action>=1);
+  assert.equal(item.owner,"Lola");
+  assert.equal(item.next_action,"Qualify hire/install enquiry");
+  assert.equal(payload.alerts.unowned.some(v=>v.id===lead.id),false);
+  assert.equal(payload.alerts.without_next_action.some(v=>v.id===lead.id),false);
 
   r=await fetch(base+"/api/admin/crm/update",{method:"POST",headers,body:JSON.stringify({entity_type:"lead",entity_id:lead.id,status:"CONTACT",owner:"Lola",next_action:"Call customer",next_action_at:"2026-09-21T09:00:00Z"})});
   assert.equal(r.status,200);
