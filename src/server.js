@@ -675,10 +675,18 @@ const server=http.createServer(async(req,res)=>{
       quote.sent_at=new Date().toISOString();
       quote.delivery_provider=delivery.provider;
       quote.provider_message_id=delivery.message_id;
+      enq.status="QUOTE";
+      enq.crm_next_action="Await customer deposit";
+      enq.crm_updated_at=quote.sent_at;
       db.crm_events.push({
         id:id("receipt"),entity_type:"quote",entity_id:quote.id,status:"SENT",owner:"operator",
         next_action:"Await customer deposit",note:JSON.stringify({provider:delivery.provider,provider_message_id:delivery.message_id,recipient:delivery.recipient}),
-        created_at:new Date().toISOString()
+        created_at:quote.sent_at
+      });
+      db.crm_events.push({
+        id:id("crm"),entity_type:"enquiry",entity_id:enq.id,status:"QUOTE",owner:enq.crm_owner||"",
+        next_action:"Await customer deposit",next_action_at:"",note:"Quote delivered with provider receipt "+delivery.message_id,
+        created_at:quote.sent_at
       });
       await save(db);
       return json(res,200,{sent:true,quote_id:quote.id,provider:delivery.provider,provider_message_id:delivery.message_id});
@@ -981,6 +989,7 @@ const server=http.createServer(async(req,res)=>{
       const row={id:id("quo"),...createQuote(enq,eq)};
       db.quotes.push(row);
       enq.status="QUOTE";
+      enq.crm_next_action="Review and approve quote delivery";
       enq.crm_updated_at=new Date().toISOString();
       const event={id:id("crm"),entity_type:"enquiry",entity_id:enq.id,status:"QUOTE",owner:enq.crm_owner||"",next_action:enq.crm_next_action||"",next_action_at:enq.crm_next_action_at||"",note:"Quote created from CRM",created_at:enq.crm_updated_at};
       db.crm_events.push(event);
