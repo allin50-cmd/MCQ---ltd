@@ -148,6 +148,11 @@ async function openRecord(type,id){
   const d=state.detail;
   const canQuote=type==="enquiry"&&d.item&&d.item.equipment_id&&!d.quotes.length;
   const raw=d.item||{};
+  const canPromote=type==="lead"&&/hire|install/i.test(String(raw.interest||""));
+  let equipment=[];
+  if(canPromote){
+    try{equipment=await api("/api/equipment")}catch{}
+  }
   const commercialRows=[
     ["Event date",raw.event_date||raw.start_at||""],
     ["Venue / postcode",raw.venue_postcode||raw.venue||""],
@@ -169,6 +174,7 @@ async function openRecord(type,id){
     '<div class="field"><label>NEXT ACTION DATE / TIME</label><input id="editNextAt" value="'+esc(item.next_action_at||"")+'" placeholder="2026-09-21T10:00:00+01:00"></div>'+
     '<div class="field"><label>INTERNAL NOTE</label><textarea id="editNote">'+esc(item.note||"")+'</textarea></div>'+
     '<button id="saveRecord" class="btn">SAVE CUSTOMER RECORD</button> '+(canQuote?'<button id="createQuote" class="btn secondary">CREATE REAL HIRE QUOTE</button>':'')+
+    (canPromote?'<div class="timeline"><h3>QUALIFY INTO HIRE WORKFLOW</h3><div class="field"><label>CONFIRMED START</label><input id="promoteStart" type="datetime-local"></div><div class="field"><label>CONFIRMED END</label><input id="promoteEnd" type="datetime-local"></div><div class="field"><label>REAL EQUIPMENT</label><select id="promoteEquipment"><option value="">Select confirmed equipment</option>'+equipment.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>').join("")+'</select></div><button id="promoteHire" class="btn secondary">PROMOTE TO HIRE ENQUIRY</button><p class="sub">Creates the governed enquiry only after date/time and real equipment are confirmed. It does not send a quote, charge the customer or promise availability.</p></div>':'')+
     commercialContext+
     '<div class="timeline"><h3>Activity</h3>'+
     (d.quotes.length?'<div class="event"><b>Quotes</b><br>'+d.quotes.map(q=>esc(q.id)+' · '+esc(q.status||"CREATED")).join("<br>")+'</div>':'')+
@@ -178,6 +184,25 @@ async function openRecord(type,id){
     '</div><div id="detailStatus" class="status"></div>';
   qs("#saveRecord").onclick=saveRecord;
   if(qs("#createQuote"))qs("#createQuote").onclick=createQuote;
+  if(qs("#promoteHire"))qs("#promoteHire").onclick=promoteHire;
+}
+async function promoteHire(){
+  const st=qs("#detailStatus");
+  const start=qs("#promoteStart").value,end=qs("#promoteEnd").value,equipment=qs("#promoteEquipment").value;
+  if(!start||!end||!equipment){st.textContent="Confirm start, end and equipment first.";st.className="status bad";return}
+  st.textContent="Creating governed hire enquiry…";st.className="status";
+  try{
+    const r=await api("/api/admin/crm/promote-hire",{method:"POST",body:JSON.stringify({
+      lead_id:state.current.id,
+      start_at:new Date(start).toISOString(),
+      end_at:new Date(end).toISOString(),
+      equipment_id:equipment
+    })});
+    st.textContent=r.created?"Hire enquiry created — "+r.enquiry.id:"Existing hire enquiry — "+r.enquiry.id;
+    st.className="status good";
+    state.current={entity_type:"enquiry",id:r.enquiry.id};
+    await load();
+  }catch(e){st.textContent=e.message;st.className="status bad"}
 }
 async function saveRecord(){
   const b={entity_type:state.current.entity_type,entity_id:state.current.id,status:qs("#editStatus").value,owner:qs("#editOwner").value.trim(),next_action:qs("#editNext").value.trim(),next_action_at:qs("#editNextAt").value.trim(),note:qs("#editNote").value.trim()};
