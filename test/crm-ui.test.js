@@ -44,3 +44,13 @@ test("CRM inline JavaScript is syntactically valid",()=>{
   const source=html.slice(open+8,close);
   assert.doesNotThrow(()=>new Function(source));
 });
+
+
+test("CRM lets operators promote qualified hire leads into the existing hire workflow",()=>{
+  const html=fs.readFileSync(new URL("../public/crm.html",import.meta.url),"utf8");
+  assert.match(html,/QUALIFY INTO HIRE WORKFLOW/);
+  assert.match(html,/PROMOTE TO HIRE ENQUIRY/);
+  assert.match(html,/\/api\/admin\/crm\/promote-hire/);
+  assert.match(html,/Select confirmed equipment/);
+  assert.match(html,/does not send a quote, charge the customer or promise availability/i);
+});
