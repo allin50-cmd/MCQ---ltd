@@ -147,6 +147,21 @@ async function openRecord(type,id){
   const item=state.data.items.find(x=>x.id===id&&x.entity_type===type)||{};
   const d=state.detail;
   const canQuote=type==="enquiry"&&d.item&&d.item.equipment_id&&!d.quotes.length;
+  const raw=d.item||{};
+  const commercialRows=[
+    ["Event date",raw.event_date||raw.start_at||""],
+    ["Venue / postcode",raw.venue_postcode||raw.venue||""],
+    ["Guest count",raw.guest_count||""],
+    ["Event type",raw.event_type||""],
+    ["Playback / DJ",raw.playback||""],
+    ["Budget",raw.budget||""],
+    ["Customer message",raw.message||raw.notes||""],
+    ["Campaign",raw.campaign_context||raw.utm_campaign||""],
+    ["Source",raw.utm_source||raw.source||""]
+  ].filter(([,value])=>String(value||"").trim());
+  const commercialContext=commercialRows.length
+    ?'<div class="timeline"><h3>Customer / event brief</h3>'+commercialRows.map(([label,value])=>'<div class="event"><b>'+esc(label)+'</b><br>'+esc(value)+'</div>').join("")+'</div>'
+    :"";
   qs("#detail").innerHTML='<div class="detailHead"><div><h3>'+esc(item.name||item.contact||id)+'</h3><div class="sub">'+esc(typeLabel(type))+' · '+esc(item.contact||"")+(item.phone?' · '+esc(item.phone):'')+'</div></div><span class="pill '+(item.overdue?'overdue':'')+'">'+esc(item.status||"NEW")+'</span></div>'+
     '<div class="field"><label>STATUS</label><select id="editStatus">'+statuses.map(x=>'<option '+(x===item.status?'selected':'')+'>'+x+'</option>').join("")+'</select></div>'+
     '<div class="field"><label>OWNER</label><input id="editOwner" value="'+esc(item.owner||"")+'" placeholder="Lola / Devin / person"></div>'+
@@ -154,6 +169,7 @@ async function openRecord(type,id){
     '<div class="field"><label>NEXT ACTION DATE / TIME</label><input id="editNextAt" value="'+esc(item.next_action_at||"")+'" placeholder="2026-09-21T10:00:00+01:00"></div>'+
     '<div class="field"><label>INTERNAL NOTE</label><textarea id="editNote">'+esc(item.note||"")+'</textarea></div>'+
     '<button id="saveRecord" class="btn">SAVE CUSTOMER RECORD</button> '+(canQuote?'<button id="createQuote" class="btn secondary">CREATE REAL HIRE QUOTE</button>':'')+
+    commercialContext+
     '<div class="timeline"><h3>Activity</h3>'+
     (d.quotes.length?'<div class="event"><b>Quotes</b><br>'+d.quotes.map(q=>esc(q.id)+' · '+esc(q.status||"CREATED")).join("<br>")+'</div>':'')+
     (d.bookings.length?'<div class="event"><b>Bookings</b><br>'+d.bookings.map(b=>esc(b.id)).join("<br>")+'</div>':'')+
