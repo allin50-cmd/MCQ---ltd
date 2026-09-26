@@ -889,6 +889,78 @@ const server=http.createServer(async(req,res)=>{
       return json(res,200,{entity_type:entityType,item:row,customer_key:key,related,timeline,quotes,payments,bookings});
     }
 
+    if(req.method==="POST"&&u.pathname==="/api/admin/crm/promote-hire"){
+      requireCrmAccess(req);
+      const x=await body(req);
+      const lead=db.leads.find(v=>v.id===String(x.lead_id||"").trim());
+      if(!lead)throw new Error("lead not found");
+      if(!/hire|install/i.test(String(lead.interest||"")))throw new Error("lead is not a hire/install enquiry");
+      const startAt=String(x.start_at||"").trim();
+      const endAt=String(x.end_at||"").trim();
+      if(!startAt||!endAt)throw new Error("start_at and end_at required");
+      const startMs=Date.parse(startAt),endMs=Date.parse(endAt);
+      if(!Number.isFinite(startMs)||!Number.isFinite(endMs)||startMs>=endMs)throw new Error("valid end must be after start");
+      const equipmentId=String(x.equipment_id||"").trim();
+      if(!equipmentId)throw new Error("equipment_id required after qualification");
+      const eq=db.equipment.find(v=>v.id===equipmentId);
+      if(!eq)throw new Error("equipment not found");
+      if(!isAvailable(eq.id,startAt,endAt,db.bookings))throw new Error("equipment unavailable");
+
+      const existing=db.enquiries.find(v=>v.source_lead_id===lead.id);
+      if(existing)return json(res,200,{ok:true,created:false,enquiry:existing,lead});
+
+      const now=new Date().toISOString();
+      const enquiry={
+        id:id("enq"),
+        source_lead_id:lead.id,
+        source:"crm-promotion",
+        customer_name:lead.name,
+        contact:lead.contact,
+        phone:lead.phone||"",
+        venue:String(x.venue||lead.venue_postcode||"").trim(),
+        event_type:String(x.event_type||lead.event_type||"").trim(),
+        notes:String(x.notes||lead.message||"").trim(),
+        equipment_id:eq.id,
+        start_at:startAt,
+        end_at:endAt,
+        status:"NEW",
+        crm_owner:lead.crm_owner||"Lola",
+        crm_next_action:"Create and send quote",
+        crm_next_action_at:"",
+        crm_updated_at:now,
+        created_at:now
+      };
+      db.enquiries.push(enquiry);
+      lead.status="QUALIFIED";
+      lead.crm_owner=lead.crm_owner||"Lola";
+      lead.crm_next_action="Continue as hire enquiry "+enquiry.id;
+      lead.crm_updated_at=now;
+      db.crm_events.push({
+        id:id("crm"),
+        entity_type:"lead",
+        entity_id:lead.id,
+        status:"QUALIFIED",
+        owner:lead.crm_owner,
+        next_action:lead.crm_next_action,
+        next_action_at:"",
+        note:"Promoted into governed hire enquiry "+enquiry.id,
+        created_at:now
+      });
+      db.crm_events.push({
+        id:id("crm"),
+        entity_type:"enquiry",
+        entity_id:enquiry.id,
+        status:"NEW",
+        owner:enquiry.crm_owner,
+        next_action:enquiry.crm_next_action,
+        next_action_at:"",
+        note:"Created from qualified public hire lead "+lead.id,
+        created_at:now
+      });
+      await save(db);
+      return json(res,201,{ok:true,created:true,enquiry,lead});
+    }
+
     if(req.method==="POST"&&u.pathname==="/api/admin/crm/quote"){
       requireCrmAccess(req);
       const x=await body(req);
